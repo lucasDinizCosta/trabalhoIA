@@ -1,0 +1,58 @@
+# depslib dependency file v1.0
+1554771234 source:/home/lucas/Desktop/labirintoIA/main.cpp
+	<iostream>
+	<vector>
+	<string>
+	<sstream>
+	<stdlib.h>
+	"src/Grafo.h"
+
+1554692135 /home/lucas/Desktop/labirintoIA/src/Grafo.h
+	"Vertice.h"
+	"Aresta.h"
+
+1554692176 /home/lucas/Desktop/labirintoIA/src/Vertice.h
+	<iostream>
+	"Aresta.h"
+
+1554691263 /home/lucas/Desktop/labirintoIA/src/Aresta.h
+	<iostream>
+
+1555279813 source:c:\users\lucaswindows\desktop\labirintoia\main.cpp
+	<iostream>
+	<vector>
+	<string>
+	<sstream>
+	<stdlib.h>
+	"src/Grafo.h"
+
+1554692135 c:\users\lucaswindows\desktop\labirintoia\src\grafo.h
+	"Vertice.h"
+	"Aresta.h"
+
+1554692176 c:\users\lucaswindows\desktop\labirintoia\src\vertice.h
+	<iostream>
+	"Aresta.h"
+
+1554691263 c:\users\lucaswindows\desktop\labirintoia\src\aresta.h
+	<iostream>
+
+1555279813 source:c:\users\lucas\desktop\tela\labirintoia\main.cpp
+	<iostream>
+	<vector>
+	<string>
+	<sstream>
+	<stdlib.h>
+	"src/Grafo.h"
+
+1554692135 c:\users\lucas\desktop\tela\labirintoia\src\grafo.h
+	"Vertice.h"
+	"Aresta.h"
+
+1554692176 c:\users\lucas\desktop\tela\labirintoia\src\vertice.h
+	<iostream>
+	"Aresta.h"
+
+1554691263 c:\users\lucas\desktop\tela\labirintoia\src\aresta.h
+	<iostream>
+
