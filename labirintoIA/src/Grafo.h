@@ -14,7 +14,8 @@ class Grafo{
         Grafo();
         ~Grafo();
         void insereVertice(int n);
-        void insereAresta(int v1, int v2, int peso);
+       // void insereAresta(int v1, int v2, int peso);
+        void insereAresta(int v1, int v2, int direcao);
         void removeAresta(int v1, int v2);
         void removeVertice(int v);
         Vertice * retornaVertice(int n);
@@ -92,28 +93,58 @@ Vertice * Grafo::retornaVertice(int n){
 * Dados dois valores(índices dos vértices), se o grafo NÃO for orientado, atribui ao  *
 * primeiro uma aresta para o segundo e ao segundo uma aresta para o primeiro*         *
 ***************************************************************************************/
-void Grafo::insereAresta(int v1, int v2, int peso){
-    if(orientado){
-        Vertice * p = retornaVertice(v1);
-        p->insereAdj(v2, peso);
-        numeroArestas++;
-    }
-    else{
-        if(v2 < 0){
-            Vertice * p = retornaVertice(v1);
-            p->insereAdj(v2,peso);
-            p = retornaVertice(v2);
-            p->insereAdj(v1,peso);
-            numeroArestas++;
+void Grafo::insereAresta(int v1, int v2, int direcao){
+
+    Vertice * p = retornaVertice(v1);
+    Vertice * p2 = retornaVertice(v2);
+    p->insereAdj(v2,0);
+    p2->insereAdj(v1,0);
+    switch(direcao)
+    {
+    case 0:
+        {
+            Aresta * a = new Aresta();
+            a->setNum(v2);
+            p->caminhos[0] = a;
+            a = new Aresta();
+            a->setNum(v1);
+            p2->caminhos[2] = a;
         }
-        else{
-            Vertice * p = retornaVertice(v1);
-            p->insereAdj(v2,peso);
-            p = retornaVertice(v2);
-            p->insereAdj(v1,peso);
-            numeroArestas++;
+            break;
+    case 1:
+        {
+            Aresta * a = new Aresta();
+            a->setNum(v2);
+            p->caminhos[1] = a;
+            a = new Aresta();
+            a->setNum(v1);
+            p2->caminhos[3] = a;
         }
+            break;
+    case 2:
+        {
+            Aresta * a = new Aresta();
+            a->setNum(v2);
+            p->caminhos[2] = a;
+            a = new Aresta();
+            a->setNum(v1);
+            p2->caminhos[0] = a;
+        }
+    break;
+    case 3:
+        {
+            Aresta * a = new Aresta();
+            a->setNum(v2);
+            p->caminhos[3] = a;
+            a = new Aresta();
+            a->setNum(v1);
+            p2->caminhos[1] = a;
+        }
+    break;
     }
+    //p = retornaVertice(v2);
+    numeroArestas++;
+
 };
 
 void Grafo::removeAresta(int v1, int v2){

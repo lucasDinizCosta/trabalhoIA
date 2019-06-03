@@ -56,3 +56,27 @@
 1554691263 c:\users\lucas\desktop\tela\labirintoia\src\aresta.h
 	<iostream>
 
+1559578469 source:c:\users\andre luiz\desktop\trabalho ia\trabalhoia\labirintoia\main.cpp
+	<iostream>
+	<vector>
+	<string>
+	<sstream>
+	<stdlib.h>
+	"src/Grafo.h"
+	"src/Labirinto.h"
+
+1559580253 c:\users\andre luiz\desktop\trabalho ia\trabalhoia\labirintoia\src\grafo.h
+	"Vertice.h"
+	"Aresta.h"
+
+1559580066 c:\users\andre luiz\desktop\trabalho ia\trabalhoia\labirintoia\src\vertice.h
+	<iostream>
+	"Aresta.h"
+
+1559567755 c:\users\andre luiz\desktop\trabalho ia\trabalhoia\labirintoia\src\aresta.h
+	<iostream>
+
+1559580029 c:\users\andre luiz\desktop\trabalho ia\trabalhoia\labirintoia\src\labirinto.h
+	"Grafo.h"
+	<vector>
+

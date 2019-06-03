@@ -4,6 +4,7 @@
 #include <sstream>
 #include <stdlib.h>
 #include "src/Grafo.h"
+#include "src/Labirinto.h"
 using namespace std;
 
 Grafo* G = new Grafo();
@@ -177,8 +178,6 @@ void metodoBacktrack(int ini, int fim, std::vector<std::vector<int> >& matAdj, s
                 pilha.pop_back();                 ///Desempilha e redireciona para o pai
                 n = pilha[pilha.size() - 1];
                 cout << "Foi Aqui" << endl;
-
-
             }
         }
     }

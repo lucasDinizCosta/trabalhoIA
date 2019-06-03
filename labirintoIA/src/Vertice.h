@@ -13,7 +13,16 @@ class Vertice{
         Aresta* primeiro;
         Aresta* ultimo;
         Vertice * proximo;
+
+        /**
+        *   Operações:
+        *   0 => Direita
+        *   1 => Baixo
+        *   2 => Esquerda
+        *   3 => Cima
+        */
     public:
+        Aresta * caminhos[4];
         Vertice();
         Vertice(int val);
         ~Vertice();
@@ -48,6 +57,17 @@ Vertice::Vertice(int val){
     vertice = val;
     primeiro->setNum(val);
     ultimo = primeiro;
+    for(int i = 0; i<4 ; i++)
+    {
+        caminhos[i] = NULL;
+    }
+    /**
+    *   Operações:
+    *   0 => Direita
+    *   1 => Baixo
+    *   2 => Esquerda
+    *   3 => Cima
+    */
 };
 
 //Destrutor: não faz nada por enquanto
