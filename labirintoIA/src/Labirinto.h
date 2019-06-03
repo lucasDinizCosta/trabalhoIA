@@ -8,25 +8,25 @@ using namespace std;
 
 class Labirinto
 {
-private:
-    Grafo labirinto;///Corpo do labirinto
-    vector<int> caminhoFinal;
-    bool visitados[];
-    int indiceInicio, indiceFim;
-    //vector<Vertice>
-public:
-    Labirinto(int numeroCelulas)
-    {
-        visitados[numeroCelulas];
-        limpaVisitados(numeroCelulas);
+    private:
+        Grafo labirinto;///Corpo do labirinto
+        vector<int> caminhoFinal;
+        bool* visitados;
+        int indiceInicio, indiceFim;            ///Índices de inicio e fim das buscas
+        //vector<Vertice>
+    public:
+        Labirinto(int numeroCelulas)
+        {
+            visitados[numeroCelulas];
+            limpaVisitados(numeroCelulas);
 
-    };
-    ~Labirinto();
+        };
+        ~Labirinto();
 
-    void visitaCelula(int v);
-    void insereCaminhoFinal(int v);
-    void retiraCaminhoFinal();
-    void limpaVisitados(int numeroCelulas);
+        void visitaCelula(int v);
+        void insereCaminhoFinal(int v);
+        void retiraCaminhoFinal();
+        void limpaVisitados(int numeroCelulas);
 };
 
 Labirinto::~Labirinto()

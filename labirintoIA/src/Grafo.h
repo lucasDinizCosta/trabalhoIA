@@ -44,14 +44,14 @@ Grafo::~Grafo(){};
 
 void Grafo::insereVertice(int n){
     if(primeiro==NULL){
-        primeiro = new Vertice;
+        primeiro = new Vertice();
         primeiro->setNum(n);
         primeiro->setProx(NULL);
         ultimo = primeiro;
         numeroVertices++;
     }
     else{
-        Vertice* p = new Vertice;
+        Vertice* p = new Vertice();
         p->setNum(n);
         ultimo->setProx(p);
         p->setProx(NULL);
@@ -206,6 +206,7 @@ bool Grafo::verificaAdjacencia(int v1, int v2){
 * Imprime o grafo fazendo uso da função "imprime()" Aresta TAD Vértice *
 ************************************************************************/
 void Grafo::imprime(){
+    cout << "\t\tImpressao do grafo: " << endl << endl;
     if(primeiro!=NULL){
         Vertice*p = primeiro;
         int contador= 0;

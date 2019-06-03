@@ -195,7 +195,7 @@ void metodoBacktrack(int ini, int fim, std::vector<std::vector<int> >& matAdj, s
 
 int main()
 {
-    std::vector<std::vector<int> > matVerticePorCaminho;
+    /*std::vector<std::vector<int> > matVerticePorCaminho;
     bool PARAMETER = false;
     int matrixSize = 14;
     std::vector<std::vector<int> > matAdj;
@@ -215,15 +215,23 @@ int main()
     /************************************
     *   Baixo, direita, esquerda, cima  *
     ************************************/
-    operations.push_back(1);
+    /*operations.push_back(1);
     operations.push_back(0);
     operations.push_back(2);
-    operations.push_back(3);
-    metodoBacktrack(0, 13, matAdj, operations);
+    operations.push_back(3);*/
+    //metodoBacktrack(0, 13, matAdj, operations);
 
+    Grafo* g = new Grafo();
+    g->insereVertice(1);
+    g->insereVertice(2);
+    g->insereVertice(3);
+    g->insereAresta(1,2,0);
+    g->insereAresta(2,3,1);
+    g->imprime();
     //cout << PARAMETER << endl;
     //G->insereVertice(1);
 
     //G->imprime();
+    delete g;
     return 0;
 }

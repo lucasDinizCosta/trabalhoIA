@@ -80,3 +80,27 @@
 	"Grafo.h"
 	<vector>
 
+1559603836 source:/home/lucas/trabalhoIA/labirintoIA/main.cpp
+	<iostream>
+	<vector>
+	<string>
+	<sstream>
+	<stdlib.h>
+	"src/Grafo.h"
+	"src/Labirinto.h"
+
+1559603980 /home/lucas/trabalhoIA/labirintoIA/src/Grafo.h
+	"Vertice.h"
+	"Aresta.h"
+
+1559603785 /home/lucas/trabalhoIA/labirintoIA/src/Vertice.h
+	<iostream>
+	"Aresta.h"
+
+1559601869 /home/lucas/trabalhoIA/labirintoIA/src/Aresta.h
+	<iostream>
+
+1559602563 /home/lucas/trabalhoIA/labirintoIA/src/Labirinto.h
+	"Grafo.h"
+	<vector>
+

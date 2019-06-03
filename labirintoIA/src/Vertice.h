@@ -57,9 +57,16 @@ Vertice::Vertice(int val){
     vertice = val;
     primeiro->setNum(val);
     ultimo = primeiro;
-    for(int i = 0; i<4 ; i++)
+    for(int i = 0; i < 4 ; i++)
     {
         caminhos[i] = NULL;
+    }
+cout << "NULL" << endl;
+    for(int i = 0; i < 4 ; i++)
+    {
+        if(caminhos[i] == NULL){
+            cout << "NULL" << endl;
+        }
     }
     /**
     *   Operações:
@@ -160,10 +167,49 @@ void Vertice::atualizaAposRm(int val){
 //A Função imprime a lista Vertice, ou seja, todas as suas arestas
 
 void Vertice::imprime(){
+    /*  ANTIGA IMPRESSAO
     Aresta*p = primeiro;
     while(p != NULL){
         cout << "--" << p->getNum();
         p = p->getAdj();
+    }*/
+    for(int i = 0; i < 4; i++){
+        if(caminhos[i] != NULL){
+            switch(i){
+                case 0:
+                    cout << "--(Direita) " << caminhos[i]->getNum() << " ";
+                    break;
+                case 1:
+                    cout << "--(Baixo) " << caminhos[i]->getNum() << " ";
+                    break;
+                case 2:
+                    cout << "--(Esquerda) " << caminhos[i]->getNum() << " ";
+                    break;
+                case 3:
+                    cout << "--(Cima) " << caminhos[i]->getNum() << " ";
+                    break;
+                default:
+                    break;
+            }
+        }
+        else{
+            switch(i){
+                case 0:
+                    cout << "--(Direita) NULL ";
+                    break;
+                case 1:
+                    cout << "--(Baixo) NULL ";
+                    break;
+                case 2:
+                    cout << "--(Esquerda) NULL ";
+                    break;
+                case 3:
+                    cout << "--(Cima) NULL ";
+                    break;
+                default:
+                    break;
+            }
+        }
     }
     cout << endl;
 };
