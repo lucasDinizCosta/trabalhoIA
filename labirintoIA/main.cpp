@@ -95,6 +95,51 @@ void criaMapa01(std::vector<std::vector<int> >& matAdj, bool PARAMETER, std::vec
     operations.push_back(3);
 }
 
+void criaMapaTesteGrafo(Grafo * g){
+    /************************************************************
+    *                   MAPA                                    *
+    *     Z                    1                                *
+    *     |                    |                                *
+    *     A--B--C              2--3--4                          *
+    *     |  |  |              |  |  |                          *
+    *     D  E  F              5  6  7                          *
+    *        |  |                 |  |                          *
+    *     G--H--I              8--9--10                          *
+    *     |  |  |              |  |  |                          *
+    *     J  K  L             11 12  13                         *
+    *           |                    |                          *
+    *           W                    14                         *
+    *************************************************************/
+    /**********************
+    *   Operações:        *
+    *   0 => Direita      *
+    *   1 => Baixo        *
+    *   2 => Esquerda     *
+    *   3 => Cima         *
+    ***********************/
+    for(int i = 0; i < 14; i++){
+        g->insereVertice(i+1);
+    }
+    g->insereAresta(1,2,1);
+    g->insereAresta(2,3,0);
+    g->insereAresta(2,5,1);
+    g->insereAresta(3,4,0);
+    g->insereAresta(3,6,1);
+    g->insereAresta(6,9,1);
+    g->insereAresta(7,10,1);
+    g->insereAresta(8,9,0);
+    g->insereAresta(8,11,1);
+    g->insereAresta(9,12,1);
+    g->insereAresta(10,13,1);
+    g->insereAresta(13,14,1);
+    /*g->insereVertice(1);
+    g->insereVertice(2);
+    g->insereVertice(3);
+    g->insereAresta(1,2,0);
+    g->insereAresta(2,3,1);*/
+    g->imprime();
+}
+
 void metodoIrrevogavel(int ini, int fim, std::vector<std::vector<int> >& matAdj, std::vector<int>& operations){          ///Funcionando
 
     cout << endl << "Executando Irrevogavel: " << endl;
@@ -222,12 +267,13 @@ int main()
     //metodoBacktrack(0, 13, matAdj, operations);
 
     Grafo* g = new Grafo();
-    g->insereVertice(1);
+    criaMapaTesteGrafo(g);
+    /*g->insereVertice(1);
     g->insereVertice(2);
     g->insereVertice(3);
     g->insereAresta(1,2,0);
     g->insereAresta(2,3,1);
-    g->imprime();
+    g->imprime();*/
     //cout << PARAMETER << endl;
     //G->insereVertice(1);
 
