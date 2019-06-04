@@ -13,15 +13,14 @@ class Vertice{
         Aresta* primeiro;
         Aresta* ultimo;
         Vertice * proximo;
-
-        /**
-        *   Operações:
-        *   0 => Direita
-        *   1 => Baixo
-        *   2 => Esquerda
-        *   3 => Cima
-        */
     public:
+        /****************************
+        *   Arestas de caminhos:    *
+        *   0 => Direita            *
+        *   1 => Baixo              *
+        *   2 => Esquerda           *
+        *   3 => Cima               *
+        *****************************/
         Aresta * caminhos[4];
         Vertice();
         Vertice(int val);

@@ -14,15 +14,79 @@ class Grafo{
         Grafo();
         ~Grafo();
         void insereVertice(int n);
-       // void insereAresta(int v1, int v2, int peso);
         void insereAresta(int v1, int v2, int direcao);
         void removeAresta(int v1, int v2);
         void removeVertice(int v);
         Vertice * retornaVertice(int n);
         bool verificaAdjacencia(int v1, int v2);
         void imprime();
-
+        void backtracking(int ini, int fim);
 };
+
+void Grafo::backtracking(int ini, int fim){
+
+    cout << endl << "Executando Backtrack: " << endl;
+    //string arvore = "{";
+    //stringstream convert;       // stream used for the conversion
+    std::vector<int> pilha;             ///Empilha os vertices
+    bool visitados[numeroVertices];
+    for(int i = 0; i < numeroVertices; i++){
+        visitados[i] = false;
+    }
+    int s = ini;
+    int n = s;
+    //visitados[s - 1] = true;              ///Marca o primeiro como visitado
+    //pilha.push_back(s);                 ///Empilha o primeiro elemento
+    pilha.push_back(n);
+    bool fracasso = false;
+    bool sucesso = false;
+    while((sucesso == false) && (fracasso == false)){
+        int cont = 0;
+        while(cont < 4){
+            cout << cont << endl;
+            if(retornaVertice(n)->caminhos[cont] != NULL && visitados[retornaVertice(n)->caminhos[cont]->getNum() - 1] == false){  ///Checa se não é NULL e se o vertice da proxima aresta não foi visitado
+
+                n = retornaVertice(n)->caminhos[cont]->getNum();            ///Atualiza para o próximo vértice
+                visitados[n - 1] = true;                                        ///Marca como visitado o próximo vértice
+                pilha.push_back(n);
+                if(n == fim){                                                   ///Encontrou o objetivo
+                    sucesso = true;
+                }
+                break;
+            }
+            cont++;
+        }
+        if(cont >= 4){          ///Passou todas as operações possíveis -- Fazer o backtracking senão retornar fracasso
+            if(n == s){
+                fracasso = true;
+            }
+            else{
+                if(pilha.size() == 0){
+                   fracasso = true;
+                   break;
+                }
+                //arvore = arvore + " [Retorna pro pai -- ";
+                //convert << n;                           ///Usado para a concatenação do texto e número em uma String única
+                //arvore = arvore + convert.str() + "], ";
+                //convert.str(std::string());             ///"Limpa" a variável
+                pilha.pop_back();                 ///Desempilha e redireciona para o pai
+                n = pilha[pilha.size() - 1];
+                //cout << "Foi Aqui" << endl;
+            }
+        }
+    }
+    if(fracasso == true){
+        cout << "Fracasso em encontrar a solucao" << endl;
+    }
+    else{
+        if(sucesso == true){
+            cout << "--> Sucesso!!! Arvore de Solucao: " << endl << endl;
+            for(int i = 0; i < pilha.size(); i++){
+                cout << pilha[i] << " -- ";
+            }
+        }
+    }
+}
 
 /**************************
 *  Construtor ~ Destrutor *
@@ -142,9 +206,7 @@ void Grafo::insereAresta(int v1, int v2, int direcao){
         }
     break;
     }
-    //p = retornaVertice(v2);
     numeroArestas++;
-
 };
 
 void Grafo::removeAresta(int v1, int v2){
