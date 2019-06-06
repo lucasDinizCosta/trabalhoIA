@@ -159,8 +159,8 @@ int main()
     //Labirinto* la = new Labirinto();
     Grafo* g = new Grafo();
     criaMapaTesteGrafo(g);
-    g->backtracking(1,8);
-    //g->buscaProfundidade(1, 8, 10); /// Caminho de 1 ao 8 com profundidade menor que 10
+    //g->backtracking(1,8);
+    g->buscaProfundidade(1, 3, 2); /// Caminho de 1 ao 8 com profundidade menor que 10
 
     delete g;
     return 0;

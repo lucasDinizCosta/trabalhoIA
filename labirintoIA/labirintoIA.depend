@@ -104,7 +104,7 @@
 	"Grafo.h"
 	<vector>
 
-1559789355 source:/home/lucaskuat/trabalhoIA/labirintoIA/main.cpp
+1559791736 source:/home/lucaskuat/trabalhoIA/labirintoIA/main.cpp
 	<iostream>
 	<vector>
 	<string>
@@ -113,7 +113,7 @@
 	"src/Grafo.h"
 	"src/Labirinto.h"
 
-1559790925 /home/lucaskuat/trabalhoIA/labirintoIA/src/Grafo.h
+1559792119 /home/lucaskuat/trabalhoIA/labirintoIA/src/Grafo.h
 	"Vertice.h"
 	"Aresta.h"
 	<stack>

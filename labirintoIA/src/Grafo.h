@@ -50,10 +50,18 @@ void Grafo::buscaProfundidade(int ini, int fim, int limiteProfMax){
         }
         else{
             int n = abertos[abertos.size() - 1];                         ///Topo da pilha
+            if(limiteProfundidade > limiteProfMax){                     ///Estabelece um limite de profundidade da busca
+                limiteProfundidade--;
+                fechados.push_back(n);
+                abertos.pop_back();
+                //solucao.push_back(n);
+                continue;                                           ///Continua o loop sem descer o código
+            }
             //fechados.push_back(n);
             //abertos.pop_back();
             //cout << n << endl;
             cout << endl << endl;
+            cout << "Profundidade: " << limiteProfundidade << endl;
             cout << "Abertos: ";
             for(int i = 0; i < abertos.size(); i++){
                 cout << abertos[i] << " -- ";
