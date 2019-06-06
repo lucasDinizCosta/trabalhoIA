@@ -44,6 +44,7 @@ void criaMapaTesteGrafo(Grafo * g){
     g->insereAresta(7,10,1);
     g->insereAresta(8,9,0);
     g->insereAresta(8,11,1);
+    g->insereAresta(9,10,0);
     g->insereAresta(9,12,1);
     g->insereAresta(10,13,1);
     g->insereAresta(13,14,1);
@@ -159,6 +160,7 @@ int main()
     Grafo* g = new Grafo();
     criaMapaTesteGrafo(g);
     g->backtracking(1,8);
+    //g->buscaProfundidade(1, 8, 10); /// Caminho de 1 ao 8 com profundidade menor que 10
 
     delete g;
     return 0;

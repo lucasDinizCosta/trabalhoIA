@@ -60,7 +60,7 @@ Vertice::Vertice(int val){
     {
         caminhos[i] = NULL;
     }
-cout << "NULL" << endl;
+
     for(int i = 0; i < 4 ; i++)
     {
         if(caminhos[i] == NULL){

@@ -104,7 +104,7 @@
 	"Grafo.h"
 	<vector>
 
-1559660849 source:/home/lucaskuat/trabalhoIA/labirintoIA/main.cpp
+1559789355 source:/home/lucaskuat/trabalhoIA/labirintoIA/main.cpp
 	<iostream>
 	<vector>
 	<string>
@@ -113,11 +113,13 @@
 	"src/Grafo.h"
 	"src/Labirinto.h"
 
-1559660904 /home/lucaskuat/trabalhoIA/labirintoIA/src/Grafo.h
+1559790925 /home/lucaskuat/trabalhoIA/labirintoIA/src/Grafo.h
 	"Vertice.h"
 	"Aresta.h"
+	<stack>
+	<queue>
 
-1559657731 /home/lucaskuat/trabalhoIA/labirintoIA/src/Vertice.h
+1559790706 /home/lucaskuat/trabalhoIA/labirintoIA/src/Vertice.h
 	<iostream>
 	"Aresta.h"
 
