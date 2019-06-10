@@ -8,7 +8,7 @@ function Cell(i, j){
 Cell.prototype.checarVizinhos = function(grid, cols, linhas){
   var vizinhos = [];
   var cima     = grid[this.index(this.i, this.j-1, cols, linhas)];
-  var direita  = grid[this.index(this.i+1, this.j, cols, linhas)];     //i é a coluna, j é a linha
+  var direita  = grid[this.index(this.i+1, this.j, cols, linhas)];     
   var baixo    = grid[this.index(this.i, this.j+1, cols, linhas)];
   var esquerda = grid[this.index(this.i-1, this.j, cols, linhas)];
 
