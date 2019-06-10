@@ -1,0 +1,165 @@
+<DOCTYPE! html>
+<html lang="pt-br" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <script src="cell.js"></script>
+    <title>Maze Generator</title>
+    <style> body {padding: 20px; margin: 0;} canvas {vertical-align: top;} </style>
+    <style>
+      body {
+          background-color: lightblue;
+          color:black;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 align="center"><u>Trabalho de Inteligência Artificial</u> (2019/1)</h1>
+    <h2>&emsp;&emsp;Tema: Buscas em um labirinto </h2>
+    <h3>&emsp;&emsp;&ensp;Estratégia de geração do labirinto: backtrack recursivo(Recursive backtracker) </h3>
+
+    <label><b>Linhas: </b></label>
+    <input id="numLinhas" type="number" min="20" max="200">
+    <label><b>Colunas: </b></label>
+    <input id="numColunas" type="number" min="20" max="200">
+    <label><b>Largura celula: </b></label>
+    <input id="numLarguraCelula" type="number" min="20" max="40">
+    <button onclick="funcaoBotao()">Gerar</button>
+    <br></br>
+
+    <canvas id="canvas" width="400" height="400">
+		    Seu navegador não suporta canvas!
+	  </canvas>
+
+    <script>
+
+      var tela = document.getElementById("canvas");
+
+
+      var ctx = tela.getContext("2d");
+      var anterior = dt = 0;
+
+      var quadrosPorTempo = 60;
+      var tempoQuadro = 1;
+      var contaQuadros = 0;
+
+      var cols, linhas, espacamento = 20;
+      var matriz;
+      var w = 40;
+      var grid = [];            //Vetor que armazena a matriz toda de maneira linear pra poder gerar o labirinto mais fácil usando backtrack recursivo
+      var celulaAtual;
+      var pilha = [];
+
+      var pressionadoBotao = false;
+      var valorLinhas = 10, valorColunas = 10, valorLargura = 20;
+
+      function funcaoBotao(){
+        tela.style.border = '2px solid #000';                       //Colocando borda preta no canvas
+        valorLinhas = parseInt(document.getElementById("numLinhas").value);
+        valorColunas = parseInt(document.getElementById("numColunas").value);     ///Converte pra inteiro o valor digitado
+        w = parseInt(document.getElementById("numLarguraCelula").value);
+        if(w < 40 && (valorLinhas < 30 && valorColunas < 30)){
+          tela.height = 400;
+          tela.width = 400;
+        }
+        else{
+          tela.height = Math.ceil((valorLinhas * w)+espacamento*2);
+          tela.width = Math.ceil((valorColunas * w)+espacamento*2);
+        }
+
+
+        grid = [];
+        celularAtual = null;
+        setup();
+        desenha();
+        pressionadoBotao = true;
+      }
+
+      requestAnimationFrame(passo);
+     function passo(t){
+       dt = (t - anterior)/1000;
+       /*if(contaQuadros > tempoQuadro){
+         draw();
+         contaQuadros = 0;
+       }
+       contaQuadros+=dt;*/
+       if(pressionadoBotao){
+         desenha();
+       }
+
+       anterior = t;
+       requestAnimationFrame(passo);
+     }
+
+     function setup(){
+       cols = valorColunas;           //cols = Math.floor((tela.width-espacamento*2)/w);
+       linhas = valorLinhas;          //linhas = Math.floor((tela.height-espacamento*2)/w);
+       //matriz = [linhas][cols];
+       for (var i = 0; i < linhas; i++) {
+         for (var j = 0; j < cols; j++) {
+           var cell = new Cell(i, j);
+           grid.push(cell);
+         }
+       }
+       celulaAtual = grid[0];
+     }
+
+     function limparTela() {
+      ctx.fillStyle = "gray";
+      ctx.fillRect(0,0, tela.width, tela.height);
+      //ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+     function desenha(){
+       limparTela();
+       for (var i = 0; i < grid.length; i++) {          //Exibe as células
+         grid[i].show(ctx, espacamento);
+       }
+
+       celulaAtual.visited = true;
+       celulaAtual.colorido(ctx, w, espacamento);
+
+       //PASSO 1
+       var proximaCelula = celulaAtual.checarVizinhos(grid, cols, linhas);
+       if (proximaCelula) {
+         proximaCelula.visited = true;
+
+         // STEP 2
+         pilha.push(celulaAtual);
+
+         // STEP 3
+         removeWalls(celulaAtual, proximaCelula);
+
+         // STEP 4
+         celulaAtual = proximaCelula;
+       } else if (pilha.length > 0) {
+         celulaAtual = pilha.pop();
+       }
+     }
+
+     function removeWalls(a, b) {
+       var x = a.j - b.j;           ///Analisa a coluna
+       if (x === 1) {
+         a.wall[3] = false;
+         b.wall[1] = false;
+       } else if (x === -1) {
+         a.wall[1] = false;
+         b.wall[3] = false;
+       }
+       var y = a.i - b.i;           ///Analisa a linha
+       if (y === 1) {
+         a.wall[0] = false;
+         b.wall[2] = false;
+       } else if (y === -1) {
+         a.wall[2] = false;
+         b.wall[0] = false;
+       }
+     }
+
+      function stroke(value,value2,value3){
+        ctx.strokeStyle = 'rgb('+value+','+value2+','+value3+')';
+      }
+
+    </script>
+
+  </body>
+</html>
