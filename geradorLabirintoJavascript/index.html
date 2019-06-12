@@ -22,9 +22,12 @@
   </head>
   <body>
     <h1 align="center"><u>Trabalho de Inteligência Artificial</u> (2019/1)</h1>
+    <br></br>
     <h2>&emsp;&emsp;Tema: Buscas em um labirinto </h2>
-    <h3>&emsp;&emsp;&ensp;Estratégia de geração do labirinto: backtrack recursivo(Recursive backtracker) </h3>
-
+    <h2>&emsp;&emsp;Estratégia de geração do labirinto: backtrack recursivo(Recursive backtracker) </h3>
+    <br></br>
+    <h2>&emsp;&emsp;Geração de labirinto</h2>
+    <br></br>
     <label><b>Linhas: </b></label>
     <input id="numLinhas" type="number" min="20" max="200">
     <label><b>Colunas: </b></label>
@@ -41,6 +44,7 @@
     	  </canvas>
       </div>
       <div id="right">
+        <h3>&emsp;&emsp;&emsp;Algoritmos de busca:</h3>
         <h3>Vértice inicial:</h3>
         <label><b>Linha: </b></label>
         <input id="numLinhaVertInicial" type="number" min="20" max="200">
@@ -51,6 +55,21 @@
         <input id="numLinhaVertObjetivo" type="number" min="20" max="200">
         <label><b>Coluna: </b></label>
         <input id="numColunaVertObjetivo" type="number" min="20" max="200">
+        <br></br>
+        <button onclick="backtracking()">Backtracking</button>
+        <br></br>
+        <button onclick="buscaProfundidade()">Busca em Profundidade Limitada</button>
+        <br></br>
+        <button onclick="buscaLargura()">Busca em Largura</button>
+        <br></br>
+        <button onclick="buscaOrdenada()">Busca Ordenada</button>
+        <br></br>
+        <button onclick="buscaGulosa()">Busca Gulosa</button>
+        <br></br>
+        <button onclick="buscaAEstrela()">Busca A*</button>
+        <br></br>
+        <button onclick="buscaIDAEstrela()">Busca IDA*</button>
+        <br></br>
       </div>
     </div>
 
