@@ -5,6 +5,7 @@
     <script src="cell.js"></script>
     <title>Maze Generator</title>
     <style> body {padding: 20px; margin: 0;} canvas {vertical-align: top;} </style>
+
     <style>
       body {
           background-color: lightblue;
@@ -15,9 +16,15 @@
     * {margin: 0; padding: 0;}
     #container {display: flex; height: 100%; width:100%; font-size: 0;}
     #left, #middle, #right {display: inline-block; *display: inline; zoom: 1; vertical-align: top; font-size: 15px;}
-    #left {margin-right: 5px;}
-    #right {flex:1; background: yellow;}
-    canvas{border:1px solid black ; }
+    #left {margin-right: 10px;}
+    #middle {flex:1; background: yellow; border:2px solid black ; margin-right: 10px;}
+    #right {flex:1; background: yellow; border:2px solid black ; }
+    canvas{border:2px solid black ; }
+    /*div.container{
+      width: 110px;
+      height: 110px;
+      overflow: scroll;
+    }*/
     </style>
   </head>
   <body>
@@ -34,7 +41,8 @@
     <input id="numColunas" type="number" min="20" max="200">
     <label><b>Largura celula: </b></label>
     <input id="numLarguraCelula" type="number" min="20" max="40">
-    <button onclick="funcaoBotao()">Gerar</button>
+    <button onclick="funcaoBotaoGerarCompleto()">Gerar(Completo)</button>
+    <button onclick="funcaoBotaoGerarPassoAPasso()">Gerar(Passo a passo)</button>
     <br></br>
 
     <div id="container">
@@ -43,7 +51,7 @@
     		    Seu navegador não suporta canvas!
     	  </canvas>
       </div>
-      <div id="right">
+      <div id="middle">
         <h3>&emsp;&emsp;&emsp;Algoritmos de busca:</h3>
         <h3>Vértice inicial:</h3>
         <label><b>Linha: </b></label>
@@ -71,113 +79,237 @@
         <button onclick="buscaIDAEstrela()">Busca IDA*</button>
         <br></br>
       </div>
+      <div id="right">
+        teste
+      </div>
     </div>
 
     <script>
-
       var tela = document.getElementById("canvas");
-
 
       var ctx = tela.getContext("2d");
       var anterior = dt = 0;
 
-      var quadrosPorTempo = 60;
-      var tempoQuadro = 1;
-      var contaQuadros = 0;
+      //var quadrosPorTempo = 60;
+      //var tempoQuadro = 1;
+      //var contaQuadros = 0;
 
       var cols, linhas, espacamento = 20;
-      var matriz;
+      var matriz;                             //Voltara para a execução dos algoritmos de busca
       var w = 40;
-      var grid = [];            //Vetor que armazena a matriz toda de maneira linear pra poder gerar o labirinto mais fácil usando backtrack recursivo
+      var grid = [];                          //Vetor que armazena a matriz toda de maneira linear pra poder gerar o labirinto mais fácil usando backtrack recursivo
       var celulaAtual;
       var pilha = [];
 
-      var pressionadoBotao = false;
+      var terminoGeracaoPassos = true;
+
       var valorLinhas = 10, valorColunas = 10, valorLargura = 20;
 
-      function funcaoBotao(){
-        tela.style.border = '2px solid #000';                       //Colocando borda preta no canvas
+      function funcaoBotaoGerarCompleto(){
         valorLinhas = parseInt(document.getElementById("numLinhas").value);
         valorColunas = parseInt(document.getElementById("numColunas").value);     ///Converte pra inteiro o valor digitado
         w = parseInt(document.getElementById("numLarguraCelula").value);
-        if(w < 40 && (valorLinhas < 30 && valorColunas < 30)){
+        tela.height = Math.ceil((valorLinhas * w)+espacamento*2);                ///Acerta as medições do canvas conforme o valor digitado pelo usuário
+        tela.width = Math.ceil((valorColunas * w)+espacamento*2);
+        /*if(w < 40 && (valorLinhas < 30 && valorColunas < 30)){
           tela.height = 400;
           tela.width = 400;
         }
         else{
           tela.height = Math.ceil((valorLinhas * w)+espacamento*2);
           tela.width = Math.ceil((valorColunas * w)+espacamento*2);
-        }
-
-
-        grid = [];
-        celularAtual = null;
+        }*/
         setup();
-        desenha();
-        pressionadoBotao = true;
+        gerarLabirintoCompleto();
+        desenhaLabirinto();
+        terminoGeracaoPassos = true;                                ///Terminou de gerar o labirinto, logo somente será desenhado na tela o labirinto
+      }
+
+      function funcaoBotaoGerarPassoAPasso(){
+        valorLinhas = parseInt(document.getElementById("numLinhas").value);
+        valorColunas = parseInt(document.getElementById("numColunas").value);     ///Converte pra inteiro o valor digitado
+        w = parseInt(document.getElementById("numLarguraCelula").value);
+        tela.height = Math.ceil((valorLinhas * w)+espacamento*2);                ///Acerta as medições do canvas conforme o valor digitado pelo usuário
+        tela.width = Math.ceil((valorColunas * w)+espacamento*2);
+        /*if(w < 40 && (valorLinhas < 30 && valorColunas < 30)){
+          tela.height = 400;
+          tela.width = 400;
+        }
+        else{
+          tela.height = Math.ceil((valorLinhas * w)+espacamento*2);
+          tela.width = Math.ceil((valorColunas * w)+espacamento*2);
+        }*/
+        setup();
+        terminoGeracaoPassos = false;                                           ///Atribui como falso para o começo da geração por passos
+        desenhaGeracaoLabirintoPorPassos();
       }
 
       requestAnimationFrame(passo);
+
+      /************************************************
+      *                                               *
+      *                   passo():                    *
+      *  -> Controla o loop de animação e desenho.    *
+      *                                               *
+      ************************************************/
+
      function passo(t){
-       dt = (t - anterior)/1000;
+       dt = (t - anterior)/1000;                      //Taxa de quadros
        /*if(contaQuadros > tempoQuadro){
          draw();
          contaQuadros = 0;
        }
        contaQuadros+=dt;*/
-       if(pressionadoBotao){
-         desenha();
+       if(terminoGeracaoPassos===false){
+         desenhaGeracaoLabirintoPorPassos();
        }
+       else{
+         desenhaLabirinto();
+       }
+       /*if(pressionadoBotaoGerarPorPassos){
+        desenhaGeracaoLabirintoPorPassos();
+       }
+       else{
+         desenhaLabirinto();
+       }*/
+
 
        anterior = t;
        requestAnimationFrame(passo);
      }
 
+      /**************************************************************
+      *                                                             *
+      *                       setup():                              *
+      *  -> Cria a estrutura básica do labirinto definindo linhas,  *
+      *  colunas e o ponto inicial de geração do labirinto.         *
+      *                                                             *
+      ***************************************************************/
+
      function setup(){
-       cols = valorColunas;           //cols = Math.floor((tela.width-espacamento*2)/w);
-       linhas = valorLinhas;          //linhas = Math.floor((tela.height-espacamento*2)/w);
-       //matriz = [linhas][cols];
+       cols = valorColunas;
+       linhas = valorLinhas;
+       celularAtual = null;                                         //"Limpa" a celula antes de começar a gerar labirinto
+       grid = [];                                                   //"Limpa" o vetor de celulas
+       pilha = [];
+       matriz = [];                                                 //Cria uma matriz por meio de um vetor de vetores
        for (var i = 0; i < linhas; i++) {
+         matriz[i] = [];
          for (var j = 0; j < cols; j++) {
            var cell = new Cell(i, j);
+           matriz[i][j] = cell;
            grid.push(cell);
          }
        }
-       celulaAtual = grid[0];
+       celulaAtual = grid[0];                                     //Expande a geração do labirinto a partir da célula{0,0}
      }
+
+     /***************************************************************
+     *                                                              *
+     *                       limparTela():                          *
+     *  -> Preenche o canvas com um retângulo cheio visando retirar *
+     *  as outras informações já desenhas.                          *
+     *                                                              *
+     ****************************************************************/
 
      function limparTela() {
       ctx.fillStyle = "gray";
       ctx.fillRect(0,0, tela.width, tela.height);
       //ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
+     }
 
-     function desenha(){
+     /*****************************************************************
+     *                                                                *
+     *                 gerarLabirintoPorPassos():                      *
+     *  -> gera o labirinto passo a passo sendo necessário colocar no *
+     *  loop de animação para que termine a geração completa.         *
+     *                                                                *
+     ******************************************************************/
+
+     function gerarLabirintoPorPassos(){
+         celulaAtual.visited = true;
+         //PASSO 1
+         var proximaCelula = celulaAtual.checarVizinhos(grid, cols, linhas);
+         if (proximaCelula) {
+           proximaCelula.visited = true;
+
+           // PASSO 2
+           pilha.push(celulaAtual);
+
+           // PASSO 3
+           removeWalls(celulaAtual, proximaCelula);
+
+           // PASSO 4
+           celulaAtual = proximaCelula;
+         }else if (pilha.length > 0) {
+           celulaAtual = pilha.pop();
+           if(celulaAtual===grid[0]){
+              terminoGeracaoPassos = true;
+              console.log("Terminou geração");
+           }
+         }
+     }
+
+     /*****************************************************
+     *                                                    *
+     *             gerarLabirintoCompleto():              *
+     *  -> gera o labirinto completo de uma vez.          *
+     *                                                    *
+     ******************************************************/
+
+     function gerarLabirintoCompleto(){
+       setup();
+       var gerouLabirinto = false;
+       while(gerouLabirinto===false){
+         celulaAtual.visited = true;
+         //PASSO 1
+         var proximaCelula = celulaAtual.checarVizinhos(grid, cols, linhas);
+         if (proximaCelula) {
+           proximaCelula.visited = true;
+
+           // PASSO 2
+           pilha.push(celulaAtual);
+
+           // PASSO 3
+           removeWalls(celulaAtual, proximaCelula);
+
+           // PASSO 4
+           celulaAtual = proximaCelula;
+         } else if (pilha.length > 0) {
+           celulaAtual = pilha.pop();
+           if(celulaAtual===grid[0]){
+              gerouLabirinto = true;
+              console.log("Terminou geração");
+              break;
+           }
+         }
+       }
+       desenhaLabirinto();
+     }
+
+     function desenhaLabirinto(){
        limparTela();
        for (var i = 0; i < grid.length; i++) {          //Exibe as células
          grid[i].show(ctx, espacamento);
        }
-
-       celulaAtual.visited = true;
-       celulaAtual.colorido(ctx, w, espacamento);
-
-       //PASSO 1
-       var proximaCelula = celulaAtual.checarVizinhos(grid, cols, linhas);
-       if (proximaCelula) {
-         proximaCelula.visited = true;
-
-         // STEP 2
-         pilha.push(celulaAtual);
-
-         // STEP 3
-         removeWalls(celulaAtual, proximaCelula);
-
-         // STEP 4
-         celulaAtual = proximaCelula;
-       } else if (pilha.length > 0) {
-         celulaAtual = pilha.pop();
-       }
      }
+
+     function desenhaGeracaoLabirintoPorPassos(){
+       limparTela();
+       for (var i = 0; i < grid.length; i++) {          //Exibe as células
+         grid[i].show(ctx, espacamento);
+       }
+       celulaAtual.colorido(ctx, w, espacamento);
+       gerarLabirintoPorPassos();
+     }
+
+     /*****************************************************************
+     *                                                                *
+     *                       removeWalls(a, b):                       *
+     *  -> Método importante para geração do labirinto em que remove  *
+     *  as paredes entre duas células.                                *
+     *                                                                *
+     ******************************************************************/
 
      function removeWalls(a, b) {
        var x = a.j - b.j;           ///Analisa a coluna
@@ -197,11 +329,6 @@
          b.wall[0] = false;
        }
      }
-
-      function stroke(value,value2,value3){
-        ctx.strokeStyle = 'rgb('+value+','+value2+','+value3+')';
-      }
-
     </script>
 
   </body>
