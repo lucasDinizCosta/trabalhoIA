@@ -130,3 +130,29 @@
 	"Grafo.h"
 	<vector>
 
+1560135985 source:e:\git\trabalhoia\labirintoia\main.cpp
+	<iostream>
+	<vector>
+	<string>
+	<sstream>
+	<stdlib.h>
+	"src/Grafo.h"
+	"src/Labirinto.h"
+
+1560135985 e:\git\trabalhoia\labirintoia\src\grafo.h
+	"Vertice.h"
+	"Aresta.h"
+	<stack>
+	<queue>
+
+1560135985 e:\git\trabalhoia\labirintoia\src\vertice.h
+	<iostream>
+	"Aresta.h"
+
+1560135985 e:\git\trabalhoia\labirintoia\src\aresta.h
+	<iostream>
+
+1560135985 e:\git\trabalhoia\labirintoia\src\labirinto.h
+	"Grafo.h"
+	<vector>
+
