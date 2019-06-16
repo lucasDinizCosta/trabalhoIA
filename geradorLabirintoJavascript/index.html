@@ -258,6 +258,17 @@
 
       }
 
+      function heuristica(xInicial, yInicial, xFinal, yFinal){
+        if(Math.abs(xFinal - xInicial)  <  Math.abs(yFinal - yInicial))
+          return Number(Math.abs(xInicial - xFinal) + Math.abs((yInicial - yFinal) - Math.abs(xInicial - xFinal)));
+        else
+        if(Math.abs(xFinal - xInicial)  >  Math.abs(yFinal - yInicial))
+          return Number(Math.abs(yInicial - yFinal) + Math.abs((xInicial - xFinal) - Math.abs(yInicial - yFinal)));
+        else
+        if(Math.abs(xFinal - xInicial)  ==  Math.abs(yFinal - yInicial))
+          return Number(Math.abs(xInicial - xFinal));
+      }
+
       requestAnimationFrame(passo);
 
       /************************************************
