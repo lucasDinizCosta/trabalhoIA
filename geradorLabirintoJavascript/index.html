@@ -177,6 +177,8 @@
       }
 
       function backtracking(){
+        var tempoInicial = performance.now();
+
         console.log("Executando backtracking");
         var pilhaBT = [];
         var visitados = [];//[linhas][cols];            //Matriz de visitados
@@ -228,7 +230,6 @@
           }
         }
 
-
         if(fracasso){
           console.log("Fracasso em encontrar a solução");
         }
@@ -253,6 +254,8 @@
             }
             console.log(texto);
             console.log("\nQuantidade total de vértices visitados: " + numVisitados);
+            var tempoFinal = performance.now();
+            console.log("\nTempo de execução: " + parseFloat((tempoFinal - tempoInicial)).toFixed(3));    ///Mede o tempo somente na função
           }
         }
 
@@ -289,6 +292,29 @@
        anterior = t;
        requestAnimationFrame(passo);
      }
+
+      /********************************************************************************
+      *                                                                               *
+      *                         tempoDecorrido(funcao):                               *
+      *   -> É passada a função desejada para calcular o tempo de execução da mesma.  *
+      *   -> Observação: Se ela esperar parametros, coloque os posteriormente na de   *
+      *   claração. Exemplo: console.log(tempoDecorrido(nomeDaFuncao, parametro));    *
+      *                                                                               *
+      *********************************************************************************/
+
+     function tempoDecorrido(funcao) {
+        // pega os argumentos a serem repassados
+        var args = Array.prototype.slice.call(arguments, 1);
+
+        // logo antes da execução
+        var inicio = performance.now();
+
+        // executa a função passada, passando os argumentos se for o caso
+        funcao.apply(null, args);
+
+        // logo após a execução
+        return performance.now() - inicio;
+    }
 
       /**************************************************************
       *                                                             *
