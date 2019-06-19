@@ -87,7 +87,7 @@ Cell.prototype.colorido = function(ctx, w, espacamento){
 
 }
 
-Cell.prototype.show = function(ctx, espacamento){
+Cell.prototype.show = function(ctx, w, espacamento){
   //espacamento entre a borda do canvas
 
   var x = this.j*w + espacamento;

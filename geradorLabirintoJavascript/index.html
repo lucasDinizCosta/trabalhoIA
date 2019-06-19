@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <script src="cell.js"></script>
+    <script src="maze.js"></script>
     <title>Maze Generator</title>
     <style> body {padding: 20px; margin: 0;} canvas {vertical-align: top;} </style>
 
@@ -25,6 +26,24 @@
       height: 110px;
       overflow: scroll;
     }*/
+    </style>
+
+    <style>
+      table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+      }
+
+      tr:nth-child(even) {
+        background-color: #dddddd;
+      }
     </style>
   </head>
   <body>
@@ -97,13 +116,22 @@
       *                                                *
       **************************************************/
 
-      var cols, linhas, espacamento = 20;
-      var w = 40;
-      var grid = [];                          //Vetor que armazena a matriz toda de maneira linear pra poder gerar o labirinto mais fácil usando backtrack recursivo
-      var celulaAtual;
-      var pilha = [];
-      var terminoGeracaoPassos = true;
-      var valorLinhas = 10, valorColunas = 10, valorLargura = 20;
+      //var cols, linhas, espacamento = 20;
+      //var w = 40;
+      //var grid = [];                          //Vetor que armazena a matriz toda de maneira linear pra poder gerar o labirinto mais fácil usando backtrack recursivo
+      //var celulaAtual;
+      //var pilha = [];
+      //var terminoGeracaoPassos = true;
+      var valorLinhas = 10, valorColunas = 10, valorLargura = 10, espacamento = 20;
+      var labirinto = new Maze(20,20,10);
+
+      /**
+      *   Variaveis do controle de estado:
+      *   0 => Não faz nada;
+      *   1 => Desenha labirinto;
+      *   2 => Desenha labirinto por passos;
+      */
+      var estado = 0;
 
       /*************************************************
       *                                                *
@@ -119,9 +147,9 @@
       function funcaoBotaoGerarCompleto(){
         valorLinhas = parseInt(document.getElementById("numLinhas").value);
         valorColunas = parseInt(document.getElementById("numColunas").value);     ///Converte pra inteiro o valor digitado
-        w = parseInt(document.getElementById("numLarguraCelula").value);
-        tela.height = Math.ceil((valorLinhas * w)+espacamento*2);                ///Acerta as medições do canvas conforme o valor digitado pelo usuário
-        tela.width = Math.ceil((valorColunas * w)+espacamento*2);
+        valorLargura = parseInt(document.getElementById("numLarguraCelula").value);
+        tela.height = Math.ceil((valorLinhas * valorLargura)+espacamento*2);                ///Acerta as medições do canvas conforme o valor digitado pelo usuário
+        tela.width = Math.ceil((valorColunas * valorLargura)+espacamento*2);
         /*if(w < 40 && (valorLinhas < 30 && valorColunas < 30)){
           tela.height = 400;
           tela.width = 400;
@@ -130,21 +158,30 @@
           tela.height = Math.ceil((valorLinhas * w)+espacamento*2);
           tela.width = Math.ceil((valorColunas * w)+espacamento*2);
         }*/
-        setup();
-        gerarLabirintoCompleto();
-        desenhaLabirinto();
-        terminoGeracaoPassos = true;                                ///Terminou de gerar o labirinto, logo somente será desenhado na tela o labirinto
+        //setup();
+        //gerarLabirintoCompleto();
+        labirinto = new Maze(valorLinhas,valorColunas,valorLargura);
+        labirinto.gerarLabirintoCompleto();
+        //gerarLabirintoCompleto();
+        //desenhaLabirinto();
+        estado = 1;
+        //labirinto.terminoGeracaoPassos = true;                                ///Terminou de gerar o labirinto, logo somente será desenhado na tela o labirinto
       }
 
       function funcaoBotaoGerarPassoAPasso(){
         valorLinhas = parseInt(document.getElementById("numLinhas").value);
         valorColunas = parseInt(document.getElementById("numColunas").value);     ///Converte pra inteiro o valor digitado
-        w = parseInt(document.getElementById("numLarguraCelula").value);
-        tela.height = Math.ceil((valorLinhas * w)+espacamento*2);                ///Acerta as medições do canvas conforme o valor digitado pelo usuário
-        tela.width = Math.ceil((valorColunas * w)+espacamento*2);
-        setup();
-        terminoGeracaoPassos = false;                                           ///Atribui como falso para o começo da geração por passos
-        desenhaGeracaoLabirintoPorPassos();
+        valorLargura = parseInt(document.getElementById("numLarguraCelula").value);
+        tela.height = Math.ceil((valorLinhas * valorLargura)+espacamento*2);                ///Acerta as medições do canvas conforme o valor digitado pelo usuário
+        tela.width = Math.ceil((valorColunas * valorLargura)+espacamento*2);
+        //setup();
+        labirinto = new Maze(valorLinhas,valorColunas,valorLargura);
+        labirinto.terminoGeracaoPassos = false;                                           ///Atribui como falso para o começo da geração por passos
+        labirinto.gerarLabirintoPorPassos(estado);
+        estado = 2;
+        //labirinto.desenharGeracaoLabirintoPorPassos(ctx, espacamento);
+        //labirinto = new Maze(valorLinhas,valorColunas,w);
+        //desenhaGeracaoLabirintoPorPassos();
       }
 
       function validaVertices(){
@@ -177,7 +214,7 @@
       }
 
       function backtracking(){
-        var tempoInicial = performance.now();
+        /*var tempoInicial = performance.now();
 
         console.log("Executando backtracking");
         var pilhaBT = [];
@@ -257,9 +294,34 @@
             var tempoFinal = performance.now();
             console.log("\nTempo de execução: " + parseFloat((tempoFinal - tempoInicial)).toFixed(3));    ///Mede o tempo somente na função
           }
-        }
-
+        }*/
+        labirinto.backtrack(verticeInicial, verticeObjetivo);
       }
+
+      function tableCreate(){
+        var body = document.body,
+            tbl  = document.createElement('table');
+        tbl.style.width  = '100px';
+        tbl.style.border = '1px solid black';
+
+        for(var i = 0; i < 5; i++){
+            var tr = tbl.insertRow();
+            for(var j = 0; j < 1; j++){
+                if(i == 2 && j == 1){
+                    break;
+                } else {
+                    var td = tr.insertCell();
+                    td.appendChild(document.createTextNode('Cell'));
+                    td.style.border = '1px solid black';
+                    if(i == 1 && j == 1){
+                        td.setAttribute('rowSpan', '2');
+                    }
+                }
+            }
+        }
+        body.appendChild(tbl);
+    }
+    tableCreate();
 
       function heuristica(xInicial, yInicial, xFinal, yFinal){
         if(Math.abs(xFinal - xInicial)  <  Math.abs(yFinal - yInicial))
@@ -283,11 +345,20 @@
 
      function passo(t){
        dt = (t - anterior)/1000;                      //Taxa de quadros
-       if(terminoGeracaoPassos===false){
-         desenhaGeracaoLabirintoPorPassos();
-       }
-       else{
-         desenhaLabirinto();
+       limparTela();
+       switch(estado){
+         case 0:
+            ///Não faz nada
+         break;
+         case 1:
+            labirinto.desenharLabirinto(ctx, espacamento);
+            //console.log("Estado 1");
+         break;
+         case 2:
+            labirinto.desenharGeracaoLabirintoPorPassos(ctx, espacamento, estado);
+         break;
+         default:
+            console.log("Problema no controle de estados");
        }
        anterior = t;
        requestAnimationFrame(passo);
