@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <form name="pilha">
+       <label>Elemento:<input type="text" name="elemento"/></label>
+       <button id="botaoEmpilhar">Empilhar</button>
+       <button id="botaoDesempilhar">Desempilhar</button>
+    </form>
+
+    <ol>
+    </ol>
+
+    <script>
+
+        var pilha = [];
+        var botaoEmpilha = document.getElementById("botaoEmpilhar");
+        var botaoDesempilha = document.getElementById("botaoDesempilhar");
+
+        botaoEmpilha.addEventListener("click", empilhar);
+        botaoDesempilha.addEventListener("click", desempilhar);
+
+        function empilhar(e){
+            e.preventDefault();
+            var element = document.forms.pilha.elemento.value;
+            var novoElemento = {"elemento":element};
+            pilha.push(novoElemento);
+            var lista = document.getElementsByTagName("ol")[0];
+            var novoLi = document.createElement("li");
+            novoLi.textContent = novoElemento.elemento;
+            lista.appendChild(novoLi);
+        }
+
+        function desempilhar(e){
+            e.preventDefault();
+            console.log("teste");
+            pilha.pop();
+            var lista = document.getElementsByTagName("ol")[0];
+            lista.removeChild(lista.lastChild);
+        }
+
+    </script>
+
+</body>
+</html>
