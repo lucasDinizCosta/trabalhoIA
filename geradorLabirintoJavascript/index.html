@@ -143,7 +143,6 @@
       var verticeInicial = [2];               //posicao 1 representa a identificação da linha e a 2 a identificação da coluna
       var verticeObjetivo = [2];
 
-
       function funcaoBotaoGerarCompleto(){
         valorLinhas = parseInt(document.getElementById("numLinhas").value);
         valorColunas = parseInt(document.getElementById("numColunas").value);     ///Converte pra inteiro o valor digitado
@@ -200,7 +199,14 @@
       }
 
       function buscaProfundidadeLimitada(){
-        labirinto.buscaProfundidadeLimitada(verticeInicial, verticeObjetivo, 1000000);
+        var limite = prompt("Digite um valor para o limite da busca em profundidade: ", 1000000);
+        if (limite == null || limite < 2) {
+          alert("Digite um número valido maior que 1");
+        } else {
+          console.log(parseInt(limite));
+          labirinto.buscaProfundidadeLimitada(verticeInicial, verticeObjetivo, parseInt(limite));
+        }
+
       }
 
       function tableCreate(){
