@@ -353,3 +353,68 @@ Maze.prototype.buscaProfundidadeLimitada = function (verticeInicial, verticeObje
     }
 
 }
+
+Maze.prototype.buscaGulosa = function(verticeInicial, verticeObjetivo)
+{
+
+  //CRIA MATRIZ AUXILIAR DE HEURÍSTICAS
+  var matrizAux = [];
+  for (var i = 0; i < linhas; i++) {  
+      matrizAux[i] = [];                      
+    for (var j = 0; j < colunas; j++) {
+      this.matrizAux[i][j] = this.heuristica(i,j,verticeObjetivo[0], verticeObjetivo[1]);
+    }
+  }
+
+  //CRIA AUXILIARES DO ALGORITMO
+  var fracasso = false, sucesso = false;
+  var abertos = [];
+  var fechados = [];
+  var solucao = [];
+  var visitados = [];//[linhas][cols];            //Matriz de visitados
+  for (var i = 0; i < this.linhas; i++) {
+    visitados[i] = [];
+    for(var j = 0; j < this.colunas; j++){
+      visitados[i][j] = false;
+    }
+  }
+  var fim = this.matriz[verticeObjetivo[0]][verticeObjetivo[1]];
+  var inicio = this.matriz[verticeInicial[0]][verticeInicial[1]];
+  var atual = inicio;
+  abertos.push(inicio);
+  visitados[inicio.i][inicio.j] = true;  
+  
+  
+  //Analisando os filhos do primeiro vertice
+  atual = encontraMelhorHeuristicaFilho(this.matriz[i][j],matrizHeuristicas);
+
+  while(sucesso != true && fracasso != true)
+  {
+
+   
+
+  }
+
+
+}
+
+Maze.prototype.encontraMelhorHeuristicaFilho(vertice, matrizHeuristicas, visitados)
+{
+  var vetorCaminhos = [];
+  var melhorHeuristica;
+
+  vetorCaminhos[0] = matrizHeuristicas[vertice.i][vertice.j+1];
+  vetorCaminhos[1] = matrizHeuristicas[vertice.i+1][vertice.j];
+  vetorCaminhos[0] = matrizHeuristicas[vertice.i][vertice.j-1];
+  vetorCaminhos[1] = matrizHeuristicas[vertice.i-1][vertice.j];
+
+  melhorHeuristica = vetorCaminhos[0];
+
+  for(i = 0; i<4; i++)
+  {
+    if(melhorHeuristica < vetorCaminhos[i])
+      melhorHeuristica = vetorCaminhos[i];
+  }
+  
+  return melhorHeuristica;
+}
