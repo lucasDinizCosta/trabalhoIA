@@ -88,7 +88,7 @@
         <br></br>
         <button onclick="buscaProfundidadeLimitada()">Busca em Profundidade Limitada</button>
         <br></br>
-        <button onclick="buscaLargura()">Busca em Largura</button>
+        <button onclick="buscaEmLargura()">Busca em Largura</button>
         <br></br>
         <button onclick="buscaOrdenada()">Busca Ordenada</button>
         <br></br>
@@ -206,7 +206,10 @@
           console.log(parseInt(limite));
           labirinto.buscaProfundidadeLimitada(verticeInicial, verticeObjetivo, parseInt(limite));
         }
+      }
 
+      function buscaEmLargura(){
+        labirinto.buscaProfundidadeLimitada(verticeInicial, verticeObjetivo);
       }
 
       function tableCreate(){
