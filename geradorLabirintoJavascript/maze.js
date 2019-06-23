@@ -372,6 +372,7 @@ Maze.prototype.buscaGulosa = function(verticeInicial, verticeObjetivo)
   var fechados = [];
   var solucao = [];
   var visitados = [];//[linhas][cols];            //Matriz de visitados
+  var quatroMelhoresHeuristicas = [];
   for (var i = 0; i < this.linhas; i++) {
     visitados[i] = [];
     for(var j = 0; j < this.colunas; j++){
@@ -381,40 +382,60 @@ Maze.prototype.buscaGulosa = function(verticeInicial, verticeObjetivo)
   var fim = this.matriz[verticeObjetivo[0]][verticeObjetivo[1]];
   var inicio = this.matriz[verticeInicial[0]][verticeInicial[1]];
   var atual = inicio;
+  var destino;
+  var menor;
   abertos.push(inicio);
   visitados[inicio.i][inicio.j] = true;  
   
-  
   //Analisando os filhos do primeiro vertice
-  atual = encontraMelhorHeuristicaFilho(this.matriz[i][j],matrizHeuristicas);
-
+  
   while(sucesso != true && fracasso != true)
   {
 
-   
-
+    if(matrizHeuristicas[atual.i][atual.j] === 0)  //Se a heurística da célula atual é 0, então esta célula é a solução
+    {
+      sucesso = true;
+    }else //Caso contrário
+    {
+      encontraMelhorHeuristicaFilho(atual, matrizHeuristicas, quatroMelhoresHeuristicas);//O algoritmo pega as heurísticas das quatro células vizinhas
+      menor = quatroMelhoresHeuristicas[0];
+      //Checa se há parede na direção desejada e se a direção desejada possui a melhor heurística
+      //Ao fim deste 'for', o destino com a melhor heurística estará salvo na variável "destino"
+      for(c = 0; c<4; c++)
+      {
+        if(atual.wall[c]===false)//Verifica se existe parede
+        {
+          if(visitados[atual.getVizinho(c,this.matriz).i][atual.getVizinho(c,this.matriz).j]===false)//Verifica se o vértice ainda não foi visitado
+          {
+            if(quatroMelhoresHeuristicas[c] < menor)//Verifica se o vértice em questão possui a menor heurística
+            {
+              menor = quatroMelhoresHeuristicas[c];
+              destino = atual.getVizinho(c,this.matriz);//Atribui a heurística ao vértice
+            }
+          }
+        }
+      }
+  
+      //Atual se transforma no novo destino, se preparando para o próximo laço 
+      atual = destino;
+      
+    }
   }
 
 
 }
 
-Maze.prototype.encontraMelhorHeuristicaFilho(vertice, matrizHeuristicas, visitados)
+Maze.prototype.encontraMelhorHeuristicaFilho(vertice, matrizHeuristicas, quatroMelhoresHeuristicas)
 {
   var vetorCaminhos = [];
-  var melhorHeuristica;
+  var melhorHeuristica, ene;
+  var retorno;
 
-  vetorCaminhos[0] = matrizHeuristicas[vertice.i][vertice.j+1];
-  vetorCaminhos[1] = matrizHeuristicas[vertice.i+1][vertice.j];
-  vetorCaminhos[0] = matrizHeuristicas[vertice.i][vertice.j-1];
-  vetorCaminhos[1] = matrizHeuristicas[vertice.i-1][vertice.j];
+  vetorCaminhos.push(matrizHeuristicas[vertice.i][vertice.j+1]);
+  vetorCaminhos.push(matrizHeuristicas[vertice.i+1][vertice.j]);
+  vetorCaminhos.push(matrizHeuristicas[vertice.i][vertice.j-1]);
+  vetorCaminhos.push(matrizHeuristicas[vertice.i-1][vertice.j]);
 
-  melhorHeuristica = vetorCaminhos[0];
+  quatroMelhoresHeuristicas = vetorCaminhos;
 
-  for(i = 0; i<4; i++)
-  {
-    if(melhorHeuristica < vetorCaminhos[i])
-      melhorHeuristica = vetorCaminhos[i];
-  }
-  
-  return melhorHeuristica;
 }
