@@ -384,19 +384,21 @@ Maze.prototype.buscaGulosa = function(verticeInicial, verticeObjetivo)
   var atual = inicio;
   var destino;
   var menor;
+  var pilhaBT;
   abertos.push(inicio);
+  pilhaBT.push(inicio);
   visitados[inicio.i][inicio.j] = true;  
-  
-  //Analisando os filhos do primeiro vertice
-  
+  var contador = 0;
+
   while(sucesso != true && fracasso != true)
   {
-
+    contador = 0;
     if(matrizHeuristicas[atual.i][atual.j] === 0)  //Se a heurística da célula atual é 0, então esta célula é a solução
     {
       sucesso = true;
     }else //Caso contrário
     {
+      atual = pilhaBT[solucao.length - 1];//O atual é sempre o último elemento da lista 
       encontraMelhorHeuristicaFilho(atual, matrizHeuristicas, quatroMelhoresHeuristicas);//O algoritmo pega as heurísticas das quatro células vizinhas
       menor = quatroMelhoresHeuristicas[0];
       //Checa se há parede na direção desejada e se a direção desejada possui a melhor heurística
@@ -410,9 +412,15 @@ Maze.prototype.buscaGulosa = function(verticeInicial, verticeObjetivo)
             if(quatroMelhoresHeuristicas[c] < menor)//Verifica se o vértice em questão possui a menor heurística
             {
               menor = quatroMelhoresHeuristicas[c];
-              destino = atual.getVizinho(c,this.matriz);//Atribui a heurística ao vértice
+              destino = atual.getVizinho(c,this.matriz);//Faz o destino ser o vértice com menor valor heurístico
             }
+          }else
+          {
+            contador++;
           }
+        }else
+        {
+          contador++;
         }
       }
   
@@ -420,9 +428,18 @@ Maze.prototype.buscaGulosa = function(verticeInicial, verticeObjetivo)
       atual = destino;
       
     }
+
+    if(contador >= 4){          ///Passou todas as operações possíveis -- Fazer o backtracking senão retornar fracasso
+    if(pilhaBT.length == 0){
+          fracasso = true;
+          break;
+     }
+          pilhaBT.pop();                 ///Desempilha e redireciona para o pai
+          n = pilhaBT[pilhaBT.length - 1];
+    }
+    
+
   }
-
-
 }
 
 Maze.prototype.encontraMelhorHeuristicaFilho(vertice, matrizHeuristicas, quatroMelhoresHeuristicas)
