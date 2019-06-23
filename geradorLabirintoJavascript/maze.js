@@ -145,7 +145,7 @@ Maze.prototype.heuristica = function (xInicial, yInicial, xFinal, yFinal){
 Maze.prototype.backtracking = function(verticeInicial, verticeObjetivo){
   var tempoInicial = performance.now();
   console.log("\n \t \t-------- Executando busca em Backtracking:  ------------\n \n");
-  var pilhaBT = [];
+  var abertos = [];                                //Pilha
   var visitados = [];//[linhas][cols];            //Matriz de visitados
   for (var i = 0; i < this.linhas; i++) {
     visitados[i] = [];
@@ -158,7 +158,7 @@ Maze.prototype.backtracking = function(verticeInicial, verticeObjetivo){
   var s = this.matriz[verticeInicial[0]][verticeInicial[1]];
   var n = s;
   visitados[n.i][n.j] = true;                                       //Visitando o primeiro vertice
-  pilhaBT.push(n);
+  abertos.push(n);
   var fracasso = false, sucesso = false;
   while((sucesso == false) && (fracasso == false)){
     var contador = 0;
@@ -170,7 +170,7 @@ Maze.prototype.backtracking = function(verticeInicial, verticeObjetivo){
         if(visitados[auxVizinho.i][auxVizinho.j] === false){        //vizinho não visitado
           n = auxVizinho;                                           //Atualiza para o próximo vértice
           visitados[n.i][n.j] = true;                               //Marca como visitado o próximo vértice
-          pilhaBT.push(n);
+          abertos.push(n);
           if(n === fim){                                            //Encontrou o objetivo
             sucesso = true;
           }
@@ -185,12 +185,12 @@ Maze.prototype.backtracking = function(verticeInicial, verticeObjetivo){
           fracasso = true;
       }
       else{
-          if(pilhaBT.length == 0){
+          if(abertos.length == 0){
              fracasso = true;
              break;
           }
-          pilhaBT.pop();                 ///Desempilha e redireciona para o pai
-          n = pilhaBT[pilhaBT.length - 1];
+          abertos.pop();                 ///Desempilha e redireciona para o pai
+          n = abertos[abertos.length - 1];
       }
     }
   }
@@ -203,14 +203,20 @@ Maze.prototype.backtracking = function(verticeInicial, verticeObjetivo){
     }
   }
   console.log("Status da busca: \n \n");
-  var texto = "\nPilha: ";
-  for(var i = 0; i < pilhaBT.length; i++){
-      texto = texto + "Celula["+pilhaBT[i].i+"]["+pilhaBT[i].j+"]"+ " -- ";
+  var texto = "\nAbertos (total ao final da execucao: " + abertos.length + "): ";
+  for(var i = 0; i < abertos.length; i++){
+      texto = texto + "Celula["+abertos[i].i+"]["+abertos[i].j+"]"+ " -- ";
   }
   texto = texto + "\n";
+  /*console.log(texto);
+  texto = "\Fechados (total ao final da execucao: " + fechados.length + "): ";
+  for(var i = 0; i < fechados.length; i++){
+      texto = texto + "Celula["+fechados[i].i+"]["+fechados[i].j+"]"+ " -- ";
+  }
+  texto = texto + "\n";*/
   console.log(texto);
+  texto = "";
   var numVisitados = 0;
-  texto = "\n\nQuem foi visitado: ";
   for (var i = 0; i < this.linhas; i++) {
     for(var j = 0; j < this.colunas; j++){
       if(visitados[i][j]){
@@ -251,39 +257,20 @@ Maze.prototype.buscaProfundidadeLimitada = function (verticeInicial, verticeObje
   limiteProfundidade++;
   visitados[s.i][s.j] = true;                                       //Visitando o primeiro vertice
   var fracasso = false, sucesso = false;
-  //pilhaBT.push(n);
-  //var fracasso = false, sucesso = false;
   while((sucesso == false) && (fracasso == false)){
         if(abertos.length == 0){                            ///Lista de abertos vazia
             fracasso = true;
         }
         else{
-            var n = abertos[abertos.length - 1];                         ///Topo da pilha
-            if(limiteProfundidade > limiteProfMax){                     ///Estabelece um limite de profundidade da busca
+            var n = abertos[abertos.length - 1];                      //Topo da pilha
+            if(limiteProfundidade > limiteProfMax){                   //Estabelece um limite de profundidade da busca
                 limiteProfundidade--;
                 fechados.push(n);
                 abertos.pop();
                 //solucao.push_back(n);
-                continue;                                           ///Continua o loop sem descer o código
+                continue;                                             //Continua o loop sem descer o código
             }
-            //fechados.push_back(n);
-            //abertos.pop_back();
-            //cout << n << endl;
-            //console.log("\n \n");
-            //console.log("Profundidade: " + limiteProfundidade);
-            //console.log("Abertos: " + limiteProfundidade);
-            /*cout << "Abertos: ";
-            for(int i = 0; i < abertos.size(); i++){
-                cout << abertos[i] << " -- ";
-            }
-            cout << endl;
-            cout << "Fechados: ";
-            for(int i = 0; i < fechados.size(); i++){
-                cout << fechados[i] << " -- ";
-            }
-            cout << endl << endl;*/
-
-            abertos.pop();
+            abertos.pop();                                            //Desempilha
             visitados[n.i][n.j] = true;                               //Marca como visitado o próximo vértice
             if(n == fim){
                 sucesso = true;
@@ -332,6 +319,12 @@ Maze.prototype.buscaProfundidadeLimitada = function (verticeInicial, verticeObje
     var texto = "\nAbertos (total ao final da execucao: " + abertos.length + "): ";
     for(var i = 0; i < abertos.length; i++){
         texto = texto + "Celula["+abertos[i].i+"]["+abertos[i].j+"]"+ " -- ";
+    }
+    texto = texto + "\n";
+    console.log(texto);
+    texto = "\Fechados (total ao final da execucao: " + fechados.length + "): ";
+    for(var i = 0; i < fechados.length; i++){
+        texto = texto + "Celula["+fechados[i].i+"]["+fechados[i].j+"]"+ " -- ";
     }
     texto = texto + "\n";
     console.log(texto);
@@ -359,6 +352,7 @@ Maze.prototype.buscaEmLargura = function (verticeInicial, verticeObjetivo){
   var fechados = [];
   var solucao = [];
   var visitados = [];                            //Matriz de visitados
+  var limiteProfundidade = 0;
   for (var i = 0; i < this.linhas; i++) {
     visitados[i] = [];
     for(var j = 0; j < this.colunas; j++){
@@ -377,59 +371,28 @@ Maze.prototype.buscaEmLargura = function (verticeInicial, verticeObjetivo){
             fracasso = true;
         }
         else{
-            var n = abertos[0];                                  ///Inicio da fila
-            /*if(limiteProfundidade > limiteProfMax){              ///Estabelece um limite de profundidade da busca
-                limiteProfundidade--;
-                fechados.push(n);
-                abertos.pop();
-                //solucao.push_back(n);
-                continue;                                           ///Continua o loop sem descer o código
-            }*/
-            //fechados.push_back(n);
-            //abertos.pop_back();
-            //cout << n << endl;
-            //console.log("\n \n");
-            //console.log("Profundidade: " + limiteProfundidade);
-            //console.log("Abertos: " + limiteProfundidade);
-            /*cout << "Abertos: ";
-            for(int i = 0; i < abertos.size(); i++){
-                cout << abertos[i] << " -- ";
-            }
-            cout << endl;
-            cout << "Fechados: ";
-            for(int i = 0; i < fechados.size(); i++){
-                cout << fechados[i] << " -- ";
-            }
-            cout << endl << endl;*/
+            var n = abertos[0];                                       ///Inicio da fila
             abertos.shift();                                          //Remove o elemento do começo da fila
             visitados[n.i][n.j] = true;                               //Marca como visitado o próximo vértice
             if(n == fim){
                 sucesso = true;
+                limiteProfundidade++;
                 fechados.push(n);
                 break;
             }
             else{
                 var contador = 0;
-                //var contVisitados = 3;
-                //var contVerticesNull = 0;
-                for (var i = s.wall.length - 1; i > -1; i--) {                  //Checa na direção contraria(esquerda,baixo,direita,cima) para poder retirar da pilha na ordem do vetor de paredes
+                for (var i = 0; i < s.wall.length; i++) {                       //Checa na direção contraria(esquerda,baixo,direita,cima) para poder retirar da pilha na ordem do vetor de paredes
                   if(n.wall[i] === false){                                      //Checa se não há parede
-                    //console.log(i + " ---- "+ n.i + " ------(n) BACKTRACKING ---- " + n.j);
-                    var auxVizinho = n.getVizinho(i, this.matriz);                   //Captura a celula do vizinho na matriz
-                    //console.log(auxVizinho.i + " ------ BACKTRACKING ---- " + auxVizinho.j);
+                    var auxVizinho = n.getVizinho(i, this.matriz);              //Captura a celula do vizinho na matriz
                     if(visitados[auxVizinho.i][auxVizinho.j] === false){        //vizinho não visitado
-                      var u = auxVizinho;                                           //Atualiza para o próximo vértice
+                      var u = auxVizinho;                                       //Atualiza para o próximo vértice
                       abertos.push(u);
-                      //pilhaBT.push(n);
                     }
                   }
-                  else{
-                    //contVisitados++;
-                  }
-                  //contador++;
                   contador++;
               }
-              if(contador >= 4){ ///Passou todas as operações possíveis -- Fazer o backtracking senão retornar fracasso
+              if(contador >= 4){                ///Passou todas as operações possíveis -- Fazer o backtracking senão retornar fracasso
                 limiteProfundidade++;
                 fechados.push(n);
                 solucao.push(n);
@@ -448,26 +411,30 @@ Maze.prototype.buscaEmLargura = function (verticeInicial, verticeObjetivo){
     }
 
     console.log("Status da busca: \n \n");
-    var texto = "\nAbertos (total ao final da execucao: " + abertos.length + "): ";
-    for(var i = 0; i < abertos.length; i++){
-        texto = texto + "Celula["+abertos[i].i+"]["+abertos[i].j+"]"+ " -- ";
-    }
-    texto = texto + "\n";
-    console.log(texto);
-    texto = "";
-    var numVisitados = 0;
-    for (var i = 0; i < this.linhas; i++) {
-      for(var j = 0; j < this.colunas; j++){
-        if(visitados[i][j]){
-            texto = texto + "Celula["+i+"]["+j+"] -- ";
-            numVisitados++;
+      var texto = "\nAbertos (total ao final da execucao: " + abertos.length + "): ";
+      for(var i = 0; i < abertos.length; i++){
+          texto = texto + "Celula["+abertos[i].i+"]["+abertos[i].j+"]"+ " -- ";
+      }
+      texto = texto + "\n";
+      console.log(texto);
+      texto = "\Fechados (total ao final da execucao: " + fechados.length + "): ";
+      for(var i = 0; i < fechados.length; i++){
+          texto = texto + "Celula["+fechados[i].i+"]["+fechados[i].j+"]"+ " -- ";
+      }
+      texto = texto + "\n";
+      console.log(texto);
+      texto = "";
+      var numVisitados = 0;
+      for (var i = 0; i < this.linhas; i++) {
+        for(var j = 0; j < this.colunas; j++){
+          if(visitados[i][j]){
+              texto = texto + "Celula["+i+"]["+j+"] -- ";
+              numVisitados++;
+          }
         }
       }
-    }
-    texto = "\n\nQuem foi visitado (total ao final da execucao: " + numVisitados + "): " + texto;
-    console.log(texto);
-    //console.log("\nQuantidade total de vértices visitados: " + numVisitados);
-    var tempoFinal = performance.now();
-    console.log("\nTempo de execução: " + parseFloat((tempoFinal - tempoInicial)).toFixed(3) + " milissegundos");    ///Mede o tempo somente na função
-
+      texto = "\n\nQuem foi visitado (total ao final da execucao: " + numVisitados + "): " + texto;
+      console.log(texto);
+      var tempoFinal = performance.now();
+      console.log("\nTempo de execução: " + parseFloat((tempoFinal - tempoInicial)).toFixed(3) + " milissegundos");    ///Mede o tempo somente na função
 }
