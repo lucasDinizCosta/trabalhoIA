@@ -358,34 +358,31 @@ Maze.prototype.buscaGulosa = function(verticeInicial, verticeObjetivo)
 {
 
   //CRIA MATRIZ AUXILIAR DE HEURÍSTICAS
-  var matrizAux = [];
-  for (var i = 0; i < linhas; i++) {  
-      matrizAux[i] = [];                      
-    for (var j = 0; j < colunas; j++) {
-      this.matrizAux[i][j] = this.heuristica(i,j,verticeObjetivo[0], verticeObjetivo[1]);
+  var matrizHeuristicas = [];
+  for (var i = 0; i < this.linhas; i++) {  
+      matrizHeuristicas[i] = [];                      
+    for (var j = 0; j < this.colunas; j++) {
+      matrizHeuristicas[i][j] = heuristica(i,j,verticeObjetivo[0], verticeObjetivo[1]);
+      console.log("linha "+i+" coluna "+j+" = "+matrizHeuristicas[i][j]);
     }
   }
 
   //CRIA AUXILIARES DO ALGORITMO
-  var fracasso = false, sucesso = false;
-  var abertos = [];
-  var fechados = [];
-  var solucao = [];
+  var fracasso = false, sucesso = false;//Fazem o algoritmo sair do loop para o caso de sucesso ou fracasso do algoritmo
   var visitados = [];//[linhas][cols];            //Matriz de visitados
-  var quatroMelhoresHeuristicas = [];
   for (var i = 0; i < this.linhas; i++) {
     visitados[i] = [];
     for(var j = 0; j < this.colunas; j++){
       visitados[i][j] = false;
     }
   }
-  var fim = this.matriz[verticeObjetivo[0]][verticeObjetivo[1]];
+
+  var fechados = [];
   var inicio = this.matriz[verticeInicial[0]][verticeInicial[1]];
-  var atual = inicio;
+  var atual = this.matriz[verticeInicial[0]][verticeInicial[1]];;
   var destino;
   var menor;
-  var pilhaBT;
-  abertos.push(inicio);
+  var pilhaBT = [];
   pilhaBT.push(inicio);
   visitados[inicio.i][inicio.j] = true;  
   var contador = 0;
@@ -393,29 +390,33 @@ Maze.prototype.buscaGulosa = function(verticeInicial, verticeObjetivo)
   while(sucesso != true && fracasso != true)
   {
     contador = 0;
+    console.log(matrizHeuristicas[atual.i][atual.j]);
     if(matrizHeuristicas[atual.i][atual.j] === 0)  //Se a heurística da célula atual é 0, então esta célula é a solução
     {
       sucesso = true;
     }else //Caso contrário
     {
-      atual = pilhaBT[solucao.length - 1];//O atual é sempre o último elemento da lista 
-      encontraMelhorHeuristicaFilho(atual, matrizHeuristicas, quatroMelhoresHeuristicas);//O algoritmo pega as heurísticas das quatro células vizinhas
-      menor = quatroMelhoresHeuristicas[0];
+      atual = pilhaBT[pilhaBT.length - 1];//O atual é sempre o último elemento da lista 
+      menor = 100000000000000000000000000000//MUDAR ISSO DEPOIS
       //Checa se há parede na direção desejada e se a direção desejada possui a melhor heurística
       //Ao fim deste 'for', o destino com a melhor heurística estará salvo na variável "destino"
+      console.log("celula "+atual.i+" e "+ atual.j);
       for(c = 0; c<4; c++)
       {
         if(atual.wall[c]===false)//Verifica se existe parede
         {
           if(visitados[atual.getVizinho(c,this.matriz).i][atual.getVizinho(c,this.matriz).j]===false)//Verifica se o vértice ainda não foi visitado
-          {
-            if(quatroMelhoresHeuristicas[c] < menor)//Verifica se o vértice em questão possui a menor heurística
+          { pilhaBT.push(atual.getVizinho(c,this.matriz));
+            if(matrizHeuristicas[atual.getVizinho(c,this.matriz).i][atual.getVizinho(c,this.matriz).j] < menor)//Verifica se o vértice em questão possui a menor heurística
             {
-              menor = quatroMelhoresHeuristicas[c];
+              console.log("melhor heurística");
+              visitados[atual.i][atual.j]=true;
+              menor = matrizHeuristicas[atual.getVizinho(c,this.matriz).i][atual.getVizinho(c,this.matriz).j];
               destino = atual.getVizinho(c,this.matriz);//Faz o destino ser o vértice com menor valor heurístico
             }
           }else
           {
+            console.log("ja foi visitado");
             contador++;
           }
         }else
@@ -423,36 +424,28 @@ Maze.prototype.buscaGulosa = function(verticeInicial, verticeObjetivo)
           contador++;
         }
       }
-  
+      atual = destino; 
+      console.log("proximo: "+"celula "+atual.i+" e "+ atual.j);
       //Atual se transforma no novo destino, se preparando para o próximo laço 
-      atual = destino;
-      
     }
 
     if(contador >= 4){          ///Passou todas as operações possíveis -- Fazer o backtracking senão retornar fracasso
-    if(pilhaBT.length == 0){
-          fracasso = true;
-          break;
-     }
-          pilhaBT.pop();                 ///Desempilha e redireciona para o pai
-          n = pilhaBT[pilhaBT.length - 1];
+      
+      fechados.push(atual);
+
+      if(pilhaBT[length-1] === inicio){
+        fracasso = true;
+    }
+    else{
+        if(pilhaBT.length === 0){
+           fracasso = true;
+           break;
+        }
+        pilhaBT.pop();                 ///Desempilha e redireciona para o pai
+    }
     }
     
 
   }
-}
-
-Maze.prototype.encontraMelhorHeuristicaFilho(vertice, matrizHeuristicas, quatroMelhoresHeuristicas)
-{
-  var vetorCaminhos = [];
-  var melhorHeuristica, ene;
-  var retorno;
-
-  vetorCaminhos.push(matrizHeuristicas[vertice.i][vertice.j+1]);
-  vetorCaminhos.push(matrizHeuristicas[vertice.i+1][vertice.j]);
-  vetorCaminhos.push(matrizHeuristicas[vertice.i][vertice.j-1]);
-  vetorCaminhos.push(matrizHeuristicas[vertice.i-1][vertice.j]);
-
-  quatroMelhoresHeuristicas = vetorCaminhos;
-
+  console.log("BUSCA GULOSAAAAAAAAAAA");
 }
