@@ -88,7 +88,7 @@
         <br></br>
         <button onclick="buscaProfundidadeLimitada()">Busca em Profundidade Limitada</button>
         <br></br>
-        <button onclick="buscaLargura()">Busca em Largura</button>
+        <button onclick="buscaEmLargura()">Busca em Largura</button>
         <br></br>
         <button onclick="buscaOrdenada()">Busca Ordenada</button>
         <br></br>
@@ -142,7 +142,6 @@
       var matriz;                             //Armazena o labirinto além do vetor grid, sendo este voltado para a realização das buscas
       var verticeInicial = [2];               //posicao 1 representa a identificação da linha e a 2 a identificação da coluna
       var verticeObjetivo = [2];
-
 
       function funcaoBotaoGerarCompleto(){
         valorLinhas = parseInt(document.getElementById("numLinhas").value);
@@ -200,7 +199,17 @@
       }
 
       function buscaProfundidadeLimitada(){
-        labirinto.buscaProfundidadeLimitada(verticeInicial, verticeObjetivo, 1000000);
+        var limite = prompt("Digite um valor para o limite da busca em profundidade: ", 1000000);
+        if (limite == null || limite < 2) {
+          alert("Digite um número valido maior que 1");
+        } else {
+          console.log(parseInt(limite));
+          labirinto.buscaProfundidadeLimitada(verticeInicial, verticeObjetivo, parseInt(limite));
+        }
+      }
+
+      function buscaEmLargura(){
+        labirinto.buscaEmLargura(verticeInicial, verticeObjetivo);
       }
 
       function buscaGulosa(){
