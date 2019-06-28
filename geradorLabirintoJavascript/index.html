@@ -63,6 +63,10 @@
     <button onclick="funcaoBotaoGerarCompleto()">Gerar(Completo)</button>
     <button onclick="funcaoBotaoGerarPassoAPasso()">Gerar(Passo a passo)</button>
     <br></br>
+    <h2>Exibir: </h2>
+    <br></br>
+    <input type="checkbox" id="cbCaminhoSolucao"><b> - Caminho Solução </b><br>
+    <br></br>
 
     <div id="container">
       <div id="left">
@@ -115,13 +119,6 @@
       *   Variáveis da geração e controle do labirinto *
       *                                                *
       **************************************************/
-
-      //var cols, linhas, espacamento = 20;
-      //var w = 40;
-      //var grid = [];                          //Vetor que armazena a matriz toda de maneira linear pra poder gerar o labirinto mais fácil usando backtrack recursivo
-      //var celulaAtual;
-      //var pilha = [];
-      //var terminoGeracaoPassos = true;
       var valorLinhas = 10, valorColunas = 10, valorLargura = 10, espacamento = 20;
       var labirinto = new Maze(20,20,10);
 
@@ -139,7 +136,6 @@
       *                                                *
       **************************************************/
 
-      var matriz;                             //Armazena o labirinto além do vetor grid, sendo este voltado para a realização das buscas
       var verticeInicial = [2];               //posicao 1 representa a identificação da linha e a 2 a identificação da coluna
       var verticeObjetivo = [2];
 
@@ -277,6 +273,11 @@
          break;
          default:
             console.log("Problema no controle de estados");
+       }
+
+       var caminhoSolucaoCB = document.getElementById("cbCaminhoSolucao").checked;
+       if(caminhoSolucaoCB){
+         labirinto.desenharSolucao(ctx, espacamento);
        }
        anterior = t;
        requestAnimationFrame(passo);

@@ -15,6 +15,7 @@ function Maze(linhas, colunas, larguraCelula){
     }
   }
   this.celulaAtual = this.grid[0];                                     //Expande a geração do labirinto a partir da célula{0,0}
+  this.caminhoSolucao = [];
 };
 
 
@@ -98,6 +99,25 @@ Maze.prototype.desenharGeracaoLabirintoPorPassos = function(ctx, espacamento, es
   }
   this.celulaAtual.colorido(ctx, this.larguraCelula, espacamento);
   this.gerarLabirintoPorPassos(estado);
+}
+
+Maze.prototype.desenharSolucao = function(ctx, espacamento){
+  for(var i = 0; i < this.caminhoSolucao.length; i++){
+    var x = this.caminhoSolucao[i].j * this.larguraCelula + espacamento;
+    var y = this.caminhoSolucao[i].i * this.larguraCelula + espacamento;
+    if(i == 0){
+      ctx.fillStyle = 'rgb(0,0,255)';   //Celula Inicial
+      ctx.fillRect(x+(this.larguraCelula/4), y+(this.larguraCelula/4), this.larguraCelula/2, this.larguraCelula/2);
+    }
+    else if(i == (this.caminhoSolucao.length - 1)){
+      ctx.fillStyle = 'rgb(255,0,0)';   //Celula INICIAL da busca
+      ctx.fillRect(x+(this.larguraCelula/4), y+(this.larguraCelula/4), this.larguraCelula/2, this.larguraCelula/2);
+    }
+    else{
+      ctx.fillStyle = 'rgb(0,200,0)';   //Celula FINAL da busca
+      ctx.fillRect(x+(this.larguraCelula/4), y+(this.larguraCelula/4), this.larguraCelula/2, this.larguraCelula/2);
+    }
+  }
 }
 
 /*****************************************************************
@@ -279,23 +299,15 @@ Maze.prototype.buscaProfundidadeLimitada = function (verticeInicial, verticeObje
             }
             else{
                 var contador = 0;
-                //var contVisitados = 3;
-                //var contVerticesNull = 0;
                 for (var i = s.wall.length - 1; i > -1; i--) {                  //Checa na direção contraria(esquerda,baixo,direita,cima) para poder retirar da pilha na ordem do vetor de paredes
                   if(n.wall[i] === false){                                      //Checa se não há parede
-                    //console.log(i + " ---- "+ n.i + " ------(n) BACKTRACKING ---- " + n.j);
-                    var auxVizinho = n.getVizinho(i, this.matriz);                   //Captura a celula do vizinho na matriz
-                    //console.log(auxVizinho.i + " ------ BACKTRACKING ---- " + auxVizinho.j);
+                    var auxVizinho = n.getVizinho(i, this.matriz);              //Captura a celula do vizinho na matriz
                     if(visitados[auxVizinho.i][auxVizinho.j] === false){        //vizinho não visitado
-                      var u = auxVizinho;                                           //Atualiza para o próximo vértice
+                      var u = auxVizinho;                                       //Atualiza para o próximo vértice
+                      u.pai = n;
                       abertos.push(u);
-                      //pilhaBT.push(n);
                     }
                   }
-                  else{
-                    //contVisitados++;
-                  }
-                  //contador++;
                   contador++;
               }
               if(contador >= 4){ ///Passou todas as operações possíveis -- Fazer o backtracking senão retornar fracasso
@@ -309,40 +321,85 @@ Maze.prototype.buscaProfundidadeLimitada = function (verticeInicial, verticeObje
 
     if(fracasso){
       console.log("\t \t ----- Fracasso em encontrar a solução!!! --- \n");
+      console.log("Status da busca: \n \n");
+      var texto = "\nAbertos (total ao final da execucao: " + abertos.length + "): ";
+      for(var i = 0; i < abertos.length; i++){
+          texto = texto + "Celula["+abertos[i].i+"]["+abertos[i].j+"]"+ " -- ";
+      }
+      texto = texto + "\n";
+      console.log(texto);
+      texto = "\Fechados (total ao final da execucao: " + fechados.length + "): ";
+      for(var i = 0; i < fechados.length; i++){
+          texto = texto + "Celula["+fechados[i].i+"]["+fechados[i].j+"]"+ " -- ";
+      }
+      texto = texto + "\n";
+      console.log(texto);
+      texto = "";
+      var numVisitados = 0;
+      for (var i = 0; i < this.linhas; i++) {
+        for(var j = 0; j < this.colunas; j++){
+          if(visitados[i][j]){
+              texto = texto + "Celula["+i+"]["+j+"] -- ";
+              numVisitados++;
+          }
+        }
+      }
+      texto = "\n\nQuem foi visitado (total ao final da execucao: " + numVisitados + "): " + texto;
+      console.log(texto);
+      //console.log("\nQuantidade total de vértices visitados: " + numVisitados);
+      var tempoFinal = performance.now();
+      console.log("\nTempo de execução: " + parseFloat((tempoFinal - tempoInicial)).toFixed(3) + " milissegundos");    ///Mede o tempo somente na função
     }
     else{
       if(sucesso){
         console.log("\t \t ----- Sucesso em encontrar a solução!!! --- \n");
-      }
-    }
-    console.log("Status da busca: \n \n");
-    var texto = "\nAbertos (total ao final da execucao: " + abertos.length + "): ";
-    for(var i = 0; i < abertos.length; i++){
-        texto = texto + "Celula["+abertos[i].i+"]["+abertos[i].j+"]"+ " -- ";
-    }
-    texto = texto + "\n";
-    console.log(texto);
-    texto = "\Fechados (total ao final da execucao: " + fechados.length + "): ";
-    for(var i = 0; i < fechados.length; i++){
-        texto = texto + "Celula["+fechados[i].i+"]["+fechados[i].j+"]"+ " -- ";
-    }
-    texto = texto + "\n";
-    console.log(texto);
-    texto = "";
-    var numVisitados = 0;
-    for (var i = 0; i < this.linhas; i++) {
-      for(var j = 0; j < this.colunas; j++){
-        if(visitados[i][j]){
-            texto = texto + "Celula["+i+"]["+j+"] -- ";
-            numVisitados++;
+        console.log("Status da busca: \n \n");
+        var texto = "\nAbertos (total ao final da execucao: " + abertos.length + "): ";
+        for(var i = 0; i < abertos.length; i++){
+            texto = texto + "Celula["+abertos[i].i+"]["+abertos[i].j+"]"+ " -- ";
         }
+        texto = texto + "\n";
+        console.log(texto);
+        texto = "\Fechados (total ao final da execucao: " + fechados.length + "): ";
+        for(var i = 0; i < fechados.length; i++){
+            texto = texto + "Celula["+fechados[i].i+"]["+fechados[i].j+"]"+ " -- ";
+        }
+        texto = texto + "\n";
+        console.log(texto);
+        texto = "";
+        var numVisitados = 0;
+        for (var i = 0; i < this.linhas; i++) {
+          for(var j = 0; j < this.colunas; j++){
+            if(visitados[i][j]){
+                texto = texto + "Celula["+i+"]["+j+"] -- ";
+                numVisitados++;
+            }
+          }
+        }
+        texto = "\n\nQuem foi visitado (total ao final da execucao: " + numVisitados + "): " + texto;
+        console.log(texto);
+        this.caminhoSolucao = [];
+        var aux = fechados[fechados.length - 1];
+        while(aux != null){
+          this.caminhoSolucao.push(aux);
+          aux = aux.pai;
+        }
+        this.caminhoSolucao.reverse();                                               //Inverte o vetor
+        texto = "Caminho da solução (Total: "+ this.caminhoSolucao.length + "): ";
+        for(var i = 0; i < this.caminhoSolucao.length; i++){
+          texto = texto + "Celula["+this.caminhoSolucao[i].i+"]["+this.caminhoSolucao[i].j+"] -- "
+        }
+        console.log(texto);
+        // Encontrar o caminho até a raiz da solução
+        // Encontrar o fator médio de ramificação
+
+
+        //console.log("\nQuantidade total de vértices visitados: " + numVisitados);
+        var tempoFinal = performance.now();
+        console.log("\nTempo de execução: " + parseFloat((tempoFinal - tempoInicial)).toFixed(3) + " milissegundos");    ///Mede o tempo somente na função
       }
     }
-    texto = "\n\nQuem foi visitado (total ao final da execucao: " + numVisitados + "): " + texto;
-    console.log(texto);
-    //console.log("\nQuantidade total de vértices visitados: " + numVisitados);
-    var tempoFinal = performance.now();
-    console.log("\nTempo de execução: " + parseFloat((tempoFinal - tempoInicial)).toFixed(3) + " milissegundos");    ///Mede o tempo somente na função
+
 }
 
 Maze.prototype.buscaEmLargura = function (verticeInicial, verticeObjetivo){
@@ -417,12 +474,14 @@ Maze.prototype.buscaEmLargura = function (verticeInicial, verticeObjetivo){
       }
       texto = texto + "\n";
       console.log(texto);
+
       texto = "\Fechados (total ao final da execucao: " + fechados.length + "): ";
       for(var i = 0; i < fechados.length; i++){
           texto = texto + "Celula["+fechados[i].i+"]["+fechados[i].j+"]"+ " -- ";
       }
       texto = texto + "\n";
       console.log(texto);
+
       texto = "";
       var numVisitados = 0;
       for (var i = 0; i < this.linhas; i++) {
@@ -435,6 +494,7 @@ Maze.prototype.buscaEmLargura = function (verticeInicial, verticeObjetivo){
       }
       texto = "\n\nQuem foi visitado (total ao final da execucao: " + numVisitados + "): " + texto;
       console.log(texto);
+
       var tempoFinal = performance.now();
       console.log("\nTempo de execução: " + parseFloat((tempoFinal - tempoInicial)).toFixed(3) + " milissegundos");    ///Mede o tempo somente na função
 }
@@ -444,8 +504,8 @@ Maze.prototype.buscaGulosa = function(verticeInicial, verticeObjetivo)
 
   //CRIA MATRIZ AUXILIAR DE HEURÍSTICAS
   var matrizHeuristicas = [];
-  for (var i = 0; i < this.linhas; i++) {  
-      matrizHeuristicas[i] = [];                      
+  for (var i = 0; i < this.linhas; i++) {
+      matrizHeuristicas[i] = [];
     for (var j = 0; j < this.colunas; j++) {
       matrizHeuristicas[i][j] = heuristica(i,j,verticeObjetivo[0], verticeObjetivo[1]);
       console.log("linha "+i+" coluna "+j+" = "+matrizHeuristicas[i][j]);
@@ -469,7 +529,7 @@ Maze.prototype.buscaGulosa = function(verticeInicial, verticeObjetivo)
   var menor;
   var pilhaBT = [];
   pilhaBT.push(inicio);
-  visitados[inicio.i][inicio.j] = true;  
+  visitados[inicio.i][inicio.j] = true;
   var contador = 0;
 
   while(sucesso != true && fracasso != true)
@@ -481,7 +541,7 @@ Maze.prototype.buscaGulosa = function(verticeInicial, verticeObjetivo)
       sucesso = true;
     }else //Caso contrário
     {
-      atual = pilhaBT[pilhaBT.length - 1];//O atual é sempre o último elemento da lista 
+      atual = pilhaBT[pilhaBT.length - 1];//O atual é sempre o último elemento da lista
       menor = 100000000000000000000000000000//MUDAR ISSO DEPOIS
       //Checa se há parede na direção desejada e se a direção desejada possui a melhor heurística
       //Ao fim deste 'for', o destino com a melhor heurística estará salvo na variável "destino"
@@ -509,13 +569,13 @@ Maze.prototype.buscaGulosa = function(verticeInicial, verticeObjetivo)
           contador++;
         }
       }
-      atual = destino; 
+      atual = destino;
       console.log("proximo: "+"celula "+atual.i+" e "+ atual.j);
-      //Atual se transforma no novo destino, se preparando para o próximo laço 
+      //Atual se transforma no novo destino, se preparando para o próximo laço
     }
 
     if(contador >= 4){          ///Passou todas as operações possíveis -- Fazer o backtracking senão retornar fracasso
-      
+
       fechados.push(atual);
 
       if(pilhaBT[length-1] === inicio){
@@ -529,7 +589,7 @@ Maze.prototype.buscaGulosa = function(verticeInicial, verticeObjetivo)
         pilhaBT.pop();                 ///Desempilha e redireciona para o pai
     }
     }
-    
+
 
   }
   console.log("BUSCA GULOSAAAAAAAAAAA");

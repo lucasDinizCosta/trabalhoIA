@@ -4,6 +4,7 @@ function Cell(i, j){
   this.wall = [true,true,true,true];   //Paredes(cima, direita, baixo, esquerda)
   this.visited = false;
   this.verticeBusca = -1;             //0 => vertice inicial, 1 => vértice final
+  this.pai = null;                    //Para auxiliar a encontrar o caminho da solução
 };
 
 Cell.prototype.checarVizinhos = function(grid, cols, linhas){
@@ -83,8 +84,6 @@ Cell.prototype.colorido = function(ctx, w, espacamento){
     ctx.fillStyle = 'rgb(200,0,0)';   //Celula FINAL da busca
     ctx.fillRect(x, y, w, w);
   }
-
-
 }
 
 Cell.prototype.show = function(ctx, w, espacamento){
