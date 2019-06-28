@@ -65,7 +65,8 @@
     <br></br>
     <h2>Exibir: </h2>
     <br></br>
-    <input type="checkbox" id="cbCaminhoSolucao"><b> - Caminho Solução </b><br>
+    <input type="checkbox" id="cbCaminhoSolucao"><b> - Caminho Solução &emsp;</b>
+    <input type="checkbox" id="cdLinhasGrade"><b> - Linhas de Grade &emsp;</b>
     <br></br>
 
     <div id="container">
@@ -119,15 +120,15 @@
       *   Variáveis da geração e controle do labirinto *
       *                                                *
       **************************************************/
-      var valorLinhas = 10, valorColunas = 10, valorLargura = 10, espacamento = 20;
-      var labirinto = new Maze(20,20,10);
+      var valorLinhas = 10, valorColunas = 10, valorLargura = 20, espacamento = 30;
+      var labirinto = new Maze(valorLinhas,valorColunas,valorLargura);
 
-      /**
-      *   Variaveis do controle de estado:
-      *   0 => Não faz nada;
-      *   1 => Desenha labirinto;
-      *   2 => Desenha labirinto por passos;
-      */
+      /**********************************************
+      *   Variaveis do controle de estado:          *
+      *   0 => Não faz nada;                        *
+      *   1 => Desenha labirinto;                   *
+      *   2 => Desenha labirinto por passos;        *
+      ***********************************************/
       var estado = 0;
 
       /*************************************************
@@ -275,9 +276,13 @@
             console.log("Problema no controle de estados");
        }
 
-       var caminhoSolucaoCB = document.getElementById("cbCaminhoSolucao").checked;
-       if(caminhoSolucaoCB){
+       var checkBoxDados = document.getElementById("cbCaminhoSolucao").checked;
+       if(checkBoxDados){                             //Desenhar solução
          labirinto.desenharSolucao(ctx, espacamento);
+       }
+       checkBoxDados = document.getElementById("cdLinhasGrade").checked;
+       if(checkBoxDados){
+         labirinto.desenharLinhasGrade(ctx, espacamento);
        }
        anterior = t;
        requestAnimationFrame(passo);

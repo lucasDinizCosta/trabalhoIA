@@ -106,17 +106,50 @@ Maze.prototype.desenharSolucao = function(ctx, espacamento){
     var x = this.caminhoSolucao[i].j * this.larguraCelula + espacamento;
     var y = this.caminhoSolucao[i].i * this.larguraCelula + espacamento;
     if(i == 0){
-      ctx.fillStyle = 'rgb(0,0,255)';   //Celula Inicial
-      ctx.fillRect(x+(this.larguraCelula/4), y+(this.larguraCelula/4), this.larguraCelula/2, this.larguraCelula/2);
+      ctx.fillStyle = 'rgb(0,0,255)';   //Celula INICIAL da busca
+      ctx.fillRect(x + (this.larguraCelula/4), y + (this.larguraCelula/4), this.larguraCelula/2, this.larguraCelula/2);
     }
     else if(i == (this.caminhoSolucao.length - 1)){
-      ctx.fillStyle = 'rgb(255,0,0)';   //Celula INICIAL da busca
-      ctx.fillRect(x+(this.larguraCelula/4), y+(this.larguraCelula/4), this.larguraCelula/2, this.larguraCelula/2);
+      ctx.fillStyle = 'rgb(255,0,0)';   //Celula FINAL da busca
+      ctx.fillRect(x + (this.larguraCelula/4), y + (this.larguraCelula/4), this.larguraCelula/2, this.larguraCelula/2);
     }
     else{
-      ctx.fillStyle = 'rgb(0,200,0)';   //Celula FINAL da busca
-      ctx.fillRect(x+(this.larguraCelula/4), y+(this.larguraCelula/4), this.larguraCelula/2, this.larguraCelula/2);
+      ctx.fillStyle = 'rgb(0,200,0)';   //Caminho
+      ctx.fillRect(x + (this.larguraCelula/4), y + (this.larguraCelula/4), this.larguraCelula/2, this.larguraCelula/2);
     }
+  }
+}
+
+Maze.prototype.desenharLinhasGrade = function(ctx, espacamento){
+  ctx.strokeStyle = 'black';
+  for (var i = 0; i < this.linhas; i++) {                         ///Cria a estrutura básica do labirinto
+    for (var j = 0; j < this.colunas; j++){
+      var x = this.matriz[i][j].j * this.larguraCelula + espacamento;
+      var y = this.matriz[i][j].i * this.larguraCelula + espacamento;
+      ctx.strokeRect(x, y, this.larguraCelula, this.larguraCelula);
+    }
+  }
+
+  ctx.fillStyle = 'black';
+  ctx.textAlign = "center";
+  if(this.larguraCelula > 30){
+    ctx.font = "12px Arial Black";
+  }
+  else{
+    ctx.font = "8px Arial Black";
+  }
+
+  for (var i = 0; i < this.linhas; i++) {                         ///Cria a estrutura básica do labirinto
+    var x = this.matriz[0][i].j * this.larguraCelula + espacamento + this.larguraCelula/3;
+    var y = this.matriz[0][0].i * this.larguraCelula + espacamento - 8;
+    ctx.fillText(i+"", x, y);
+
+  }
+
+  for (var j = 0; j < this.colunas; j++) {                         ///Cria a estrutura básica do labirinto
+    var x = this.matriz[0][0].j + espacamento/2;
+    var y = this.matriz[j][0].i * this.larguraCelula + espacamento + this.larguraCelula/2;
+    ctx.fillText(j+"", x, y);
   }
 }
 
