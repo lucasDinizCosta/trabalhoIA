@@ -153,12 +153,12 @@
 
       function funcaoBotaoGerarPassoAPasso(){
         valorLinhas = parseInt(document.getElementById("numLinhas").value);
-        valorColunas = parseInt(document.getElementById("numColunas").value);     ///Converte pra inteiro o valor digitado
+        valorColunas = parseInt(document.getElementById("numColunas").value);             //Converte pra inteiro o valor digitado
         valorLargura = parseInt(document.getElementById("numLarguraCelula").value);
-        tela.height = Math.ceil((valorLinhas * valorLargura)+espacamento*2);                ///Acerta as medições do canvas conforme o valor digitado pelo usuário
+        tela.height = Math.ceil((valorLinhas * valorLargura)+espacamento*2);              //Acerta as medições do canvas conforme o valor digitado pelo usuário
         tela.width = Math.ceil((valorColunas * valorLargura)+espacamento*2);
         labirinto = new Maze(valorLinhas,valorColunas,valorLargura);
-        labirinto.terminoGeracaoPassos = false;                                           ///Atribui como falso para o começo da geração por passos
+        labirinto.terminoGeracaoPassos = false;                                           //Atribui como falso para o começo da geração por passos
         labirinto.gerarLabirintoPorPassos(estado);
         estado = 2;
       }
@@ -184,8 +184,6 @@
             }
             else{
               console.log("Validado");
-              //matriz[verticeInicial[0]][verticeInicial[1]].verticeBusca = 0;
-              //matriz[verticeObjetivo[0]][verticeObjetivo[1]].verticeBusca = 1;
             }
           }
         }
