@@ -36,6 +36,35 @@ Cell.prototype.checarVizinhos = function(grid, cols, linhas){
   }
 }
 
+Cell.prototype.retornaVizinhos = function(grid, cols, linhas){
+  var vizinhos = [];
+  var cima     = grid[this.index(this.i, this.j-1, cols, linhas)];
+  var direita  = grid[this.index(this.i+1, this.j, cols, linhas)];
+  var baixo    = grid[this.index(this.i, this.j+1, cols, linhas)];
+  var esquerda = grid[this.index(this.i-1, this.j, cols, linhas)];
+
+  if(cima && !cima.visited){ //Celula de cima não foi visitada
+    vizinhos.push(cima);
+  }
+  if(direita && !direita.visited){ //Celula da direita não foi visitada
+    vizinhos.push(direita);
+  }
+  if(baixo && !baixo.visited){ //Celula de baixo não foi visitada
+    vizinhos.push(baixo);
+  }
+  if(esquerda && !esquerda.visited){ //Celula da esquerda não foi visitada
+    vizinhos.push(esquerda);
+  }
+
+  if(vizinhos.length > 0){    ///Tem vizinhos não visitados
+    var r = Math.floor(Math.random() * (vizinhos.length - 0) ) + 0; //var r = Math.floor(Math.random(0, vizinhos.length))   ///Escolhe um vizinho
+    return vizinhos;       ///Retorna o vizinho sorteado e não visitado
+  }
+  else{
+    return undefined;
+  }
+}
+
 /************************************************************
 *         getVizinho():                                     *
 *  -> Retorna a célula vizinha conforme o indice da parede  *

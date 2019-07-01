@@ -402,7 +402,7 @@ Maze.prototype.buscaProfundidadeLimitada = function (verticeInicial, verticeObje
   var s = this.matriz[verticeInicial[0]][verticeInicial[1]];
   abertos.push(s);
   limiteProfundidade++;
-  visitados[s.i][s.j] = true;                                       //Visitando o primeiro vertice
+  visitados[s.i][s.j] = true;                               //Visitando o primeiro vertice
   var fracasso = false, sucesso = false;
   while((sucesso == false) && (fracasso == false)){
         if(abertos.length == 0){                            ///Lista de abertos vazia
@@ -731,6 +731,14 @@ Maze.prototype.buscaEmLargura = function (verticeInicial, verticeObjetivo){
 Maze.prototype.buscaGulosa = function(verticeInicial, verticeObjetivo)
 {
 
+  var visitados = [];                            //Matriz de visitados
+  for (var i = 0; i < this.linhas; i++) {
+    visitados[i] = [];
+    for(var j = 0; j < this.colunas; j++){
+      visitados[i][j] = false;
+    }
+  }
+
   //CRIA MATRIZ AUXILIAR DE HEURÍSTICAS
   var matrizHeuristicas = [];
   for (var i = 0; i < this.linhas; i++) {
@@ -740,8 +748,102 @@ Maze.prototype.buscaGulosa = function(verticeInicial, verticeObjetivo)
       console.log("linha "+i+" coluna "+j+" = "+matrizHeuristicas[i][j]);
     }
   }
+  
+  var pilhaBT = [];
 
-  //CRIA AUXILIARES DO ALGORITMO
+  var celulaInicial = this.matriz[verticeInicial[0]][verticeInicial[1]];
+
+  ///Posicoes iniciais
+  var navegante = this.escolheMelhorCaminho(celulaInicial, matrizHeuristicas, visitados);
+  
+  pilhaBT.push(celulaInicial);
+  pilhaBT.push(navegante);
+
+  console.log("MATRIZ HEURISTICAS"+matrizHeuristicas[navegante.i][navegante.j]);
+
+  
+  var sucesso = false, fracasso = false;
+  var aux;
+  while(sucesso === false && fracasso === false)
+  {
+    console.log(navegante.i+" e "+navegante.j);
+      if(navegante === this.matriz[verticeObjetivo[0]][verticeObjetivo[1]])
+      {
+        console.log(navegante.i+" e "+navegante.j);
+        sucesso = true;
+      }else
+      {
+
+        if(visitados[navegante.i][navegante.j] === true)
+        {
+            aux = this.escolheMelhorCaminho(navegante,matrizHeuristicas,visitados);
+            if(aux===navegante)
+            {
+              pilhaBT.pop();
+              if(pilhaBT.length===0)
+              {
+                fracasso = true;
+              }else
+              {
+                navegante = pilhaBT[pilhaBT.length-1]; 
+              }
+            }else{
+              navegante = aux;
+            }
+        }else
+        {
+          navegante = this.escolheMelhorCaminho(navegante, matrizHeuristicas, visitados);
+        }
+      }
+  }
+  
+}
+
+Maze.prototype.escolheMelhorCaminho = function(celula, matrizHeuristicas, visitados){
+
+  var vizinhos = [];
+  var contadorVizinhos=0;
+
+  for(var i = 0; i<celula.wall.length; i++)
+  {
+    if(celula.wall[i] === false && visitados[celula.getVizinho(i,this.matriz).i][celula.getVizinho(i,this.matriz).j]===false)
+    { 
+      vizinhos.push(celula.getVizinho(i,this.matriz));
+      contadorVizinhos++;
+    }
+  }
+
+  if(contadorVizinhos === 0)
+  {
+    visitados[celula.i][celula.j] = true;
+    return celula;
+  }else
+  {
+
+    var melhor = matrizHeuristicas[vizinhos[0].i][vizinhos[0].j];
+    var retorno = 0;
+  
+  
+      for(var o = 0; o<vizinhos.length; o++)
+      {
+          if(matrizHeuristicas[vizinhos[o].i][vizinhos[o].j]<melhor)
+          {
+            melhor = matrizHeuristicas[vizinhos[o].i][vizinhos[o].j];
+            retorno = i;
+          } 
+      }
+  
+    
+    visitados[celula.i][celula.j] = true;
+    return this.matriz[vizinhos[retorno].i][vizinhos[retorno].j];
+    
+  }
+
+}
+
+
+
+/*//CRIA AUXILIARES DO ALGORITMO
   var fracasso = false, sucesso = false;//Fazem o algoritmo sair do loop para o caso de sucesso ou fracasso do algoritmo
   var visitados = [];//[linhas][cols];            //Matriz de visitados
   for (var i = 0; i < this.linhas; i++) {
@@ -821,5 +923,4 @@ Maze.prototype.buscaGulosa = function(verticeInicial, verticeObjetivo)
 
 
   }
-  console.log("BUSCA GULOSAAAAAAAAAAA");
-}
+  console.log("BUSCA GULOSAAAAAAAAAAA");*/
