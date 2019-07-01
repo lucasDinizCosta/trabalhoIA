@@ -766,10 +766,11 @@ Maze.prototype.buscaGulosa = function(verticeInicial, verticeObjetivo)
   var aux;
   while(sucesso === false && fracasso === false)
   {
+    visitados[navegante.i][navegante.j] = true;
     console.log(navegante.i+" e "+navegante.j);
       if(navegante === this.matriz[verticeObjetivo[0]][verticeObjetivo[1]])
       {
-        console.log(navegante.i+" e "+navegante.j);
+        console.log("SUCESSO"+navegante.i+" e "+navegante.j);
         sucesso = true;
       }else
       {
@@ -779,16 +780,20 @@ Maze.prototype.buscaGulosa = function(verticeInicial, verticeObjetivo)
             aux = this.escolheMelhorCaminho(navegante,matrizHeuristicas,visitados);
             if(aux===navegante)
             {
+              console.log("não tem caminho");
               pilhaBT.pop();
               if(pilhaBT.length===0)
               {
+                console.log("FRACASSO"+navegante.i+" e "+navegante.j)
                 fracasso = true;
               }else
               {
+                console.log("volta pro pai");
                 navegante = pilhaBT[pilhaBT.length-1]; 
               }
             }else{
               navegante = aux;
+              pilhaBT.push(navegante);
             }
         }else
         {
@@ -829,7 +834,7 @@ Maze.prototype.escolheMelhorCaminho = function(celula, matrizHeuristicas, visita
           if(matrizHeuristicas[vizinhos[o].i][vizinhos[o].j]<melhor)
           {
             melhor = matrizHeuristicas[vizinhos[o].i][vizinhos[o].j];
-            retorno = i;
+            retorno = o;
           } 
       }
   
