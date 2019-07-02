@@ -846,7 +846,60 @@ Maze.prototype.escolheMelhorCaminho = function(celula, matrizHeuristicas, visita
 
 }
 
+Maze.prototype.buscaAEstrela = function(verticeInicial, verticeObjetivo){
 
+  //CRIA MATRIZ AUXILIAR DE HEURÍSTICAS
+  var matrizHeuristicas = [];
+  for (var i = 0; i < this.linhas; i++) {
+      matrizHeuristicas[i] = [];
+    for (var j = 0; j < this.colunas; j++) {
+      matrizHeuristicas[i][j] = heuristica(i,j,verticeObjetivo[0], verticeObjetivo[1]);
+      console.log("linha "+i+" coluna "+j+" = "+matrizHeuristicas[i][j]);
+    }
+  }
+  
+  var pilhaBT = [];
+
+  var celulaInicial = this.matriz[verticeInicial[0]][verticeInicial[1]];
+
+  var caminhosAbertos = [];
+
+  var navegante = escolheMelhorCaminhoAEstrela();
+
+}
+
+Maze.prototype.verificaPosicaoNavegante(x, y, navegante)
+{
+  if(navegante.i === x && navegante.j === y)
+  {
+    return true;
+  }else
+  {
+    return false;
+  }
+}
+
+Maze.prototype.retornaFilhosCelula(celula)
+{
+  var filhos = [];
+
+  for(var n = 0; n < 4; n++)
+  {
+    if(celula.wall[n] === false)
+    filhos.push(celula.getVizinho(celula.wall[n],this.matriz));
+  }
+
+  return filhos;
+}
+
+Maze.prototype.atualizaListaCaminhosAbertos = function(caminhosAbertos,navegante){
+}
+
+Maze.prototype.escolheMelhorCaminhoAEstrela = function(caminhosAbertos){
+}
+
+Maze.prototype.calculaCaminhoAEstrela = function(celula){
+}
 
 /*//CRIA AUXILIARES DO ALGORITMO
   var fracasso = false, sucesso = false;//Fazem o algoritmo sair do loop para o caso de sucesso ou fracasso do algoritmo
