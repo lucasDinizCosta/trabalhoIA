@@ -19,27 +19,27 @@
            text-align: center;}
     input{margin:0; padding: 0; border:1px solid black; line-height:20px;}
     #container {margin: auto; display: flex; height: 100%; width:10000px; font-size: 0;}
-    #left, #middle{display: inline-block; zoom: 1; vertical-align: top; font-size: 15px;}
-    #left {margin-right: 20px;/** border:2px solid black; */}
-    #middle {flex:1; /**border:2px solid black ; margin-right: 10px;*/}
+    #canvasPosicao, #algoritmosDeBuscaPos, #tabAbertos, #tabFechados, #tabHeuristica, #tab4, #tab5{display: inline-block; zoom: 1; vertical-align: top; font-size: 15px;}
+    #canvasPosicao, #algoritmosDeBuscaPos, #tabAbertos, #tabFechados, #tabHeuristica, #tab4{margin-right: 20px}
+    #tab5 {flex:1}
     canvas{border:2px solid black ;}
-    </style>
-    <style>
-      table {
-        font-family: arial, sans-serif;
-        border-collapse: collapse;
-        width: 100%;
-      }
-
-      td, th {
-        border: 1px solid #dddddd;
-        text-align: left;
-        padding: 8px;
-      }
-
-      tr:nth-child(even) {
-        background-color: #dddddd;
-      }
+    table {
+      display: table;
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 300px;
+    }
+    td, th {
+      border: 2px solid black;
+      text-align: center;
+      padding: 8px;
+      background-color: white;
+    }
+    th{
+        background-color: #4CAF50;
+        color: black;
+        font-weight: bold;
+    }
     </style>
   </head>
   <body>
@@ -69,12 +69,13 @@
     <input type="checkbox" id="cdLinhasGrade"><b> - Linhas de Grade &emsp;</b>
     <br></br>
     <div id="container">
-      <div id="left">
+        #canvasPosicao, #algoritmosDeBuscaPos, #tabAbertos, #tabFechados, #tabHeuristica, #tab4, #tab5{display: inline-block; zoom: 1; vertical-align: top; font-size: 15px;}
+      <div id="canvasPosicao">
         <canvas id="canvas" width="400" height="400">
     		    Seu navegador não suporta canvas!
     	  </canvas>
       </div>
-      <div id="middle">
+      <div id="algoritmosDeBuscaPos">
         <h3>&emsp;&emsp;&emsp;Algoritmos de busca:</h3>
         <h3>Vértice inicial:</h3>
         <label><b>Linha: </b></label>
@@ -103,8 +104,100 @@
         <button onclick="buscaIDAEstrela()">Busca IDA*</button>
         <br></br>
       </div>
-      <div id="right">
-        teste
+      <div id="tabAbertos">
+          <table id="tabelaListaAbertos">
+           <tr>
+            <th colspan="2">Lista de Abertos</th>
+          </tr>
+          <tr>
+            <td>Row1 cell1</td>
+            <td>Row1 cell2</td>
+          </tr>
+          <tr>
+            <td>Row2 cell1</td>
+            <td>Row2 cell2</td>
+          </tr>
+          <tr>
+            <td>Row3 cell1</td>
+            <td>Row3 cell2</td>
+          </tr>
+        </table>
+      </div>
+      <div id="tabFechados">
+          <table id="tabelaListaFechados">
+           <tr>
+            <th colspan="2">Lista de Fechados</th>
+          </tr>
+          <tr>
+            <td>Row1 cell1</td>
+            <td>Row1 cell2</td>
+          </tr>
+          <tr>
+            <td>Row2 cell1</td>
+            <td>Row2 cell2</td>
+          </tr>
+          <tr>
+            <td>Row3 cell1</td>
+            <td>Row3 cell2</td>
+          </tr>
+        </table>
+      </div>
+      <div id="tabHeuristica">
+          <table id="tabelaListaHeurística">
+           <tr>
+            <th colspan="2">Lista de Heurística</th>
+          </tr>
+          <tr>
+            <td>Row1 cell1</td>
+            <td>Row1 cell2</td>
+          </tr>
+          <tr>
+            <td>Row2 cell1</td>
+            <td>Row2 cell2</td>
+          </tr>
+          <tr>
+            <td>Row3 cell1</td>
+            <td>Row3 cell2</td>
+          </tr>
+        </table>
+      </div>
+      <div id="tab4">
+          <table id="tabelaLista4">
+           <tr>
+            <th colspan="2">Lista de Fechados</th>
+          </tr>
+          <tr>
+            <td>Row1 cell1</td>
+            <td>Row1 cell2</td>
+          </tr>
+          <tr>
+            <td>Row2 cell1</td>
+            <td>Row2 cell2</td>
+          </tr>
+          <tr>
+            <td>Row3 cell1</td>
+            <td>Row3 cell2</td>
+          </tr>
+        </table>
+    </div>
+      <div id="tab5">
+          <table id="tabelaLista5">
+           <tr>
+            <th colspan="2">Lista de Fechados</th>
+          </tr>
+          <tr>
+            <td>Row1 cell1</td>
+            <td>Row1 cell2</td>
+          </tr>
+          <tr>
+            <td>Row2 cell1</td>
+            <td>Row2 cell2</td>
+          </tr>
+          <tr>
+            <td>Row3 cell1</td>
+            <td>Row3 cell2</td>
+          </tr>
+        </table>
       </div>
     </div>
 
@@ -177,11 +270,11 @@
         verticeObjetivo[0] = parseInt(document.getElementById("numLinhaVertObjetivo").value);
         verticeObjetivo[1] = parseInt(document.getElementById("numColunaVertObjetivo").value);
         if(verticeInicial[0] >= labirinto.linhas){
-          alert("Vértice inicial ultrapassando as linhas do labirintos: {" + 0 + " -> "+ (linhas-1) + "}");
+          alert("Vértice inicial ultrapassando as linhas do labirintos: {" + 0 + " -> "+ (linhas - 1) + "}");
         }
         else{
           if(verticeObjetivo[0] >= labirinto.linhas){
-            alert("Vértice objetivo ultrapassando as linhas do labirintos: {" + 0 + " -> "+ (linhas-1) + "}");
+            alert("Vértice objetivo ultrapassando as linhas do labirintos: {" + 0 + " -> "+ (linhas - 1) + "}");
           }
           else{
             if(verticeInicial[1] >= labirinto.colunas){
@@ -206,7 +299,6 @@
         if (limite == null || limite < 2) {
           alert("Digite um número valido maior que 1");
         } else {
-          console.log(parseInt(limite));
           labirinto.buscaProfundidadeLimitada(verticeInicial, verticeObjetivo, parseInt(limite));
         }
       }
@@ -224,10 +316,10 @@
       }
 
       function tableCreate(){
-        var body = document.body,
-            tbl  = document.createElement('table');
-        tbl.style.width  = '100px';
-        tbl.style.border = '1px solid black';
+        /*var body = document.body,
+            tbl  = document.createElement('tabelaListaAbertos');
+        //tbl.style.width  = '100px';
+        //tbl.style.border = '1px solid black';
 
         for(var i = 0; i < 5; i++){
             var tr = tbl.insertRow();
@@ -237,27 +329,32 @@
                 } else {
                     var td = tr.insertCell();
                     td.appendChild(document.createTextNode('Cell'));
-                    td.style.border = '1px solid black';
+                    //td.style.border = '1px solid black';
                     if(i == 1 && j == 1){
                         td.setAttribute('rowSpan', '2');
                     }
                 }
             }
         }
-        body.appendChild(tbl);
-    }
-    tableCreate();
+        body.appendChild(tbl);*/
 
-      function heuristica(xInicial, yInicial, xFinal, yFinal){
-        if(Math.abs(xFinal - xInicial)  <  Math.abs(yFinal - yInicial))
-          return Number(Math.abs(xInicial - xFinal) + Math.abs((yInicial - yFinal) - Math.abs(xInicial - xFinal)));
-        else
-        if(Math.abs(xFinal - xInicial)  >  Math.abs(yFinal - yInicial))
-          return Number(Math.abs(yInicial - yFinal) + Math.abs((xInicial - xFinal) - Math.abs(yInicial - yFinal)));
-        else
-        if(Math.abs(xFinal - xInicial)  ==  Math.abs(yFinal - yInicial))
-          return Number(Math.abs(xInicial - xFinal));
-      }
+            // Find a <table> element with id="myTable":
+            var table = document.getElementById("tabelaListaAbertos");
+
+            // Create an empty <tr> element and add it to the 1st position of the table:
+            //var row = table.insertRow(0);
+            var x = document.getElementById("tabelaListaAbertos").rows.length;
+            var row = table.insertRow(x);
+
+
+            // Insert new cells (<td> elements) at the 1st and 2nd position of the "new" <tr> element:
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+
+            // Add some text to the new cells:
+            cell1.innerHTML = "NEW CELL1";
+            cell2.innerHTML = "NEW CELL2";
+        }
 
       requestAnimationFrame(passo);
 
