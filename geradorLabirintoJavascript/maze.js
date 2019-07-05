@@ -748,20 +748,20 @@ Maze.prototype.buscaGulosa = function(verticeInicial, verticeObjetivo)
       console.log("linha "+i+" coluna "+j+" = "+matrizHeuristicas[i][j]);
     }
   }
-  
+
   var pilhaBT = [];
 
   var celulaInicial = this.matriz[verticeInicial[0]][verticeInicial[1]];
 
   ///Posicoes iniciais
   var navegante = this.escolheMelhorCaminho(celulaInicial, matrizHeuristicas, visitados);
-  
+
   pilhaBT.push(celulaInicial);
   pilhaBT.push(navegante);
 
   console.log("MATRIZ HEURISTICAS"+matrizHeuristicas[navegante.i][navegante.j]);
 
-  
+
   var sucesso = false, fracasso = false;
   var aux;
   while(sucesso === false && fracasso === false)
@@ -789,7 +789,7 @@ Maze.prototype.buscaGulosa = function(verticeInicial, verticeObjetivo)
               }else
               {
                 console.log("volta pro pai");
-                navegante = pilhaBT[pilhaBT.length-1]; 
+                navegante = pilhaBT[pilhaBT.length-1];
               }
             }else{
               navegante = aux;
@@ -801,7 +801,7 @@ Maze.prototype.buscaGulosa = function(verticeInicial, verticeObjetivo)
         }
       }
   }
-  
+
 }
 
 Maze.prototype.escolheMelhorCaminho = function(celula, matrizHeuristicas, visitados){
@@ -812,7 +812,7 @@ Maze.prototype.escolheMelhorCaminho = function(celula, matrizHeuristicas, visita
   for(var i = 0; i<celula.wall.length; i++)
   {
     if(celula.wall[i] === false && visitados[celula.getVizinho(i,this.matriz).i][celula.getVizinho(i,this.matriz).j]===false)
-    { 
+    {
       vizinhos.push(celula.getVizinho(i,this.matriz));
       contadorVizinhos++;
     }
@@ -827,21 +827,21 @@ Maze.prototype.escolheMelhorCaminho = function(celula, matrizHeuristicas, visita
 
     var melhor = matrizHeuristicas[vizinhos[0].i][vizinhos[0].j];
     var retorno = 0;
-  
-  
+
+
       for(var o = 0; o<vizinhos.length; o++)
       {
           if(matrizHeuristicas[vizinhos[o].i][vizinhos[o].j]<melhor)
           {
             melhor = matrizHeuristicas[vizinhos[o].i][vizinhos[o].j];
             retorno = o;
-          } 
+          }
       }
-  
-    
+
+
     visitados[celula.i][celula.j] = true;
     return this.matriz[vizinhos[retorno].i][vizinhos[retorno].j];
-    
+
   }
 
 }
@@ -857,7 +857,7 @@ Maze.prototype.buscaAEstrela = function(verticeInicial, verticeObjetivo){
       console.log("linha "+i+" coluna "+j+" = "+matrizHeuristicas[i][j]);
     }
   }
-  
+
   var pilhaBT = [];
 
   var celulaInicial = this.matriz[verticeInicial[0]][verticeInicial[1]];
@@ -868,7 +868,7 @@ Maze.prototype.buscaAEstrela = function(verticeInicial, verticeObjetivo){
 
 }
 
-Maze.prototype.verificaPosicaoNavegante(x, y, navegante)
+Maze.prototype.verificaPosicaoNavegante = function(x, y, navegante)
 {
   if(navegante.i === x && navegante.j === y)
   {
@@ -879,7 +879,7 @@ Maze.prototype.verificaPosicaoNavegante(x, y, navegante)
   }
 }
 
-Maze.prototype.retornaFilhosCelula(celula)
+Maze.prototype.retornaFilhosCelula = function(celula)
 {
   var filhos = [];
 
