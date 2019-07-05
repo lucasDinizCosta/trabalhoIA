@@ -15,7 +15,8 @@
     </style>
     <style type="text/css">
     * {margin: 0; padding: 0;}
-    button{margin:0; padding: 3px; border:1px solid black;line-height:15px;}
+    button{margin-left: 5px; padding: 3px; border:1px solid black;line-height:15px;
+           text-align: center;}
     input{margin:0; padding: 0; border:1px solid black; line-height:20px;}
     #container {margin: auto; display: flex; height: 100%; width:10000px; font-size: 0;}
     #left, #middle{display: inline-block; zoom: 1; vertical-align: top; font-size: 15px;}
@@ -44,26 +45,29 @@
   <body>
     <h1 align="center"><u>Trabalho de Inteligência Artificial</u> (2019/1)</h1>
     <br></br>
-    <h2>&emsp;&emsp;Tema: Buscas em um labirinto </h2>
-    <h2>&emsp;&emsp;Estratégia de geração do labirinto: backtrack recursivo(Recursive backtracker) </h3>
+    <h2>&emsp;&emsp;Tema: Buscas em um labirinto. </h2>
+    <h2>&emsp;&emsp;Estratégia de geração do labirinto: backtrack recursivo(Recursive backtracker) </h2>
     <br></br>
     <h2>&emsp;&emsp;Geração de labirinto</h2>
     <br></br>
     <label><b>Linhas: </b></label>
-    <input id="numLinhas" type="number" min="20" max="200">
+    <input id="numLinhas" type="number" min="20" max="200" style="width:70px">
     <label><b>Colunas: </b></label>
     <input id="numColunas" type="number" min="20" max="200">
     <label><b>Largura celula: </b></label>
     <input id="numLarguraCelula" type="number" min="20" max="40">
-    <button onclick="funcaoBotaoGerarCompleto()">Gerar(Completo)</button>
-    <button onclick="funcaoBotaoGerarPassoAPasso()">Gerar(Passo a passo)</button>
+    <br></br>
+    <label><b>Gerar: </b></label>
+    <button onclick="funcaoBotaoGerarCompleto()" style="width:70px; margin-right:22px">Completo</button>
+    <button onclick="funcaoBotaoGerarPassoAPasso()"style="margin-right:20px;">Passo a passo</button>
+    <label><b>Diversificar: </b></label>
+    <button onclick="funcaoGerarVariacao()">Aplicar</button>
     <br></br>
     <h2>Exibir: </h2>
     <br></br>
     <input type="checkbox" id="cbCaminhoSolucao"><b> - Caminho Solução &emsp;</b>
     <input type="checkbox" id="cdLinhasGrade"><b> - Linhas de Grade &emsp;</b>
     <br></br>
-
     <div id="container">
       <div id="left">
         <canvas id="canvas" width="400" height="400">
@@ -136,20 +140,29 @@
       var verticeObjetivo = [2];
 
       function funcaoBotaoGerarCompleto(){
-        valorLinhas = parseInt(document.getElementById("numLinhas").value);
+        valorLinhas  = parseInt(document.getElementById("numLinhas").value);
         valorColunas = parseInt(document.getElementById("numColunas").value);     ///Converte pra inteiro o valor digitado
         valorLargura = parseInt(document.getElementById("numLarguraCelula").value);
+        if((document.getElementById("numLinhas").value === "")||(document.getElementById("numColunas").value === "")||(document.getElementById("numLarguraCelula").value === "")){
+            //Valor padrao caso for vazio as caixas de texto
+            valorLinhas = 10, valorColunas = 10, valorLargura = 20, espacamento = 30;
+        }
         tela.height = Math.ceil((valorLinhas * valorLargura)+espacamento*2);                ///Acerta as medições do canvas conforme o valor digitado pelo usuário
         tela.width = Math.ceil((valorColunas * valorLargura)+espacamento*2);
         labirinto = new Maze(valorLinhas,valorColunas,valorLargura);
         labirinto.gerarLabirintoCompleto();
         estado = 1;
+
       }
 
       function funcaoBotaoGerarPassoAPasso(){
         valorLinhas = parseInt(document.getElementById("numLinhas").value);
         valorColunas = parseInt(document.getElementById("numColunas").value);             //Converte pra inteiro o valor digitado
         valorLargura = parseInt(document.getElementById("numLarguraCelula").value);
+        if((document.getElementById("numLinhas").value === "")||(document.getElementById("numColunas").value === "")||(document.getElementById("numLarguraCelula").value === "")){
+            //Valor padrao caso for vazio as caixas de texto
+            valorLinhas = 10, valorColunas = 10, valorLargura = 20, espacamento = 30;
+        }
         tela.height = Math.ceil((valorLinhas * valorLargura)+espacamento*2);              //Acerta as medições do canvas conforme o valor digitado pelo usuário
         tela.width = Math.ceil((valorColunas * valorLargura)+espacamento*2);
         labirinto = new Maze(valorLinhas,valorColunas,valorLargura);
