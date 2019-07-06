@@ -201,13 +201,22 @@ Maze.prototype.insereNaTabelaTexto = function(nomeTabela, qtdCelulasColuna, text
             var row = table.insertRow();    //Deixando vazio ele insere uma linha na ultima posicao
             var cell1 = row.insertCell(0);
             var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
             cell1.innerHTML = texto[0];
             cell2.innerHTML = texto[1];
+            cell3.innerHTML = " - ";
         }
         break;
         case 3://Caso tenha tabelas com 3 elementos -- ACERTAR AQUI
         {
-
+            var table = document.getElementById(nomeTabela);
+            var row = table.insertRow();    //Deixando vazio ele insere uma linha na ultima posicao
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            cell1.innerHTML = texto[0];
+            cell2.innerHTML = texto[1];
+            cell3.innerHTML = texto[2];
         }
         break;
     }
@@ -307,12 +316,18 @@ Maze.prototype.backtracking = function(verticeInicial, verticeObjetivo){
     var tempoFinal = performance.now();
     console.log("\nTempo de execução: " + parseFloat((tempoFinal - tempoInicial)).toFixed(3) + " milissegundos");    ///Mede o tempo somente na função
     this.caminhoSolucao = [];
+
+    //Atualiza as estatísticas no HTML
+    document.getElementById("statusBusca").style="color:red; font-weight:bold";
+    document.getElementById("statusBusca").innerHTML="FRACASSO!!!";
+    document.getElementById("custoSolucao").innerHTML="0";
+    document.getElementById("qtdNosExpandidos").innerHTML="";
+    document.getElementById("tempoExecucao").innerHTML="";
   }
   else{
     if(sucesso){
       console.log("\t \t ----- Sucesso em encontrar a solução!!! --- \n");
       console.log("Status da busca: \n \n");
-
       var texto = "\nAbertos - Nós expandidos (total ao final da execucao: " + abertos.length + "): ";
       for(var i = 0; i < abertos.length; i++){
           texto = texto + "Celula["+abertos[i].i+"]["+abertos[i].j+"]"+ " -- ";
@@ -398,6 +413,17 @@ Maze.prototype.backtracking = function(verticeInicial, verticeObjetivo){
 
       var tempoFinal = performance.now();
       console.log("\nTempo de execução: " + parseFloat((tempoFinal - tempoInicial)).toFixed(3) + " milissegundos");    ///Mede o tempo somente na função
+
+
+      //Atualiza as estatísticas no HTML
+      document.getElementById("profEstatistica").innerHTML=(profundidade + "");
+      document.getElementById("statusBusca").style="color:green; font-weight:bold";
+      document.getElementById("statusBusca").innerHTML="SUCESSO!!!";
+      document.getElementById("custoSolucao").innerHTML=(this.caminhoSolucao.length + "");
+      document.getElementById("qtdNosExpandidos").innerHTML="";
+      document.getElementById("qtdNosVisitados").innerHTML=(numVisitados + "");
+      document.getElementById("fatorRamificacaoMediaBusca").innerHTML=(valorMedioRamificacao + "");
+      document.getElementById("tempoExecucao").innerHTML=(parseFloat((tempoFinal - tempoInicial)).toFixed(3) + " milissegundos");
     }
   }
 
@@ -501,6 +527,18 @@ Maze.prototype.buscaProfundidadeLimitada = function (verticeInicial, verticeObje
       //console.log("\nQuantidade total de vértices visitados: " + numVisitados);
       var tempoFinal = performance.now();
       console.log("\nTempo de execução: " + parseFloat((tempoFinal - tempoInicial)).toFixed(3) + " milissegundos");    ///Mede o tempo somente na função
+
+
+      //Atualiza as estatísticas no HTML
+      document.getElementById("profEstatistica").innerHTML=(limiteProfundidade + "");
+      document.getElementById("statusBusca").style="color:red; font-weight:bold";
+      document.getElementById("statusBusca").innerHTML="FRACASSO!!!";
+      document.getElementById("custoSolucao").innerHTML=("SEM SOLUCAO");
+      document.getElementById("qtdNosExpandidos").innerHTML="";
+      document.getElementById("qtdNosVisitados").innerHTML=(numVisitados + "");
+      document.getElementById("fatorRamificacaoMediaBusca").innerHTML=(valorMedioRamificacao + "");
+      document.getElementById("tempoExecucao").innerHTML=(parseFloat((tempoFinal - tempoInicial)).toFixed(3) + " milissegundos");
+
     }
     else{
       if(sucesso){
@@ -584,6 +622,18 @@ Maze.prototype.buscaProfundidadeLimitada = function (verticeInicial, verticeObje
         //console.log("\nQuantidade total de vértices visitados: " + numVisitados);
         var tempoFinal = performance.now();
         console.log("\nTempo de execução: " + parseFloat((tempoFinal - tempoInicial)).toFixed(3) + " milissegundos");    ///Mede o tempo somente na função
+
+
+
+        //Atualiza as estatísticas no HTML
+        document.getElementById("profEstatistica").innerHTML=(limiteProfundidade + "");
+        document.getElementById("statusBusca").style="color:green; font-weight:bold";
+        document.getElementById("statusBusca").innerHTML="SUCESSO!!!";
+        document.getElementById("custoSolucao").innerHTML=(this.caminhoSolucao.length + "");
+        document.getElementById("qtdNosExpandidos").innerHTML="";
+        document.getElementById("qtdNosVisitados").innerHTML=(numVisitados + "");
+        document.getElementById("fatorRamificacaoMediaBusca").innerHTML=(valorMedioRamificacao + "");
+        document.getElementById("tempoExecucao").innerHTML=(parseFloat((tempoFinal - tempoInicial)).toFixed(3) + " milissegundos");
       }
     }
 
@@ -755,6 +805,16 @@ Maze.prototype.buscaEmLargura = function (verticeInicial, verticeObjetivo){
 
         var tempoFinal = performance.now();
         console.log("\nTempo de execução: " + parseFloat((tempoFinal - tempoInicial)).toFixed(3) + " milissegundos");    ///Mede o tempo somente na função
+
+        //Atualiza as estatísticas no HTML
+        document.getElementById("profEstatistica").innerHTML=(profundidade + "");
+        document.getElementById("statusBusca").style="color:green; font-weight:bold";
+        document.getElementById("statusBusca").innerHTML="SUCESSO!!!";
+        document.getElementById("custoSolucao").innerHTML=(this.caminhoSolucao.length + "");
+        document.getElementById("qtdNosExpandidos").innerHTML="";
+        document.getElementById("qtdNosVisitados").innerHTML=(numVisitados + "");
+        document.getElementById("fatorRamificacaoMediaBusca").innerHTML=(valorMedioRamificacao + "");
+        document.getElementById("tempoExecucao").innerHTML=(parseFloat((tempoFinal - tempoInicial)).toFixed(3) + " milissegundos");
       }
     }
 }
@@ -775,7 +835,7 @@ Maze.prototype.buscaGulosa = function(verticeInicial, verticeObjetivo)
   for (var i = 0; i < this.linhas; i++) {
       matrizHeuristicas[i] = [];
     for (var j = 0; j < this.colunas; j++) {
-      matrizHeuristicas[i][j] = heuristica(i,j,verticeObjetivo[0], verticeObjetivo[1]);
+      matrizHeuristicas[i][j] = this.heuristica(i,j,verticeObjetivo[0], verticeObjetivo[1]);
       console.log("linha "+i+" coluna "+j+" = "+matrizHeuristicas[i][j]);
     }
   }
