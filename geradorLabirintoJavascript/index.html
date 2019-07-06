@@ -296,10 +296,17 @@
               alert("Vértice inicial ultrapassando as colunas do labirintos: {" + 0 + " -> "+ (cols-1) + "}");
             }
             else if(verticeObjetivo[1] >= labirinto.colunas){
-              alert("Vértice inicial ultrapassando as colunas do labirintos: {" + 0 + " -> "+ (cols-1) + "}");
+              alert("Vértice objetivo ultrapassando as colunas do labirintos: {" + 0 + " -> "+ (cols-1) + "}");
             }
             else{
               console.log("Validado");
+              var txt;
+              var r = confirm("Deseja testar para que as buscas NUNCA encontrem o vertice objetivo?");
+              if (r == true) {
+                  labirinto.criarMapaComFracassoProObjetivo(verticeObjetivo);
+              } else {
+                  txt = "You pressed Cancel!";
+              }
               document.getElementById("verticeInicialBuscaEstatistica").innerHTML=("["+ verticeInicial[0] + ", " + verticeInicial[1] + "]");
               document.getElementById("verticeObjetivoBuscaEstatistica").innerHTML=("["+ verticeObjetivo[0] + ", " + verticeObjetivo[1] + "]");
             }

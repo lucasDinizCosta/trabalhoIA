@@ -168,6 +168,42 @@ Maze.prototype.desenharLinhasGrade = function(ctx, espacamento){
 
 /*****************************************************************
 *                                                                *
+*                       addWalls(a, b):                          *
+*  -> Adicionar paredes entre celulas visando gerar um mapa sem  *
+*  caminho pra uma determinada celula e testar situações de      *
+*  fracasso.                                                     *
+******************************************************************/
+
+Maze.prototype.addWalls = function (a, b) {
+  var x = a.j - b.j;           ///Analisa a coluna
+  if (x === 1) {
+    a.wall[3] = true;
+    b.wall[1] = true;
+  } else if (x === -1) {
+    a.wall[1] = true;
+    b.wall[3] = true;
+  }
+  var y = a.i - b.i;           ///Analisa a linha
+  if (y === 1) {
+    a.wall[0] = true;
+    b.wall[2] = true;
+  } else if (y === -1) {
+    a.wall[2] = true;
+    b.wall[0] = true;
+  }
+}
+
+Maze.prototype.criarMapaComFracassoProObjetivo = function(verticeObjetivo){
+    var celulaFinal = this.matriz[verticeObjetivo[0]][verticeObjetivo[1]];
+    for (var i = 0; i < celulaFinal.wall.length; i++) {
+        if(celulaFinal.wall[i] === false){
+            this.addWalls(celulaFinal, celulaFinal.getVizinho(i, this.matriz));
+        }
+    }
+}
+
+/*****************************************************************
+*                                                                *
 *                       removeWalls(a, b):                       *
 *  -> Método importante para geração do labirinto em que remove  *
 *  as paredes entre duas células.                                *
@@ -294,12 +330,23 @@ Maze.prototype.backtracking = function(verticeInicial, verticeObjetivo){
   if(fracasso){
     console.log("\t \t ----- Fracasso em encontrar a solução!!! --- \n");
     console.log("Status da busca: \n \n");
-    var texto = "\nAbertos - nós expandidos (total ao final da execucao: " + abertos.length + "): ";
+
+    var texto = "\nAbertos - Nós expandidos (total ao final da execucao: " + abertos.length + "): ";
     for(var i = 0; i < abertos.length; i++){
         texto = texto + "Celula["+abertos[i].i+"]["+abertos[i].j+"]"+ " -- ";
+
+        //Adicionando na tabela do html
+        this.insereNaTabelaTexto("tabelaListaAbertos", 2, [(i + ""), ("Celula["+abertos[i].i+"]["+abertos[i].j+"]")]);
     }
-    texto = texto + "\n";
-    console.log(texto);
+    console.log(texto + "\n");
+
+    var texto = "\nFechados (total ao final da execucao: " + fechados.length + "): ";
+    for(var i = 0; i < fechados.length; i++){
+        texto = texto + "Celula["+fechados[i].i+"]["+fechados[i].j+"]"+ " -- \n";
+        this.insereNaTabelaTexto("tabelaListaFechados", 2, [(i + ""), ("Celula["+fechados[i].i+"]["+fechados[i].j+"]")]);
+    }
+    console.log(texto+"\n");
+
     texto = "";
     var numVisitados = 0;
     for (var i = 0; i < this.linhas; i++) {
@@ -318,11 +365,14 @@ Maze.prototype.backtracking = function(verticeInicial, verticeObjetivo){
     this.caminhoSolucao = [];
 
     //Atualiza as estatísticas no HTML
+    document.getElementById("profEstatistica").innerHTML=(profundidade + "");
     document.getElementById("statusBusca").style="color:red; font-weight:bold";
     document.getElementById("statusBusca").innerHTML="FRACASSO!!!";
-    document.getElementById("custoSolucao").innerHTML="0";
-    document.getElementById("qtdNosExpandidos").innerHTML="";
-    document.getElementById("tempoExecucao").innerHTML="";
+    document.getElementById("custoSolucao").innerHTML=" X ";
+    document.getElementById("qtdNosExpandidos").innerHTML=(abertos.length + "");
+    document.getElementById("qtdNosVisitados").innerHTML=(numVisitados + "");
+    //document.getElementById("fatorRamificacaoMediaBusca").innerHTML=(valorMedioRamificacao + "");
+    document.getElementById("tempoExecucao").innerHTML=(parseFloat((tempoFinal - tempoInicial)).toFixed(3) + " milissegundos");
   }
   else{
     if(sucesso){
