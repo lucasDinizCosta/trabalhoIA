@@ -193,6 +193,26 @@ Maze.prototype.removeWalls = function (a, b) {
   }
 }
 
+Maze.prototype.insereNaTabelaTexto = function(nomeTabela, qtdCelulasColuna, texto){
+    switch(qtdCelulasColuna){
+        case 2:
+        {
+            var table = document.getElementById(nomeTabela);
+            var row = table.insertRow();    //Deixando vazio ele insere uma linha na ultima posicao
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            cell1.innerHTML = texto[0];
+            cell2.innerHTML = texto[1];
+        }
+        break;
+        case 3://Caso tenha tabelas com 3 elementos -- ACERTAR AQUI
+        {
+
+        }
+        break;
+    }
+}
+
             /********************************
             *       Algoritmos de busca     *
             *********************************/
@@ -292,17 +312,22 @@ Maze.prototype.backtracking = function(verticeInicial, verticeObjetivo){
     if(sucesso){
       console.log("\t \t ----- Sucesso em encontrar a solução!!! --- \n");
       console.log("Status da busca: \n \n");
+
       var texto = "\nAbertos - Nós expandidos (total ao final da execucao: " + abertos.length + "): ";
       for(var i = 0; i < abertos.length; i++){
           texto = texto + "Celula["+abertos[i].i+"]["+abertos[i].j+"]"+ " -- ";
+
+          //Adicionando na tabela do html
+          this.insereNaTabelaTexto("tabelaListaAbertos", 2, [(i + ""), ("Celula["+abertos[i].i+"]["+abertos[i].j+"]")]);
       }
       console.log(texto + "\n");
 
       var texto = "\nFechados (total ao final da execucao: " + fechados.length + "): ";
       for(var i = 0; i < fechados.length; i++){
           texto = texto + "Celula["+fechados[i].i+"]["+fechados[i].j+"]"+ " -- \n";
+          this.insereNaTabelaTexto("tabelaListaFechados", 2, [(i + ""), ("Celula["+fechados[i].i+"]["+fechados[i].j+"]")]);
       }
-     console.log(texto+"\n");
+      console.log(texto+"\n");
 
       texto = "";
       var numVisitados = 0;
@@ -450,12 +475,14 @@ Maze.prototype.buscaProfundidadeLimitada = function (verticeInicial, verticeObje
       var texto = "\nAbertos (total ao final da execucao: " + abertos.length + "): ";
       for(var i = 0; i < abertos.length; i++){
           texto = texto + "Celula["+abertos[i].i+"]["+abertos[i].j+"]"+ " -- ";
+          this.insereNaTabelaTexto("tabelaListaAbertos", 2, [(i + ""), ("Celula["+abertos[i].i+"]["+abertos[i].j+"]")]);
       }
       texto = texto + "\n";
       console.log(texto);
       texto = "\Fechados (total ao final da execucao: " + fechados.length + "): ";
       for(var i = 0; i < fechados.length; i++){
           texto = texto + "Celula["+fechados[i].i+"]["+fechados[i].j+"]"+ " -- ";
+          this.insereNaTabelaTexto("tabelaListaFechados", 2, [(i + ""), ("Celula["+fechados[i].i+"]["+fechados[i].j+"]")]);
       }
       texto = texto + "\n";
       console.log(texto);
@@ -482,12 +509,14 @@ Maze.prototype.buscaProfundidadeLimitada = function (verticeInicial, verticeObje
         var texto = "\nAbertos (total ao final da execucao: " + abertos.length + "): ";
         for(var i = 0; i < abertos.length; i++){
             texto = texto + "Celula["+abertos[i].i+"]["+abertos[i].j+"]"+ " -- ";
+            this.insereNaTabelaTexto("tabelaListaAbertos", 2, [(i + ""), ("Celula["+abertos[i].i+"]["+abertos[i].j+"]")]);
         }
         texto = texto + "\n";
         console.log(texto);
         texto = "\Fechados (total ao final da execucao: " + fechados.length + "): ";
         for(var i = 0; i < fechados.length; i++){
             texto = texto + "Celula["+fechados[i].i+"]["+fechados[i].j+"]"+ " -- ";
+            this.insereNaTabelaTexto("tabelaListaFechados", 2, [(i + ""), ("Celula["+fechados[i].i+"]["+fechados[i].j+"]")]);
         }
         texto = texto + "\n";
         console.log(texto);
@@ -652,6 +681,7 @@ Maze.prototype.buscaEmLargura = function (verticeInicial, verticeObjetivo){
         var texto = "\nAbertos (total ao final da execucao: " + abertos.length + "): ";
         for(var i = 0; i < abertos.length; i++){
         texto = texto + "Celula["+abertos[i].i+"]["+abertos[i].j+"]"+ " -- ";
+        this.insereNaTabelaTexto("tabelaListaAbertos", 2, [(i + ""), ("Celula["+abertos[i].i+"]["+abertos[i].j+"]")]);
         }
         texto = texto + "\n";
         console.log(texto);
@@ -659,6 +689,7 @@ Maze.prototype.buscaEmLargura = function (verticeInicial, verticeObjetivo){
         texto = "\nFechados (total ao final da execucao: " + fechados.length + "): ";
         for(var i = 0; i < fechados.length; i++){
             texto = texto + "Celula["+fechados[i].i+"]["+fechados[i].j+"]"+ " -- ";
+            this.insereNaTabelaTexto("tabelaListaFechados", 2, [(i + ""), ("Celula["+fechados[i].i+"]["+fechados[i].j+"]")]);
         }
         texto = texto + "\n";
         console.log(texto);

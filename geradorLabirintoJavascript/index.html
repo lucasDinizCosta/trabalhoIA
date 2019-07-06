@@ -46,7 +46,7 @@
     <h1 align="center"><u>Trabalho de Inteligência Artificial</u> (2019/1)</h1>
     <br></br>
     <h2>&emsp;&emsp;Tema: Buscas em um labirinto. </h2>
-    <h2>&emsp;&emsp;Estratégia de geração do labirinto: backtrack recursivo(Recursive backtracker) </h2>
+    <h2>&emsp;&emsp;Estratégia de geração do labirinto: backtrack recursivo (Recursive backtracker)</h2>
     <br></br>
     <h2>&emsp;&emsp;Geração de labirinto</h2>
     <br></br>
@@ -55,19 +55,21 @@
     <label><b>Colunas: </b></label>
     <input id="numColunas" type="number" min="20" max="200">
     <label><b>Largura celula: </b></label>
-    <input id="numLarguraCelula" type="number" min="20" max="40">
+    <input id="numLarguraCelula" type="number" min="20" max="40" style="width:70px; margin-right:22px">
     <br></br>
     <label><b>Gerar: </b></label>
     <button onclick="funcaoBotaoGerarCompleto()" style="width:70px; margin-right:22px">Completo</button>
-    <button onclick="funcaoBotaoGerarPassoAPasso()"style="margin-right:20px;">Passo a passo</button>
+    <button onclick="funcaoBotaoGerarPassoAPasso()"style="margin-right:17px;">Passo a passo</button>
     <label><b>Diversificar: </b></label>
-    <button onclick="funcaoGerarVariacao()">Aplicar</button>
+    <button onclick="funcaoGerarVariacao()" style="width:70px; margin-right:20px">Aplicar</button>
     <br></br>
     <h2>Exibir: </h2>
     <br></br>
     <input type="checkbox" id="cbCaminhoSolucao"><b> - Caminho Solução &emsp;</b>
     <input type="checkbox" id="cdLinhasGrade"><b> - Linhas de Grade &emsp;</b>
     <br></br>
+
+
     <div id="container">
         #canvasPosicao, #algoritmosDeBuscaPos, #tabAbertos, #tabFechados, #tabHeuristica, #tab4, #tab5{display: inline-block; zoom: 1; vertical-align: top; font-size: 15px;}
       <div id="canvasPosicao">
@@ -110,16 +112,8 @@
             <th colspan="2">Lista de Abertos</th>
           </tr>
           <tr>
-            <td>Row1 cell1</td>
-            <td>Row1 cell2</td>
-          </tr>
-          <tr>
-            <td>Row2 cell1</td>
-            <td>Row2 cell2</td>
-          </tr>
-          <tr>
-            <td>Row3 cell1</td>
-            <td>Row3 cell2</td>
+            <th>ID</th>
+            <th>Elemento</th>
           </tr>
         </table>
       </div>
@@ -129,73 +123,41 @@
             <th colspan="2">Lista de Fechados</th>
           </tr>
           <tr>
-            <td>Row1 cell1</td>
-            <td>Row1 cell2</td>
-          </tr>
-          <tr>
-            <td>Row2 cell1</td>
-            <td>Row2 cell2</td>
-          </tr>
-          <tr>
-            <td>Row3 cell1</td>
-            <td>Row3 cell2</td>
+            <th>ID</th>
+            <th>Elemento</th>
           </tr>
         </table>
       </div>
       <div id="tabHeuristica">
-          <table id="tabelaListaHeurística">
+          <table id="tabelaListaHeuristica">
            <tr>
             <th colspan="2">Lista de Heurística</th>
           </tr>
           <tr>
-            <td>Row1 cell1</td>
-            <td>Row1 cell2</td>
-          </tr>
-          <tr>
-            <td>Row2 cell1</td>
-            <td>Row2 cell2</td>
-          </tr>
-          <tr>
-            <td>Row3 cell1</td>
-            <td>Row3 cell2</td>
+            <th>ID</th>
+            <th>Elemento</th>
           </tr>
         </table>
       </div>
       <div id="tab4">
           <table id="tabelaLista4">
            <tr>
-            <th colspan="2">Lista de Fechados</th>
+            <th colspan="2">Lista 4</th>
           </tr>
           <tr>
-            <td>Row1 cell1</td>
-            <td>Row1 cell2</td>
-          </tr>
-          <tr>
-            <td>Row2 cell1</td>
-            <td>Row2 cell2</td>
-          </tr>
-          <tr>
-            <td>Row3 cell1</td>
-            <td>Row3 cell2</td>
+            <th>ID</th>
+            <th>Elemento</th>
           </tr>
         </table>
     </div>
       <div id="tab5">
           <table id="tabelaLista5">
            <tr>
-            <th colspan="2">Lista de Fechados</th>
+            <th colspan="2">Lista 5</th>
           </tr>
           <tr>
-            <td>Row1 cell1</td>
-            <td>Row1 cell2</td>
-          </tr>
-          <tr>
-            <td>Row2 cell1</td>
-            <td>Row2 cell2</td>
-          </tr>
-          <tr>
-            <td>Row3 cell1</td>
-            <td>Row3 cell2</td>
+            <th>ID</th>
+            <th>Elemento</th>
           </tr>
         </table>
       </div>
@@ -233,6 +195,7 @@
       var verticeObjetivo = [2];
 
       function funcaoBotaoGerarCompleto(){
+        limparTabelasAntigas();
         valorLinhas  = parseInt(document.getElementById("numLinhas").value);
         valorColunas = parseInt(document.getElementById("numColunas").value);     ///Converte pra inteiro o valor digitado
         valorLargura = parseInt(document.getElementById("numLarguraCelula").value);
@@ -249,6 +212,7 @@
       }
 
       function funcaoBotaoGerarPassoAPasso(){
+        limparTabelasAntigas();
         valorLinhas = parseInt(document.getElementById("numLinhas").value);
         valorColunas = parseInt(document.getElementById("numColunas").value);             //Converte pra inteiro o valor digitado
         valorLargura = parseInt(document.getElementById("numLarguraCelula").value);
@@ -291,10 +255,12 @@
       }
 
       function backtracking(){
+        limparTabelasAntigas();
         labirinto.backtracking(verticeInicial, verticeObjetivo);
       }
 
       function buscaProfundidadeLimitada(){
+        limparTabelasAntigas();
         var limite = prompt("Digite um valor para o limite da busca em profundidade: ", 1000000);
         if (limite == null || limite < 2) {
           alert("Digite um número valido maior que 1");
@@ -304,57 +270,48 @@
       }
 
       function buscaEmLargura(){
+        limparTabelasAntigas();
         labirinto.buscaEmLargura(verticeInicial, verticeObjetivo);
       }
 
       function buscaGulosa(){
+        limparTabelasAntigas();
         labirinto.buscaGulosa(verticeInicial, verticeObjetivo);
       }
 
       function buscaAEstrela(){
+        limparTabelasAntigas();
         labirinto.buscaAEstrela(verticeInicial, verticeObjetivo);
       }
 
-      function tableCreate(){
-        /*var body = document.body,
-            tbl  = document.createElement('tabelaListaAbertos');
-        //tbl.style.width  = '100px';
-        //tbl.style.border = '1px solid black';
-
-        for(var i = 0; i < 5; i++){
-            var tr = tbl.insertRow();
-            for(var j = 0; j < 1; j++){
-                if(i == 2 && j == 1){
+      function limparTabelasAntigas(){
+         for (var i = 0; i < 4; i++) {
+             var nomeTabela = "";
+             switch (i) {
+                 case 0:
+                    nomeTabela = "tabelaListaAbertos";
+                     break;
+                 case 1:
+                    nomeTabela = "tabelaListaFechados";
                     break;
-                } else {
-                    var td = tr.insertCell();
-                    td.appendChild(document.createTextNode('Cell'));
-                    //td.style.border = '1px solid black';
-                    if(i == 1 && j == 1){
-                        td.setAttribute('rowSpan', '2');
-                    }
-                }
-            }
-        }
-        body.appendChild(tbl);*/
-
-            // Find a <table> element with id="myTable":
-            var table = document.getElementById("tabelaListaAbertos");
-
-            // Create an empty <tr> element and add it to the 1st position of the table:
-            //var row = table.insertRow(0);
-            var x = document.getElementById("tabelaListaAbertos").rows.length;
-            var row = table.insertRow(x);
-
-
-            // Insert new cells (<td> elements) at the 1st and 2nd position of the "new" <tr> element:
-            var cell1 = row.insertCell(0);
-            var cell2 = row.insertCell(1);
-
-            // Add some text to the new cells:
-            cell1.innerHTML = "NEW CELL1";
-            cell2.innerHTML = "NEW CELL2";
-        }
+                 case 2:
+                    nomeTabela = "tabelaListaHeuristica";
+                    break;
+                 case 3:
+                    nomeTabela = "tabelaLista4";
+                    break;
+                 case 3:
+                    nomeTabela = "tabelaLista5";
+                    break;
+                 default:
+             }
+             var tabela = document.getElementById(nomeTabela);
+             while(tabela.rows.length > 2){
+                 var ultimaLinha = document.getElementById(nomeTabela).rows.length - 1;
+                 tabela.deleteRow(ultimaLinha);
+             }
+         }
+      }
 
       requestAnimationFrame(passo);
 
