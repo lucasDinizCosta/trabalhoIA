@@ -185,7 +185,7 @@
           <tr>
             <th style="width:100px">ID</th>
             <th>Elemento</th>
-            <th>Valor</th>
+            <th>Custo</th>
           </tr>
         </table>
       </div>
@@ -344,10 +344,22 @@
         labirinto.buscaGulosa(verticeInicial, verticeObjetivo);
       }
 
+      function buscaOrdenada(){
+        limparDadosBusca();
+        document.getElementById("tipoBuscaEstatistica").innerHTML="Busca Ordenada";
+        labirinto.buscaOrdenada(verticeInicial, verticeObjetivo);
+      }
+
       function buscaAEstrela(){
         limparDadosBusca();
         document.getElementById("tipoBuscaEstatistica").innerHTML="Busca em A*";
         labirinto.buscaAEstrela(verticeInicial, verticeObjetivo);
+      }
+
+      function buscaIDAEstrela(){
+        limparDadosBusca();
+        document.getElementById("tipoBuscaEstatistica").innerHTML="Busca em IDA*";
+        labirinto.buscaIDAEstrela(verticeInicial, verticeObjetivo);
       }
 
       function limparDadosBusca(){
