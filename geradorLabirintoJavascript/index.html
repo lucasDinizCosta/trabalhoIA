@@ -19,10 +19,10 @@
            text-align: center;}
     input{margin:0; padding: 0; border:1px solid black; line-height:20px; text-align: center;}
     #container {margin: auto; display: flex; height: 100%; width:50000px; font-size: 0;}
-    #canvasPosicao, #algoritmosDeBuscaPos, #estatisticasDeBusca, #tabAbertos, #tabFechados, #tabHeuristica, #tab4, #tab5{display: inline-block; zoom: 1; vertical-align: top; font-size: 15px;}
-    #canvasPosicao, #algoritmosDeBuscaPos, #estatisticasDeBusca, #tabAbertos, #tabFechados, #tabHeuristica, #tab4{margin-right: 20px}
-    #estatisticasDeBusca{margin-left: 20px;width: 350px;}
-    #tab5 {flex:1}
+    #canvasPosicao, #algoritmosDeBuscaPos, #estatisticasDeBusca, #tabAbertos, #tabFechados, #tabHeuristica{display: inline-block; zoom: 1; vertical-align: top; font-size: 15px;}
+    #canvasPosicao, #algoritmosDeBuscaPos, #estatisticasDeBusca, #tabAbertos, #tabFechados, #tabHeuristica {margin-right: 20px}
+    #estatisticasDeBusca{margin-left: 20px; width: 350px;}
+    #tabHeuristica {flex:1}
     canvas{border:2px solid black ;}
     table {
       display: table;
@@ -78,7 +78,7 @@
 
 
     <div id="container">
-        #canvasPosicao, #algoritmosDeBuscaPos, #tabAbertos, #tabFechados, #tabHeuristica, #tab4, #tab5{display: inline-block; zoom: 1; vertical-align: top; font-size: 15px;}
+        <!--#canvasPosicao, #algoritmosDeBuscaPos, #tabAbertos, #tabFechados, #tabHeuristica, #tab4, #tab5{display: inline-block; zoom: 1; vertical-align: top; font-size: 15px;}-->
       <div id="canvasPosicao">
         <canvas id="canvas" width="400" height="400">
     		    Seu navegador não suporta canvas!
@@ -189,30 +189,6 @@
           </tr>
         </table>
       </div>
-      <div id="tab4">
-          <table id="tabelaLista4">
-           <tr>
-            <th colspan="3">Lista 4</th>
-          </tr>
-          <tr>
-            <th style="width:100px">ID</th>
-            <th>Elemento</th>
-            <th>Custo</th>
-          </tr>
-        </table>
-    </div>
-      <div id="tab5">
-          <table id="tabelaLista5">
-           <tr>
-            <th colspan="3">Lista 5</th>
-          </tr>
-          <tr>
-            <th style="width:100px">ID</th>
-            <th>Elemento</th>
-            <th>Custo</th>
-          </tr>
-        </table>
-      </div>
     </div>
 
     <script>
@@ -285,18 +261,18 @@
         verticeObjetivo[0] = parseInt(document.getElementById("numLinhaVertObjetivo").value);
         verticeObjetivo[1] = parseInt(document.getElementById("numColunaVertObjetivo").value);
         if(verticeInicial[0] >= labirinto.linhas){
-          alert("Vértice inicial ultrapassando as linhas do labirintos: {" + 0 + " -> "+ (linhas - 1) + "}");
+          alert("Vértice inicial ultrapassando as linhas do labirintos: {" + 0 + " -> "+ (labirinto.linhas - 1) + "}");
         }
         else{
           if(verticeObjetivo[0] >= labirinto.linhas){
-            alert("Vértice objetivo ultrapassando as linhas do labirintos: {" + 0 + " -> "+ (linhas - 1) + "}");
+            alert("Vértice objetivo ultrapassando as linhas do labirintos: {" + 0 + " -> "+ (labirinto.linhas - 1) + "}");
           }
           else{
             if(verticeInicial[1] >= labirinto.colunas){
-              alert("Vértice inicial ultrapassando as colunas do labirintos: {" + 0 + " -> "+ (cols-1) + "}");
+              alert("Vértice inicial ultrapassando as colunas do labirintos: {" + 0 + " -> "+ (labirinto.cols-1) + "}");
             }
             else if(verticeObjetivo[1] >= labirinto.colunas){
-              alert("Vértice objetivo ultrapassando as colunas do labirintos: {" + 0 + " -> "+ (cols-1) + "}");
+              alert("Vértice objetivo ultrapassando as colunas do labirintos: {" + 0 + " -> "+ (labirinto.cols-1) + "}");
             }
             else{
               console.log("Validado");
@@ -364,7 +340,7 @@
 
       function limparDadosBusca(){
           //Remove os dados das tabelas
-         for (var i = 0; i < 4; i++) {
+         for (var i = 0; i < 3; i++) {
              var nomeTabela = "";
              switch (i) {
                  case 0:
@@ -375,12 +351,6 @@
                     break;
                  case 2:
                     nomeTabela = "tabelaListaHeuristica";
-                    break;
-                 case 3:
-                    nomeTabela = "tabelaLista4";
-                    break;
-                 case 3:
-                    nomeTabela = "tabelaLista5";
                     break;
                  default:
              }
