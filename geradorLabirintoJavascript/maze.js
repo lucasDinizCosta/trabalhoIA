@@ -661,7 +661,6 @@ Maze.prototype.buscaProfundidadeLimitada = function (verticeInicial, verticeObje
          }
        }
       }
-
       
       texto = "\nImpressao da lista de pais e numero de filhos(Total de vertices: " + tabelaFilhosPorCelula.length + "): \n";
       var valorMedioRamificacao = 0;
@@ -736,21 +735,20 @@ Maze.prototype.buscaProfundidadeLimitada = function (verticeInicial, verticeObje
         console.log(texto);
 
        var elementosBusca = [];
-       elementosBusca = abertos.concat(fechados);
-       var tabelaFilhosPorCelula = [];
-       for(var j = 0; j < elementosBusca.length; j++){          //Cria tabela inicial de filhos por celula
-         tabelaFilhosPorCelula.push([elementosBusca[j], 0]);
-       }
-       for(var i = 0; i < elementosBusca.length; i++){
-         if(elementosBusca[i].pai != null){
-           for(var j = 0; j < tabelaFilhosPorCelula.length; j++){
-             if(elementosBusca[i].pai === tabelaFilhosPorCelula[j][0]){                 //Encontrou o pai então incrementa o número de filhos dele
-               tabelaFilhosPorCelula[j][1] = tabelaFilhosPorCelula[j][1] + 1;
-               //break;
-             }
+      elementosBusca = abertos.concat(fechados);
+      var tabelaFilhosPorCelula = [];
+      for(var j = 0; j < elementosBusca.length; j++){          //Cria tabela inicial de filhos por celula
+       tabelaFilhosPorCelula.push([elementosBusca[j], 0]);
+      }
+      for(var i = 0; i < elementosBusca.length; i++){
+       if(elementosBusca[i].pai != null){
+         for(var j = 0; j < tabelaFilhosPorCelula.length; j++){
+           if(elementosBusca[i].pai === tabelaFilhosPorCelula[j][0]){                 //Encontrou o pai então incrementa o número de filhos dele
+             tabelaFilhosPorCelula[j][1] = tabelaFilhosPorCelula[j][1] + 1;
            }
          }
        }
+      }
 
        texto = "\nImpressao da lista de pais e numero de filhos(Total de vertices: " + tabelaFilhosPorCelula.length + "): \n";
       var valorMedioRamificacao = 0;
@@ -1074,26 +1072,6 @@ Maze.prototype.buscaEmLargura = function (verticeInicial, verticeObjetivo){
          }
        }
       }
-
-      var elementosBusca = [];
-      elementosBusca = abertos.concat(fechados);
-      var tabelaFilhosPorCelula = [];
-      for(var i = 0; i < elementosBusca.length; i++){
-       if(elementosBusca[i].pai != null){
-         for(var j = 0; j < tabelaFilhosPorCelula.length; j++){
-           if(elementosBusca[i].pai === tabelaFilhosPorCelula[j][0]){                 //Encontrou o pai então incrementa o número de filhos dele
-             tabelaFilhosPorCelula[j][1] = tabelaFilhosPorCelula[j][1] + 1;
-             break;
-           }
-         }
-         tabelaFilhosPorCelula.push([elementosBusca[i], 0]);
-       }
-       else{
-         tabelaFilhosPorCelula.push([elementosBusca[i], 0]);
-       }
-      }
-
-
       texto = "\nImpressao da lista de pais e numero de filhos(Total de vertices: " + tabelaFilhosPorCelula.length + "): \n";
       var valorMedioRamificacao = 0;
       var numPais = 0;
@@ -1172,18 +1150,16 @@ Maze.prototype.buscaEmLargura = function (verticeInicial, verticeObjetivo){
         var elementosBusca = [];
         elementosBusca = abertos.concat(fechados);
         var tabelaFilhosPorCelula = [];
+        for(var j = 0; j < elementosBusca.length; j++){          //Cria tabela inicial de filhos por celula
+         tabelaFilhosPorCelula.push([elementosBusca[j], 0]);
+        }
         for(var i = 0; i < elementosBusca.length; i++){
          if(elementosBusca[i].pai != null){
            for(var j = 0; j < tabelaFilhosPorCelula.length; j++){
              if(elementosBusca[i].pai === tabelaFilhosPorCelula[j][0]){                 //Encontrou o pai então incrementa o número de filhos dele
                tabelaFilhosPorCelula[j][1] = tabelaFilhosPorCelula[j][1] + 1;
-               break;
              }
            }
-           tabelaFilhosPorCelula.push([elementosBusca[i], 0]);
-         }
-         else{
-           tabelaFilhosPorCelula.push([elementosBusca[i], 0]);
          }
         }
 
@@ -1318,35 +1294,32 @@ Maze.prototype.buscaOrdenada = function (verticeInicial, verticeObjetivo){
 
     var elementosBusca = [];
     elementosBusca = abertos.concat(fechados);
-      /*console.log(abertos.length);
-      console.log(fechados.length);
-      console.log(elementosBusca.length);
-      console.log(abertos.concat(fechados).length);*/
-
     var tabelaFilhosPorCelula = [];
+    for(var j = 0; j < elementosBusca.length; j++){          //Cria tabela inicial de filhos por celula
+     tabelaFilhosPorCelula.push([elementosBusca[j][0], 0]);
+    }
     for(var i = 0; i < elementosBusca.length; i++){
-     if(elementosBusca[i].pai != null){
+     if(elementosBusca[i][0].pai != null){
        for(var j = 0; j < tabelaFilhosPorCelula.length; j++){
          if(elementosBusca[i][0].pai === tabelaFilhosPorCelula[j][0]){                 //Encontrou o pai então incrementa o número de filhos dele
            tabelaFilhosPorCelula[j][1] = tabelaFilhosPorCelula[j][1] + 1;
-           break;
          }
        }
-       tabelaFilhosPorCelula.push([elementosBusca[i], 0]);
-     }
-     else{
-       tabelaFilhosPorCelula.push([elementosBusca[i], 0]);
      }
     }
-
-    texto = "\nImpressao da lista de pais e numero de filhos(Total de vertices: "+tabelaFilhosPorCelula.length+"): \n";
+    texto = "\nImpressao da lista de pais e numero de filhos(Total de vertices: " + tabelaFilhosPorCelula.length + "): \n";
     var valorMedioRamificacao = 0;
+    var numPais = 0;
     for(var i = 0; i < tabelaFilhosPorCelula.length; i++){
-     texto = texto + "(["+tabelaFilhosPorCelula[i][0].i+", "+ tabelaFilhosPorCelula[i][0].j + "], " + tabelaFilhosPorCelula[i][1] + ")  --  \n";
-     valorMedioRamificacao = valorMedioRamificacao + tabelaFilhosPorCelula[i][1];
+      texto = texto + "(["+tabelaFilhosPorCelula[i][0].i+", "+ tabelaFilhosPorCelula[i][0].j + "], " + tabelaFilhosPorCelula[i][1] + ")  --  \n";
+      valorMedioRamificacao = valorMedioRamificacao + tabelaFilhosPorCelula[i][1];
+      if(tabelaFilhosPorCelula[i][1] != 0){                                          //Não conta as folhas visto que não são pais
+        numPais++;
+      }     
     }
     console.log(texto+"\n");
-    valorMedioRamificacao = (valorMedioRamificacao/tabelaFilhosPorCelula.length);
+    valorMedioRamificacao = (valorMedioRamificacao/numPais);
+    valorMedioRamificacao = Math.ceil(parseFloat(valorMedioRamificacao).toFixed(3));  //Arredonda
     console.log("Valor médio do fator de ramificação da árvore de busca: " + valorMedioRamificacao);
 
     var tempoFinal = performance.now();
@@ -1356,8 +1329,8 @@ Maze.prototype.buscaOrdenada = function (verticeInicial, verticeObjetivo){
     document.getElementById("profEstatistica").innerHTML=(profundidade + "");
     document.getElementById("statusBusca").style="color:red; font-weight:bold";
     document.getElementById("statusBusca").innerHTML="FRACASSO!!!";
-    document.getElementById("custoSolucao").innerHTML=("X");
-    document.getElementById("qtdNosExpandidos").innerHTML="";
+    document.getElementById("custoSolucao").innerHTML=(" X ");
+    document.getElementById("qtdNosExpandidos").innerHTML=(numVisitados + "");
     document.getElementById("qtdNosVisitados").innerHTML=(numVisitados + "");
     document.getElementById("fatorRamificacaoMediaBusca").innerHTML=(valorMedioRamificacao + "");
     document.getElementById("tempoExecucao").innerHTML=(parseFloat((tempoFinal - tempoInicial)).toFixed(3) + " milissegundos");
@@ -1366,7 +1339,7 @@ Maze.prototype.buscaOrdenada = function (verticeInicial, verticeObjetivo){
     if(sucesso){
       console.log("\t \t ----- Sucesso em encontrar a solução!!! --- \n");
       console.log("Status da busca: \n \n");
-      //console.log("Profundidade: "+ profundidade);
+      console.log("Profundidade: "+ profundidade);
       var texto = "\nAbertos (total ao final da execucao: " + abertos.length + "): ";
       for(var i = 0; i < abertos.length; i++){
         texto = texto + "Celula[" + abertos[i][0].i + "][" + abertos[i][0].j + "] Custo:  +" + abertos[i][1] +" -- ";
@@ -1411,35 +1384,34 @@ Maze.prototype.buscaOrdenada = function (verticeInicial, verticeObjetivo){
 
       var elementosBusca = [];
       elementosBusca = abertos.concat(fechados);
-        /*console.log(abertos.length);
-        console.log(fechados.length);
-        console.log(elementosBusca.length);
-        console.log(abertos.concat(fechados).length);*/
-
       var tabelaFilhosPorCelula = [];
+      for(var j = 0; j < elementosBusca.length; j++){          //Cria tabela inicial de filhos por celula
+       tabelaFilhosPorCelula.push([elementosBusca[j][0], 0]);
+      }
       for(var i = 0; i < elementosBusca.length; i++){
-       if(elementosBusca[i].pai != null){
+       if(elementosBusca[i][0].pai != null){
          for(var j = 0; j < tabelaFilhosPorCelula.length; j++){
-           if(elementosBusca[i].pai === tabelaFilhosPorCelula[j][0]){                 //Encontrou o pai então incrementa o número de filhos dele
+           if(elementosBusca[i][0].pai === tabelaFilhosPorCelula[j][0]){                 //Encontrou o pai então incrementa o número de filhos dele
+             console.log("RTTETETET");
              tabelaFilhosPorCelula[j][1] = tabelaFilhosPorCelula[j][1] + 1;
-             break;
            }
          }
-         tabelaFilhosPorCelula.push([elementosBusca[i], 0]);
-       }
-       else{
-         tabelaFilhosPorCelula.push([elementosBusca[i], 0]);
        }
       }
 
-      texto = "\nImpressao da lista de pais e numero de filhos(Total de vertices: "+tabelaFilhosPorCelula.length+"): \n";
+      texto = "\nImpressao da lista de pais e numero de filhos(Total de vertices: " + tabelaFilhosPorCelula.length + "): \n";
       var valorMedioRamificacao = 0;
-      for(var i = 0; i < tabelaFilhosPorCelula.length; i++){
-       texto = texto + "(["+tabelaFilhosPorCelula[i][0].i+", "+ tabelaFilhosPorCelula[i][0].j + "], " + tabelaFilhosPorCelula[i][1] + ")  --  \n";
-       valorMedioRamificacao = valorMedioRamificacao + tabelaFilhosPorCelula[i][1];
+      var numPais = 0;
+      for(var k = 0; k < tabelaFilhosPorCelula.length; k++){
+        texto = texto + "(["+tabelaFilhosPorCelula[k][0].i+", "+ tabelaFilhosPorCelula[k][0].j + "], " + tabelaFilhosPorCelula[k][1] + ")  --  \n";
+        valorMedioRamificacao = valorMedioRamificacao + tabelaFilhosPorCelula[k][1];
+        if(tabelaFilhosPorCelula[k][1] != 0){                                          //Não conta as folhas visto que não são pais
+          numPais++;
+        }     
       }
       console.log(texto+"\n");
-      valorMedioRamificacao = (valorMedioRamificacao/tabelaFilhosPorCelula.length);
+      valorMedioRamificacao = (valorMedioRamificacao/numPais);
+      valorMedioRamificacao = Math.ceil(parseFloat(valorMedioRamificacao).toFixed(3));  //Arredonda
       console.log("Valor médio do fator de ramificação da árvore de busca: " + valorMedioRamificacao);
 
       var tempoFinal = performance.now();
@@ -1450,7 +1422,7 @@ Maze.prototype.buscaOrdenada = function (verticeInicial, verticeObjetivo){
       document.getElementById("statusBusca").style="color:green; font-weight:bold";
       document.getElementById("statusBusca").innerHTML="SUCESSO!!!";
       document.getElementById("custoSolucao").innerHTML=(fechados[fechados.length - 1][1] + "");        // ultimo elemento fechado tem o custo de solução
-      document.getElementById("qtdNosExpandidos").innerHTML="";
+      document.getElementById("qtdNosExpandidos").innerHTML=(numVisitados + "");
       document.getElementById("qtdNosVisitados").innerHTML=(numVisitados + "");
       document.getElementById("fatorRamificacaoMediaBusca").innerHTML=(valorMedioRamificacao + "");
       document.getElementById("tempoExecucao").innerHTML=(parseFloat((tempoFinal - tempoInicial)).toFixed(3) + " milissegundos");
@@ -1653,8 +1625,30 @@ Maze.prototype.buscaAEstrela = function(verticeInicial, verticeObjetivo){
                   var auxVizinho = n.getVizinho(i, this.matriz);              //Captura a celula do vizinho na matriz
                   if(visitados[auxVizinho.i][auxVizinho.j] === false){        //vizinho não visitado
                     var u = auxVizinho;                                       //Atualiza para o próximo vértice
-                    u.pai = n;
-                    abertos.push([u, custoArestas + matrizHeuristicas[auxVizinho.i][auxVizinho.j] + n.peso[i], custoArestas + n.peso[i]]);
+                    //verifica se a celula já está na lista de abertos e se o custo é maior ou menor
+                    //Não insere na lista de abertos caso o custo seja maior ou igual ao que já tem na lista
+                    //Se tiver e este for com custo menor, remover a celula antiga do abertos
+                    var encontrouNaLista = false;
+                    for(var c = 0; c < abertos.length; c++){
+                      if(u === abertos[c][0]){  //u está na lista
+                        encontrouNaLista = true;
+                        if(abertos[c][1] <= (custoArestas + matrizHeuristicas[auxVizinho.i][auxVizinho.j] + n.peso[i])){   // Compara o custo com a celula presente
+                            //O antigo na lista tem o menor custo então não faz nada   
+                            break;
+                        }
+                        else{   //Custo válido para inserir na lista
+                          abertos.splice(c, 1);                   //remove o elemento
+                          u.pai = n;
+                          abertos.push([u, custoArestas + matrizHeuristicas[auxVizinho.i][auxVizinho.j] + n.peso[i], custoArestas + n.peso[i]]);
+                          break;
+                        }
+                      }
+                    }
+                    if(encontrouNaLista === false){ //Não encontrou então pode inserir na lista
+                      u.pai = n;
+                      abertos.push([u, custoArestas + matrizHeuristicas[auxVizinho.i][auxVizinho.j] + n.peso[i], custoArestas + n.peso[i]]);
+                    }
+                    
                   }
                 }
                 contador++;
@@ -1711,24 +1705,17 @@ if(fracasso){
 
       var elementosBusca = [];
       elementosBusca = abertos.concat(fechados);
-        /*console.log(abertos.length);
-        console.log(fechados.length);
-        console.log(elementosBusca.length);
-        console.log(abertos.concat(fechados).length);*/
-
       var tabelaFilhosPorCelula = [];
+      for(var j = 0; j < elementosBusca.length; j++){          //Cria tabela inicial de filhos por celula
+       tabelaFilhosPorCelula.push([elementosBusca[j], 0]);
+      }
       for(var i = 0; i < elementosBusca.length; i++){
        if(elementosBusca[i].pai != null){
          for(var j = 0; j < tabelaFilhosPorCelula.length; j++){
-           if(elementosBusca[i][0].pai === tabelaFilhosPorCelula[j][0]){                 //Encontrou o pai então incrementa o número de filhos dele
+           if(elementosBusca[i].pai === tabelaFilhosPorCelula[j][0]){                 //Encontrou o pai então incrementa o número de filhos dele
              tabelaFilhosPorCelula[j][1] = tabelaFilhosPorCelula[j][1] + 1;
-             break;
            }
          }
-         tabelaFilhosPorCelula.push([elementosBusca[i], 0]);
-       }
-       else{
-         tabelaFilhosPorCelula.push([elementosBusca[i], 0]);
        }
       }
 
@@ -1804,24 +1791,17 @@ if(fracasso){
 
         var elementosBusca = [];
         elementosBusca = abertos.concat(fechados);
-          /*console.log(abertos.length);
-          console.log(fechados.length);
-          console.log(elementosBusca.length);
-          console.log(abertos.concat(fechados).length);*/
-
         var tabelaFilhosPorCelula = [];
+        for(var j = 0; j < elementosBusca.length; j++){          //Cria tabela inicial de filhos por celula
+         tabelaFilhosPorCelula.push([elementosBusca[j], 0]);
+        }
         for(var i = 0; i < elementosBusca.length; i++){
          if(elementosBusca[i].pai != null){
            for(var j = 0; j < tabelaFilhosPorCelula.length; j++){
              if(elementosBusca[i].pai === tabelaFilhosPorCelula[j][0]){                 //Encontrou o pai então incrementa o número de filhos dele
                tabelaFilhosPorCelula[j][1] = tabelaFilhosPorCelula[j][1] + 1;
-               break;
              }
            }
-           tabelaFilhosPorCelula.push([elementosBusca[i], 0]);
-         }
-         else{
-           tabelaFilhosPorCelula.push([elementosBusca[i], 0]);
          }
         }
 
