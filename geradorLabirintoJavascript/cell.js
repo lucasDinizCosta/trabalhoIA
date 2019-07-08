@@ -3,9 +3,8 @@ function Cell(i, j){
   this.j = j;
   this.wall = [true,true,true,true];   //Paredes(cima, direita, baixo, esquerda)
   this.visited = false;
-  this.verticeBusca = -1;             //0 => vertice inicial, 1 => vértice final
   this.pai = null;                    //Para auxiliar a encontrar o caminho da solução
-  this.peso = [7,5,4,2];  //Peso das arestas(pensei em padronizar pra ter esses valores fixos)
+  this.peso = [7,5,4,2];              //Peso das arestas(pensei em padronizar pra ter esses valores fixos)
 };
 
 Cell.prototype.checarVizinhos = function(grid, cols, linhas){
