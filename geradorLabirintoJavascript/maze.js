@@ -195,6 +195,14 @@ Maze.prototype.addWalls = function (a, b) {
   }
 }
 
+/*****************************************************************
+*                                                                *
+*      criarMapaComFracassoProObjetivo(verticeObjetivo)          *
+*  -> Coloca parede em todas as direções no vertice objetivo vi- *
+*  sando testar o desempenho em casos de fracasso.               *
+*                                                                *
+******************************************************************/
+
 Maze.prototype.criarMapaComFracassoProObjetivo = function(verticeObjetivo){
     var celulaFinal = this.matriz[verticeObjetivo[0]][verticeObjetivo[1]];
     for (var i = 0; i < celulaFinal.wall.length; i++) {
@@ -202,6 +210,30 @@ Maze.prototype.criarMapaComFracassoProObjetivo = function(verticeObjetivo){
             this.addWalls(celulaFinal, celulaFinal.getVizinho(i, this.matriz));
         }
     }
+}
+
+/*****************************************************************
+*                                                                *
+*               gerarVariacao(verticeObjetivo)                   *
+*  -> Função responsável por gerar uma melhor diversificação no  *
+*  mapa.                                                         *
+*                                                                *
+******************************************************************/
+
+Maze.prototype.gerarVariacao = function(){
+  /*for (var i = 0; i <  linhas; i++) {
+    0f((i >= 1) && (i < this.linhas - 1)){
+    if((j >= 1) && (j < this.colunas - 1)){// Celulas centrais
+
+    }
+
+  }
+    var celulaFinal = this.matriz[verticeObjetivo[0]][verticeObjetivo[1]];
+    for (var i = 0; i < celulaFinal.wall.length; i++) {
+        if(celulaFinal.wall[i] === false){
+            this.addWalls(celulaFinal, celulaFinal.getVizinho(i, this.matriz));
+        }
+    }*/
 }
 
 /*****************************************************************
@@ -230,6 +262,13 @@ Maze.prototype.removeWalls = function (a, b) {
     b.wall[0] = false;
   }
 }
+
+/*****************************************************************
+*                                                                *
+*     insereNaTabelaTexto(nomeTabela, qtdCelulasColuna, texto):  *
+*  -> Insere os dados na tabela do HTML.                         *
+*                                                                *
+******************************************************************/
 
 Maze.prototype.insereNaTabelaTexto = function(nomeTabela, qtdCelulasColuna, texto){
     switch(qtdCelulasColuna){
@@ -301,7 +340,7 @@ Maze.prototype.backtracking = function(verticeInicial, verticeObjetivo){
       if(n.wall[i] === false){                                      //Checa se não há parede
         var auxVizinho = n.getVizinho(i, this.matriz);              //Captura a celula do vizinho na matriz
         if(visitados[auxVizinho.i][auxVizinho.j] === false){        //vizinho não visitado
-          auxVizinho.pai = n;                                         //Armazena o pai para gerar o caminho e "arvore" de solução
+          auxVizinho.pai = n;                                       //Armazena o pai para gerar o caminho e "arvore" de solução
           n = auxVizinho;                                           //Atualiza para o próximo vértice
           visitados[n.i][n.j] = true;                               //Marca como visitado o próximo vértice
           abertos.push(n);
@@ -323,20 +362,22 @@ Maze.prototype.backtracking = function(verticeInicial, verticeObjetivo){
              fracasso = true;
              break;
           }
-          fechados.push(abertos.pop());                     //Armazena os vertices fechados
+          var aux = abertos.pop();
+          n.pai = abertos[abertos.length - 1];
+          fechados.push(aux);                               //Armazena os vertices Fechados
           n = abertos[abertos.length - 1];                  //Desempilha e redireciona para o pai
           profundidade--;
       }
     }
   }
+
   if(fracasso){
     console.log("\t \t ----- Fracasso em encontrar a solução!!! --- \n");
     console.log("Status da busca: \n \n");
 
     var texto = "\nAbertos - Nós expandidos (total ao final da execucao: " + abertos.length + "): ";
     for(var i = 0; i < abertos.length; i++){
-        texto = texto + "Celula["+abertos[i].i+"]["+abertos[i].j+"]"+ " -- ";
-
+        texto = texto + "Celula[" + abertos[i].i + "][" + abertos[i].j + "]" + " -- ";
         //Adicionando na tabela do html
         this.insereNaTabelaTexto("tabelaListaAbertos", 2, [(i + ""), ("Celula["+abertos[i].i+"]["+abertos[i].j+"]")]);
     }
@@ -438,18 +479,17 @@ Maze.prototype.backtracking = function(verticeInicial, verticeObjetivo){
      console.log(abertos.concat(fechados).length);*/
 
      var tabelaFilhosPorCelula = [];
+     for(var j = 0; j < elementosBusca.length; j++){          //Cria tabela inicial de filhos por celula
+       tabelaFilhosPorCelula.push([elementosBusca[j], 0]);
+     }
      for(var i = 0; i < elementosBusca.length; i++){
        if(elementosBusca[i].pai != null){
          for(var j = 0; j < tabelaFilhosPorCelula.length; j++){
            if(elementosBusca[i].pai === tabelaFilhosPorCelula[j][0]){                 //Encontrou o pai então incrementa o número de filhos dele
              tabelaFilhosPorCelula[j][1] = tabelaFilhosPorCelula[j][1] + 1;
-             break;
+             //break;
            }
          }
-         tabelaFilhosPorCelula.push([elementosBusca[i], 0]);
-       }
-       else{
-         tabelaFilhosPorCelula.push([elementosBusca[i], 0]);
        }
      }
 
@@ -504,7 +544,11 @@ Maze.prototype.buscaProfundidadeLimitada = function (verticeInicial, verticeObje
   var fim = this.matriz[verticeObjetivo[0]][verticeObjetivo[1]];
   var s = this.matriz[verticeInicial[0]][verticeInicial[1]];
   abertos.push(s);
-  limiteProfundidade++;
+  var limiteProfundidade = 0;             ///Controla a profundidade visando não ocorrer a possibilidade de "caminhos infinitos" ou muito grandes, o que seria inviável
+  var fim = this.matriz[verticeObjetivo[0]][verticeObjetivo[1]];
+  var s = this.matriz[verticeInicial[0]][verticeInicial[1]];
+  abertos.push(s);
+  //limiteProfundidade++;
   visitados[s.i][s.j] = true;                               //Visitando o primeiro vertice
   var fracasso = false, sucesso = false;
   while((sucesso == false) && (fracasso == false)){
@@ -520,7 +564,7 @@ Maze.prototype.buscaProfundidadeLimitada = function (verticeInicial, verticeObje
                 continue;                                             //Continua o loop sem descer o código
             }
             abertos.pop();                                            //Desempilha
-            visitados[n.i][n.j] = true;                               //Marca como visitado o próximo vértice
+            visitados[n.i][n.j] = true;                              //Marca como visitado o próximo vértice
             if(n == fim){
                 sucesso = true;
                 fechados.push(n);
@@ -528,6 +572,7 @@ Maze.prototype.buscaProfundidadeLimitada = function (verticeInicial, verticeObje
             }
             else{
                 var contador = 0;
+                var contadorVistados = 0;
                 for (var i = s.wall.length - 1; i > -1; i--) {                  //Checa na direção contraria(esquerda,baixo,direita,cima) para poder retirar da pilha na ordem do vetor de paredes
                   if(n.wall[i] === false){                                      //Checa se não há parede
                     var auxVizinho = n.getVizinho(i, this.matriz);              //Captura a celula do vizinho na matriz
@@ -535,12 +580,18 @@ Maze.prototype.buscaProfundidadeLimitada = function (verticeInicial, verticeObje
                       var u = auxVizinho;                                       //Atualiza para o próximo vértice
                       u.pai = n;
                       abertos.push(u);
+                      contadorVistados++;
                     }
                   }
                   contador++;
               }
+              
               if(contador >= 4){ ///Passou todas as operações possíveis -- Fazer o backtracking senão retornar fracasso
                 limiteProfundidade++;
+                if(contadorVistados == 0){  // Já visitou todos os vizinhos, logo tem que fazer backtracking
+                  limiteProfundidade--;     //Diminui a profundidade
+                }
+                console.log(n);
                 fechados.push(n);
               }
             }
@@ -645,6 +696,193 @@ Maze.prototype.buscaProfundidadeLimitada = function (verticeInicial, verticeObje
        console.log(abertos.concat(fechados).length);*/
 
        var tabelaFilhosPorCelula = [];
+       for(var j = 0; j < elementosBusca.length; j++){          //Cria tabela inicial de filhos por celula
+         tabelaFilhosPorCelula.push([elementosBusca[j], 0]);
+       }
+       for(var i = 0; i < elementosBusca.length; i++){
+         if(elementosBusca[i].pai != null){
+           for(var j = 0; j < tabelaFilhosPorCelula.length; j++){
+             if(elementosBusca[i].pai === tabelaFilhosPorCelula[j][0]){                 //Encontrou o pai então incrementa o número de filhos dele
+               tabelaFilhosPorCelula[j][1] = tabelaFilhosPorCelula[j][1] + 1;
+               //break;
+             }
+           }
+         }
+       }
+
+       texto = "\nImpressao da lista de pais e numero de filhos(Total de vertices: "+tabelaFilhosPorCelula.length+"): \n";
+       var valorMedioRamificacao = 0;
+       for(var i = 0; i < tabelaFilhosPorCelula.length; i++){
+         texto = texto + "(["+tabelaFilhosPorCelula[i][0].i+", "+ tabelaFilhosPorCelula[i][0].j + "], " + tabelaFilhosPorCelula[i][1] + ")  --  \n";
+         valorMedioRamificacao = valorMedioRamificacao + tabelaFilhosPorCelula[i][1];
+       }
+       console.log(texto+"\n");
+       valorMedioRamificacao = (valorMedioRamificacao/tabelaFilhosPorCelula.length);
+       console.log("Valor médio do fator de ramificação da árvore de busca: " + valorMedioRamificacao);
+
+
+        //console.log("\nQuantidade total de vértices visitados: " + numVisitados);
+        var tempoFinal = performance.now();
+        console.log("\nTempo de execução: " + parseFloat((tempoFinal - tempoInicial)).toFixed(3) + " milissegundos");    ///Mede o tempo somente na função
+
+
+
+        //Atualiza as estatísticas no HTML
+        document.getElementById("profEstatistica").innerHTML=(limiteProfundidade + "");
+        document.getElementById("statusBusca").style="color:green; font-weight:bold";
+        document.getElementById("statusBusca").innerHTML="SUCESSO!!!";
+        document.getElementById("custoSolucao").innerHTML=(this.caminhoSolucao.length + "");
+        document.getElementById("qtdNosExpandidos").innerHTML="";
+        document.getElementById("qtdNosVisitados").innerHTML=(numVisitados + "");
+        document.getElementById("fatorRamificacaoMediaBusca").innerHTML=(valorMedioRamificacao + "");
+        document.getElementById("tempoExecucao").innerHTML=(parseFloat((tempoFinal - tempoInicial)).toFixed(3) + " milissegundos");
+      }
+    }
+
+}
+/*
+Maze.prototype.geraEstatisticas = function(busca, estado, abertos, fechados, visitados, matrizHeuristicas, tempo){
+  if(estado === false){ //Fracasso
+    console.log("\t \t ----- Sucesso em encontrar a solução!!! --- \n");
+    console.log("Status da busca: \n \n");
+  }
+  else{       //Sucesso
+    console.log("\t \t ----- Fracasso em encontrar a solução!!! --- \n");
+    console.log("Status da busca: \n \n");
+  }
+
+  var texto = "\nAbertos (total ao final da execucao: " + abertos.length + "): ";
+      for(var i = 0; i < abertos.length; i++){
+          texto = texto + "Celula["+abertos[i].i+"]["+abertos[i].j+"]"+ " -- ";
+          this.insereNaTabelaTexto("tabelaListaAbertos", 2, [(i + ""), ("Celula["+abertos[i].i+"]["+abertos[i].j+"]")]);
+      }
+      texto = texto + "\n";
+      console.log(texto);
+      texto = "\Fechados (total ao final da execucao: " + fechados.length + "): ";
+      for(var i = 0; i < fechados.length; i++){
+          texto = texto + "Celula["+fechados[i].i+"]["+fechados[i].j+"]"+ " -- ";
+          this.insereNaTabelaTexto("tabelaListaFechados", 2, [(i + ""), ("Celula["+fechados[i].i+"]["+fechados[i].j+"]")]);
+      }
+      texto = texto + "\n";
+      console.log(texto);
+      texto = "";
+      var numVisitados = 0;
+      for (var i = 0; i < this.linhas; i++) {
+        for(var j = 0; j < this.colunas; j++){
+          if(visitados[i][j]){
+              texto = texto + "Celula["+i+"]["+j+"] -- ";
+              numVisitados++;
+          }
+        }
+      }
+      texto = "\n\nQuem foi visitado (total ao final da execucao: " + numVisitados + "): " + texto;
+      console.log(texto);
+
+  switch(busca){
+    case 0: // Backtracking
+    { 
+
+    }
+      break;
+    case 1: // Busca em profundidade limitada
+    {
+
+    }
+      break;
+    case 2: // Busca em Largura
+    {
+
+    }
+      break;
+    case 3: // Busca Ordenada
+    {
+
+    }
+      break;
+    case 4: // Busca Gulosa
+    {
+
+    }
+      break;
+    case 5: // Busca A*
+    {
+
+    }
+      break;
+    case 6: // Busca IDA*
+    {
+
+    }
+      break;
+
+  }
+  if(fracasso){
+      
+      //console.log("\nQuantidade total de vértices visitados: " + numVisitados);
+      var tempoFinal = performance.now();
+      console.log("\nTempo de execução: " + parseFloat(tempo).toFixed(3) + " milissegundos");    ///Mede o tempo somente na função
+
+
+      //Atualiza as estatísticas no HTML
+      document.getElementById("profEstatistica").innerHTML=(limiteProfundidade + "");
+      document.getElementById("statusBusca").style="color:red; font-weight:bold";
+      document.getElementById("statusBusca").innerHTML="FRACASSO!!!";
+      document.getElementById("custoSolucao").innerHTML=("SEM SOLUCAO");
+      document.getElementById("qtdNosExpandidos").innerHTML="";
+      document.getElementById("qtdNosVisitados").innerHTML=(numVisitados + "");
+      document.getElementById("fatorRamificacaoMediaBusca").innerHTML=(valorMedioRamificacao + "");
+      document.getElementById("tempoExecucao").innerHTML=(parseFloat((tempoFinal - tempoInicial)).toFixed(3) + " milissegundos");
+
+    }
+    else{
+      if(sucesso){
+        console.log("\t \t ----- Sucesso em encontrar a solução!!! --- \n");
+        console.log("Status da busca: \n \n");
+        var texto = "\nAbertos (total ao final da execucao: " + abertos.length + "): ";
+        for(var i = 0; i < abertos.length; i++){
+            texto = texto + "Celula["+abertos[i].i+"]["+abertos[i].j+"]"+ " -- ";
+            this.insereNaTabelaTexto("tabelaListaAbertos", 2, [(i + ""), ("Celula["+abertos[i].i+"]["+abertos[i].j+"]")]);
+        }
+        texto = texto + "\n";
+        console.log(texto);
+        texto = "\Fechados (total ao final da execucao: " + fechados.length + "): ";
+        for(var i = 0; i < fechados.length; i++){
+            texto = texto + "Celula["+fechados[i].i+"]["+fechados[i].j+"]"+ " -- ";
+            this.insereNaTabelaTexto("tabelaListaFechados", 2, [(i + ""), ("Celula["+fechados[i].i+"]["+fechados[i].j+"]")]);
+        }
+        texto = texto + "\n";
+        console.log(texto);
+        texto = "";
+        var numVisitados = 0;
+        for (var i = 0; i < this.linhas; i++) {
+          for(var j = 0; j < this.colunas; j++){
+            if(visitados[i][j]){
+                texto = texto + "Celula["+i+"]["+j+"] -- ";
+                numVisitados++;
+            }
+          }
+        }
+        texto = "\n\nQuem foi visitado (total ao final da execucao: " + numVisitados + "): " + texto;
+        console.log(texto);
+        this.caminhoSolucao = [];
+        var aux = fechados[fechados.length - 1];
+        while(aux != null){
+          this.caminhoSolucao.push(aux);
+          aux = aux.pai;
+        }
+        this.caminhoSolucao.reverse();                                               //Inverte o vetor
+        texto = "Caminho da solução (Total: "+ this.caminhoSolucao.length + "): ";
+        for(var i = 0; i < this.caminhoSolucao.length; i++){
+          texto = texto + "Celula["+this.caminhoSolucao[i].i+"]["+this.caminhoSolucao[i].j+"] -- "
+        }
+        console.log(texto);
+        // Encontrar o caminho até a raiz da solução
+        // Encontrar o fator médio de ramificação
+
+       var elementosBusca = [];
+       elementosBusca = abertos.concat(fechados);
+
+       var tabelaFilhosPorCelula = [];
        for(var i = 0; i < elementosBusca.length; i++){
          if(elementosBusca[i].pai != null){
            for(var j = 0; j < tabelaFilhosPorCelula.length; j++){
@@ -689,7 +927,8 @@ Maze.prototype.buscaProfundidadeLimitada = function (verticeInicial, verticeObje
       }
     }
 
-}
+}*/
+
 
 Maze.prototype.buscaEmLargura = function (verticeInicial, verticeObjetivo){
   var tempoInicial = performance.now();
