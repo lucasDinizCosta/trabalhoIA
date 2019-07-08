@@ -1246,6 +1246,30 @@ Maze.prototype.buscaOrdenada = function (verticeInicial, verticeObjetivo){
                 var u = auxVizinho;                                       //Atualiza para o próximo vértice
                 u.pai = n;
                 abertos.push([u, custoArestas + n.peso[i]]);
+                var u = auxVizinho;                                       //Atualiza para o próximo vértice
+                //verifica se a celula já está na lista de abertos e se o custo é maior ou menor
+                //Não insere na lista de abertos caso o custo seja maior ou igual ao que já tem na lista
+                //Se tiver e este for com custo menor, remover a celula antiga do abertos
+                var encontrouNaLista = false;
+                for(var c = 0; c < abertos.length; c++){
+                  if(u === abertos[c][0]){  //u está na lista
+                    encontrouNaLista = true;
+                    if(abertos[c][1] <= (custoArestas + n.peso[i])){   // Compara o custo com a celula presente
+                        //O antigo na lista tem o menor custo então não faz nada   
+                        break;
+                    }
+                    else{   //Custo válido para inserir na lista
+                      abertos.splice(c, 1);                   //remove o elemento
+                      u.pai = n;
+                      abertos.push([u, custoArestas + n.peso[i]]);
+                      break;
+                    }
+                  }
+                }
+                if(encontrouNaLista === false){ //Não encontrou então pode inserir na lista
+                  u.pai = n;
+                  abertos.push([u, custoArestas + n.peso[i]]);
+                }
               }
             }
             contador++;
