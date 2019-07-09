@@ -48,7 +48,6 @@ Maze.prototype.gerarLabirintoPorPassos = function(estado){
       this.celulaAtual = this.pilha.pop();
       if(this.celulaAtual===this.grid[0]){
          console.log("Terminou geração");
-         console.log("FOI");
          estado = 1;
       }
     }
@@ -241,19 +240,59 @@ Maze.prototype.criarMapaComFracassoProObjetivo = function(verticeObjetivo){
 ******************************************************************/
 
 Maze.prototype.gerarVariacao = function(){
-  /*for (var i = 0; i <  linhas; i++) {
-    0f((i >= 1) && (i < this.linhas - 1)){
-    if((j >= 1) && (j < this.colunas - 1)){// Celulas centrais
+  //IDEIA: uma porcentagem do número de celulas na região do meio perderão algumas paredes
+  //visando gerar mais caminhos possíveis
+  /**
+    Matriz total: M x N
+    Regiao do meio: (M-1)x(N-1)
 
+  */
+  var totalRegiaoMeio = ((this.linhas - 1) * (this.colunas - 1));
+  var pRemocaoParedes = 0.15; //Porcentagem de remoção das paredes
+  var quantParedePorCelulaRemove = 1;
+  var paredesRemocao = quantParedePorCelulaRemove * pRemocaoParedes * totalRegiaoMeio; // Quantidade de paredes a serem removidas
+  var regiaoCentral = [];                            // Vetor que armazena todas as celulas da região central
+  for (var i = 1; i < this.linhas - 1; i++) {
+    for(var j = 1; j < this.colunas - 1; j++){
+      regiaoCentral.push(this.matriz[i][j]);
     }
-
   }
-    var celulaFinal = this.matriz[verticeObjetivo[0]][verticeObjetivo[1]];
-    for (var i = 0; i < celulaFinal.wall.length; i++) {
-        if(celulaFinal.wall[i] === false){
-            this.addWalls(celulaFinal, celulaFinal.getVizinho(i, this.matriz));
+
+  // Caminhamento no vetor e sorteio das posições e paredes
+  var contParedesRemovidas = 0;
+  //var direcao = 0;  //Direcao de remocao se possivel: 0 => Cima, 1 => Direita, 2 => Baixo, 3 => Esquerda
+  var sentidoRemocao = 0;   // 0 => Sentido do vetor de paredes, 1 => Sentido contrário
+  while(contParedesRemovidas < paredesRemocao){
+    var posicao = Math.floor(Math.random() * (regiaoCentral.length - 1))  //Sorteia uma posição
+    var removeu = false;
+    if(sentidoRemocao === 0){
+      for(var i = 0; i < 4; i++){
+        if(regiaoCentral[posicao].wall[i]){
+          this.removeWalls(regiaoCentral[posicao], regiaoCentral[posicao].getVizinho(i, this.matriz)) //Aplica a remoção da parede
+          removeu = true;
+          regiaoCentral.splice(posicao, 1);
+          sentidoRemocao = 1;
+          contParedesRemovidas++;
+          break;
         }
-    }*/
+      }
+    }
+    else if(sentidoRemocao === 1){
+      for(var i = 3; i >= 0; i--){
+        if(regiaoCentral[posicao].wall[i]){
+          this.removeWalls(regiaoCentral[posicao], regiaoCentral[posicao].getVizinho(i, this.matriz)) //Aplica a remoção da parede
+          removeu = true;
+          regiaoCentral.splice(posicao, 1);
+          sentidoRemocao = 0;
+          contParedesRemovidas++;
+          break;
+        }
+      }
+    }
+    if(removeu === false){  //Encontrou celula que não tem parede
+      regiaoCentral.splice(posicao, 1);
+    }
+  }
 }
 
 /*****************************************************************
