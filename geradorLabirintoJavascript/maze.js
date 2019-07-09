@@ -29,7 +29,7 @@ function Maze(linhas, colunas, larguraCelula){
 *                                                                *
 ******************************************************************/
 
-Maze.prototype.gerarLabirintoPorPassos = function(estado){
+Maze.prototype.gerarLabirintoPorPassos = function(){
     this.celulaAtual.visited = true;
     //PASSO 1
     var proximaCelula = this.celulaAtual.checarVizinhos(this.grid, this.colunas, this.linhas);
@@ -48,7 +48,7 @@ Maze.prototype.gerarLabirintoPorPassos = function(estado){
       this.celulaAtual = this.pilha.pop();
       if(this.celulaAtual===this.grid[0]){
          console.log("Terminou geração");
-         estado = 1;
+         estado = 0;  //Modifica a variável global
       }
     }
 }
@@ -93,12 +93,15 @@ Maze.prototype.desenharLabirinto = function(ctx, espacamento){
   }
 }
 
-Maze.prototype.desenharGeracaoLabirintoPorPassos = function(ctx, espacamento, estado){
+Maze.prototype.desenharGeracaoLabirintoPorPassos = function(ctx, espacamento){
   for (var i = 0; i < this.grid.length; i++) {          //Exibe as células
     this.grid[i].show(ctx, this.larguraCelula, espacamento);
   }
   this.celulaAtual.colorido(ctx, this.larguraCelula, espacamento);
-  this.gerarLabirintoPorPassos(estado);
+  this.gerarLabirintoPorPassos();
+  if(estado == 0){
+    this.desenharLabirinto(ctx, espacamento);
+  }
 }
 
 /******************************************************
@@ -2005,7 +2008,7 @@ if(fracasso){
 }
 
 
-/*
+
 Maze.prototype.buscaIDAEstrela = function(verticeInicial, verticeObjetivo){
 
   var tempoInicial = performance.now();
@@ -2017,20 +2020,12 @@ Maze.prototype.buscaIDAEstrela = function(verticeInicial, verticeObjetivo){
       matrizHeuristicas[i] = [];
     for (var j = 0; j < this.colunas; j++) {
       matrizHeuristicas[i][j] = this.heuristica(i,j,verticeObjetivo[0], verticeObjetivo[1]);
-      console.log("linha "+i+" coluna "+j+" = "+matrizHeuristicas[i][j]);
+      console.log("linha "+i+" coluna " + j + " = " + matrizHeuristicas[i][j]);
     }
   }
 
   var abertos = [];                                
-  /**
-  [ No  | Heuristica ]
-  abertos[i].push(celula)
-  abertos[i].push(valorHeuristica)
-
-  ou
-  f = somaAresta + heuristica
-  abertos.push([celula, f])
-  */
+  
   /*var fechados = [];
   var visitados = [];                            //Matriz de visitados
   for (var i = 0; i < this.linhas; i++) {
@@ -2091,8 +2086,8 @@ Maze.prototype.buscaIDAEstrela = function(verticeInicial, verticeObjetivo){
         }
       }
     }
-
-}*/
+*/
+}
 
 Maze.prototype.verificaPosicaoNavegante = function(x, y, navegante)
 {

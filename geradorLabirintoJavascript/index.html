@@ -72,10 +72,9 @@
     <br></br>
     <h2>Exibir: </h2>
     <br></br>
-    <input type="checkbox" id="cbCaminhoSolucao"><b> - Caminho Solução &emsp;</b>
-    <input type="checkbox" id="cdLinhasGrade"><b> - Linhas de Grade &emsp;</b>
+    <input type="checkbox" onclick="checkboxCaminhoSolucao()" id="cbCaminhoSolucao"><b> - Caminho Solução &emsp;</b>
+    <input type="checkbox" onclick="checkboxLinhasGrade()" id="cbLinhasGrade"><b> - Linhas de Grade &emsp;</b>
     <br></br>
-
 
     <div id="container">
         <!--#canvasPosicao, #algoritmosDeBuscaPos, #tabAbertos, #tabFechados, #tabHeuristica, #tab4, #tab5{display: inline-block; zoom: 1; vertical-align: top; font-size: 15px;}-->
@@ -222,6 +221,58 @@
       var verticeInicial = [2];               //posicao 1 representa a identificação da linha e a 2 a identificação da coluna
       var verticeObjetivo = [2];
 
+      limparTela();
+
+      function checkboxCaminhoSolucao(){
+        var checkBoxDados = document.getElementById("cbCaminhoSolucao").checked;
+        limparTela();
+        if(checkBoxDados){                             //Desenhar solução
+          if(document.getElementById("cbLinhasGrade").checked){
+            labirinto.desenharLabirinto(ctx, espacamento);
+            labirinto.desenharLinhasGrade(ctx, espacamento);
+            labirinto.desenharSolucao(ctx, espacamento);
+          }
+          else{
+            labirinto.desenharLabirinto(ctx, espacamento);
+            labirinto.desenharSolucao(ctx, espacamento);
+          }
+        }
+        else{
+          if(document.getElementById("cbLinhasGrade").checked){
+            labirinto.desenharLabirinto(ctx, espacamento);
+            labirinto.desenharLinhasGrade(ctx, espacamento);
+          }
+          else{
+            labirinto.desenharLabirinto(ctx, espacamento);
+          }
+        }
+      }
+
+      function checkboxLinhasGrade(){
+        var checkBoxDados = document.getElementById("cbLinhasGrade").checked;
+        limparTela();
+        if(checkBoxDados){                             //Desenhar solução
+          if(document.getElementById("cbCaminhoSolucao").checked){
+            labirinto.desenharLabirinto(ctx, espacamento);
+            labirinto.desenharLinhasGrade(ctx, espacamento);
+            labirinto.desenharSolucao(ctx, espacamento);
+          }
+          else{
+            labirinto.desenharLabirinto(ctx, espacamento);
+            labirinto.desenharLinhasGrade(ctx, espacamento);
+          }
+        }
+        else{
+          if(document.getElementById("cbCaminhoSolucao").checked){
+            labirinto.desenharLabirinto(ctx, espacamento);
+            labirinto.desenharSolucao(ctx, espacamento);
+          }
+          else{
+            labirinto.desenharLabirinto(ctx, espacamento);
+          }
+        }
+      }
+
       function funcaoBotaoGerarCompleto(){
         limparDadosBusca();
         valorLinhas  = parseInt(document.getElementById("numLinhas").value);
@@ -236,6 +287,8 @@
         labirinto = new Maze(valorLinhas,valorColunas,valorLargura);
         labirinto.gerarLabirintoCompleto();
         estado = 1;
+        limparTela();
+        labirinto.desenharLabirinto(ctx, espacamento);
       }
 
       function funcaoBotaoGerarPassoAPasso(){
@@ -250,13 +303,28 @@
         tela.height = Math.ceil((valorLinhas * valorLargura)+espacamento*2);              //Acerta as medições do canvas conforme o valor digitado pelo usuário
         tela.width = Math.ceil((valorColunas * valorLargura)+espacamento*2);
         labirinto = new Maze(valorLinhas,valorColunas,valorLargura);
-        labirinto.terminoGeracaoPassos = false;                                           //Atribui como falso para o começo da geração por passos
-        labirinto.gerarLabirintoPorPassos(estado);
+        //labirinto.terminoGeracaoPassos = false;                                           //Atribui como falso para o começo da geração por passos
+        limparTela();
         estado = 2;
+      }
+
+      function desenharPosBusca(){
+        limparTela();
+        labirinto.desenharLabirinto(ctx, espacamento);
+        if(document.getElementById("cbLinhasGrade").checked){
+          labirinto.desenharLinhasGrade(ctx, espacamento);
+        }
+        if(document.getElementById("cbCaminhoSolucao").checked){
+          labirinto.desenharSolucao(ctx, espacamento);
+        }
       }
 
       function funcaoGerarVariacao(){
         labirinto.gerarVariacao();
+        limparTela();
+        labirinto.desenharLabirinto(ctx, espacamento);
+        document.getElementById("cbCaminhoSolucao").checked=false;
+        document.getElementById("cbLinhasGrade").checked=false;
       }
 
       function validaVertices(){
@@ -298,6 +366,7 @@
         limparDadosBusca();
         document.getElementById("tipoBuscaEstatistica").innerHTML="Busca em Backtracking";
         labirinto.backtracking(verticeInicial, verticeObjetivo);
+        desenharPosBusca();
       }
 
       function buscaProfundidadeLimitada(){
@@ -309,6 +378,7 @@
           document.getElementById("tipoBuscaEstatistica").innerHTML="Busca em profundidade limitada";
           document.getElementById("profLimitadaEstatistica").innerHTML=limite;
           labirinto.buscaProfundidadeLimitada(verticeInicial, verticeObjetivo, parseInt(limite));
+          desenharPosBusca();
         }
       }
 
@@ -316,30 +386,35 @@
         limparDadosBusca();
         document.getElementById("tipoBuscaEstatistica").innerHTML="Busca em Largura";
         labirinto.buscaEmLargura(verticeInicial, verticeObjetivo);
+        desenharPosBusca();
       }
 
       function buscaGulosa(){
         limparDadosBusca();
         document.getElementById("tipoBuscaEstatistica").innerHTML="Busca Gulosa";
         labirinto.buscaGulosa2(verticeInicial, verticeObjetivo);
+        desenharPosBusca();
       }
 
       function buscaOrdenada(){
         limparDadosBusca();
         document.getElementById("tipoBuscaEstatistica").innerHTML="Busca Ordenada";
         labirinto.buscaOrdenada(verticeInicial, verticeObjetivo);
+        desenharPosBusca();
       }
 
       function buscaAEstrela(){
         limparDadosBusca();
         document.getElementById("tipoBuscaEstatistica").innerHTML="Busca em A*";
         labirinto.buscaAEstrela(verticeInicial, verticeObjetivo);
+        desenharPosBusca();
       }
 
       function buscaIDAEstrela(){
         limparDadosBusca();
         document.getElementById("tipoBuscaEstatistica").innerHTML="Busca em IDA*";
         labirinto.buscaIDAEstrela(verticeInicial, verticeObjetivo);
+        desenharPosBusca();
       }
 
       function limparDadosBusca(){
@@ -377,44 +452,48 @@
          document.getElementById("tempoExecucao").innerHTML="";
       }
 
-      requestAnimationFrame(passo);
+      // 
 
       /************************************************
       *                                               *
       *                   passo():                    *
       *  -> Controla o loop de animação e desenho.    *
+      *  -> Usado somente na geração passo a passo.   *
       *                                               *
       ************************************************/
+      // METODO DE ANIMAÇÃO 1: DESENHA TODO TEMPO, FICANDO PESADO - LOGO O MELHOR É DESENHAR SÓ O PASSO A PASSO
+     requestAnimationFrame(passo);
 
      function passo(t){
        dt = (t - anterior)/1000;                      //Taxa de quadros
-       limparTela();
+       //limparTela();
        switch(estado){
          case 0:
-            ///Não faz nada
+            //console.log("Estado 0");
          break;
          case 1:
-            labirinto.desenharLabirinto(ctx, espacamento);
             //console.log("Estado 1");
          break;
          case 2:
-            labirinto.desenharGeracaoLabirintoPorPassos(ctx, espacamento, estado);
+            labirinto.desenharGeracaoLabirintoPorPassos(ctx, espacamento);
+            //console.log(estado);
          break;
          default:
             console.log("Problema no controle de estados");
        }
 
-       var checkBoxDados = document.getElementById("cbCaminhoSolucao").checked;
+       /*var checkBoxDados = document.getElementById("cbCaminhoSolucao").checked;
        if(checkBoxDados){                             //Desenhar solução
          labirinto.desenharSolucao(ctx, espacamento);
        }
        checkBoxDados = document.getElementById("cdLinhasGrade").checked;
        if(checkBoxDados){
          labirinto.desenharLinhasGrade(ctx, espacamento);
-       }
+       }*/
        anterior = t;
        requestAnimationFrame(passo);
      }
+
 
       /********************************************************************************
       *                                                                               *
@@ -450,9 +529,12 @@
      function limparTela() {
       ctx.fillStyle = "gray";
       ctx.fillRect(0,0, tela.width, tela.height);
-      //ctx.clearRect(0, 0, canvas.width, canvas.height);
+      //console.log("limpou a tela");
+      //ctx.clearRect(0,0, tela.width, tela.height);
      }
     </script>
 
   </body>
 </html>
+
+

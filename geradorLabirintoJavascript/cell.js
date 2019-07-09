@@ -101,18 +101,8 @@ Cell.prototype.index = function(i, j, cols, linhas) {
 Cell.prototype.colorido = function(ctx, w, espacamento){
   var x = this.j*w + espacamento;
   var y = this.i*w + espacamento;
-  if(this.verticeBusca == -1){
-    ctx.fillStyle = 'rgb(0,0,255)';   //Celula atual
-    ctx.fillRect(x, y, w, w);
-  }
-  else if(this.verticeBusca == 0){
-    ctx.fillStyle = 'rgb(0,255,0)';   //Celula INICIAL da busca
-    ctx.fillRect(x, y, w, w);
-  }
-  else{
-    ctx.fillStyle = 'rgb(200,0,0)';   //Celula FINAL da busca
-    ctx.fillRect(x, y, w, w);
-  }
+  ctx.fillStyle = 'rgb(0,0,255)';   //Celula atual
+  ctx.fillRect(x, y, w, w);
 }
 
 Cell.prototype.show = function(ctx, w, espacamento){
