@@ -432,8 +432,7 @@ Maze.prototype.backtracking = function(verticeInicial, verticeObjetivo){
      }       
     }
     console.log(texto+"\n");
-    valorMedioRamificacao = (valorMedioRamificacao/numPais);
-    valorMedioRamificacao = Math.ceil(parseFloat(valorMedioRamificacao).toFixed(3));  //Arredonda
+    valorMedioRamificacao = parseFloat((valorMedioRamificacao - 1)/numPais).toFixed(3);
     console.log("Valor médio do fator de ramificação da árvore de busca: " + valorMedioRamificacao);
 
 
@@ -524,8 +523,7 @@ Maze.prototype.backtracking = function(verticeInicial, verticeObjetivo){
        }       
       }
       console.log(texto+"\n");
-      valorMedioRamificacao = (valorMedioRamificacao/numPais);
-      valorMedioRamificacao = Math.ceil(parseFloat(valorMedioRamificacao).toFixed(3));  //Arredonda
+      valorMedioRamificacao = parseFloat((valorMedioRamificacao - 1)/numPais).toFixed(3);
       console.log("Valor médio do fator de ramificação da árvore de busca: " + valorMedioRamificacao);
 
       var tempoFinal = performance.now();
@@ -673,8 +671,7 @@ Maze.prototype.buscaProfundidadeLimitada = function (verticeInicial, verticeObje
        }       
       }
       console.log(texto+"\n");
-      valorMedioRamificacao = (valorMedioRamificacao/numPais);
-      valorMedioRamificacao = Math.ceil(parseFloat(valorMedioRamificacao).toFixed(3));  //Arredonda
+      valorMedioRamificacao = parseFloat((valorMedioRamificacao - 1)/numPais).toFixed(3);
       console.log("Valor médio do fator de ramificação da árvore de busca: " + valorMedioRamificacao);
 
       var tempoFinal = performance.now();
@@ -761,8 +758,7 @@ Maze.prototype.buscaProfundidadeLimitada = function (verticeInicial, verticeObje
        }       
       }
       console.log(texto+"\n");
-      valorMedioRamificacao = (valorMedioRamificacao/numPais);
-      valorMedioRamificacao = Math.ceil(parseFloat(valorMedioRamificacao).toFixed(3));  //Arredonda
+      valorMedioRamificacao = parseFloat((valorMedioRamificacao - 1)/numPais).toFixed(3);
       console.log("Valor médio do fator de ramificação da árvore de busca: " + valorMedioRamificacao);
 
       var tempoFinal = performance.now();
@@ -782,195 +778,6 @@ Maze.prototype.buscaProfundidadeLimitada = function (verticeInicial, verticeObje
     }
 
 }
-/*
-Maze.prototype.geraEstatisticas = function(busca, estado, abertos, fechados, visitados, matrizHeuristicas, tempo){
-  if(estado === false){ //Fracasso
-    console.log("\t \t ----- Sucesso em encontrar a solução!!! --- \n");
-    console.log("Status da busca: \n \n");
-  }
-  else{       //Sucesso
-    console.log("\t \t ----- Fracasso em encontrar a solução!!! --- \n");
-    console.log("Status da busca: \n \n");
-  }
-
-  var texto = "\nAbertos (total ao final da execucao: " + abertos.length + "): ";
-      for(var i = 0; i < abertos.length; i++){
-          texto = texto + "Celula["+abertos[i].i+"]["+abertos[i].j+"]"+ " -- ";
-          this.insereNaTabelaTexto("tabelaListaAbertos", 2, [(i + ""), ("Celula["+abertos[i].i+"]["+abertos[i].j+"]")]);
-      }
-      texto = texto + "\n";
-      console.log(texto);
-      texto = "\Fechados (total ao final da execucao: " + fechados.length + "): ";
-      for(var i = 0; i < fechados.length; i++){
-          texto = texto + "Celula["+fechados[i].i+"]["+fechados[i].j+"]"+ " -- ";
-          this.insereNaTabelaTexto("tabelaListaFechados", 2, [(i + ""), ("Celula["+fechados[i].i+"]["+fechados[i].j+"]")]);
-      }
-      texto = texto + "\n";
-      console.log(texto);
-      texto = "";
-      var numVisitados = 0;
-      for (var i = 0; i < this.linhas; i++) {
-        for(var j = 0; j < this.colunas; j++){
-          if(visitados[i][j]){
-              texto = texto + "Celula["+i+"]["+j+"] -- ";
-              numVisitados++;
-          }
-        }
-      }
-      texto = "\n\nQuem foi visitado (total ao final da execucao: " + numVisitados + "): " + texto;
-      console.log(texto);
-
-  switch(busca){
-    case 0: // Backtracking
-    { 
-
-    }
-      break;
-    case 1: // Busca em profundidade limitada
-    {
-
-    }
-      break;
-    case 2: // Busca em Largura
-    {
-
-    }
-      break;
-    case 3: // Busca Ordenada
-    {
-
-    }
-      break;
-    case 4: // Busca Gulosa
-    {
-
-    }
-      break;
-    case 5: // Busca A*
-    {
-
-    }
-      break;
-    case 6: // Busca IDA*
-    {
-
-    }
-      break;
-
-  }
-  if(fracasso){
-      
-      //console.log("\nQuantidade total de vértices visitados: " + numVisitados);
-      var tempoFinal = performance.now();
-      console.log("\nTempo de execução: " + parseFloat(tempo).toFixed(3) + " milissegundos");    ///Mede o tempo somente na função
-
-
-      //Atualiza as estatísticas no HTML
-      document.getElementById("profEstatistica").innerHTML=(limiteProfundidade + "");
-      document.getElementById("statusBusca").style="color:red; font-weight:bold";
-      document.getElementById("statusBusca").innerHTML="FRACASSO!!!";
-      document.getElementById("custoSolucao").innerHTML=("SEM SOLUCAO");
-      document.getElementById("qtdNosExpandidos").innerHTML="";
-      document.getElementById("qtdNosVisitados").innerHTML=(numVisitados + "");
-      document.getElementById("fatorRamificacaoMediaBusca").innerHTML=(valorMedioRamificacao + "");
-      document.getElementById("tempoExecucao").innerHTML=(parseFloat((tempoFinal - tempoInicial)).toFixed(3) + " milissegundos");
-
-    }
-    else{
-      if(sucesso){
-        console.log("\t \t ----- Sucesso em encontrar a solução!!! --- \n");
-        console.log("Status da busca: \n \n");
-        var texto = "\nAbertos (total ao final da execucao: " + abertos.length + "): ";
-        for(var i = 0; i < abertos.length; i++){
-            texto = texto + "Celula["+abertos[i].i+"]["+abertos[i].j+"]"+ " -- ";
-            this.insereNaTabelaTexto("tabelaListaAbertos", 2, [(i + ""), ("Celula["+abertos[i].i+"]["+abertos[i].j+"]")]);
-        }
-        texto = texto + "\n";
-        console.log(texto);
-        texto = "\Fechados (total ao final da execucao: " + fechados.length + "): ";
-        for(var i = 0; i < fechados.length; i++){
-            texto = texto + "Celula["+fechados[i].i+"]["+fechados[i].j+"]"+ " -- ";
-            this.insereNaTabelaTexto("tabelaListaFechados", 2, [(i + ""), ("Celula["+fechados[i].i+"]["+fechados[i].j+"]")]);
-        }
-        texto = texto + "\n";
-        console.log(texto);
-        texto = "";
-        var numVisitados = 0;
-        for (var i = 0; i < this.linhas; i++) {
-          for(var j = 0; j < this.colunas; j++){
-            if(visitados[i][j]){
-                texto = texto + "Celula["+i+"]["+j+"] -- ";
-                numVisitados++;
-            }
-          }
-        }
-        texto = "\n\nQuem foi visitado (total ao final da execucao: " + numVisitados + "): " + texto;
-        console.log(texto);
-        this.caminhoSolucao = [];
-        var aux = fechados[fechados.length - 1];
-        while(aux != null){
-          this.caminhoSolucao.push(aux);
-          aux = aux.pai;
-        }
-        this.caminhoSolucao.reverse();                                               //Inverte o vetor
-        texto = "Caminho da solução (Total: "+ this.caminhoSolucao.length + "): ";
-        for(var i = 0; i < this.caminhoSolucao.length; i++){
-          texto = texto + "Celula["+this.caminhoSolucao[i].i+"]["+this.caminhoSolucao[i].j+"] -- "
-        }
-        console.log(texto);
-        // Encontrar o caminho até a raiz da solução
-        // Encontrar o fator médio de ramificação
-
-       var elementosBusca = [];
-       elementosBusca = abertos.concat(fechados);
-
-       var tabelaFilhosPorCelula = [];
-       for(var i = 0; i < elementosBusca.length; i++){
-         if(elementosBusca[i].pai != null){
-           for(var j = 0; j < tabelaFilhosPorCelula.length; j++){
-             if(elementosBusca[i].pai === tabelaFilhosPorCelula[j][0]){                 //Encontrou o pai então incrementa o número de filhos dele
-               tabelaFilhosPorCelula[j][1] = tabelaFilhosPorCelula[j][1] + 1;
-               break;
-             }
-           }
-           tabelaFilhosPorCelula.push([elementosBusca[i], 0]);
-         }
-         else{
-           tabelaFilhosPorCelula.push([elementosBusca[i], 0]);
-         }
-       }
-
-       texto = "\nImpressao da lista de pais e numero de filhos(Total de vertices: "+tabelaFilhosPorCelula.length+"): \n";
-       var valorMedioRamificacao = 0;
-       for(var i = 0; i < tabelaFilhosPorCelula.length; i++){
-         texto = texto + "(["+tabelaFilhosPorCelula[i][0].i+", "+ tabelaFilhosPorCelula[i][0].j + "], " + tabelaFilhosPorCelula[i][1] + ")  --  \n";
-         valorMedioRamificacao = valorMedioRamificacao + tabelaFilhosPorCelula[i][1];
-       }
-       console.log(texto+"\n");
-       valorMedioRamificacao = (valorMedioRamificacao/tabelaFilhosPorCelula.length);
-       console.log("Valor médio do fator de ramificação da árvore de busca: " + valorMedioRamificacao);
-
-
-        //console.log("\nQuantidade total de vértices visitados: " + numVisitados);
-        var tempoFinal = performance.now();
-        console.log("\nTempo de execução: " + parseFloat((tempoFinal - tempoInicial)).toFixed(3) + " milissegundos");    ///Mede o tempo somente na função
-
-
-
-        //Atualiza as estatísticas no HTML
-        document.getElementById("profEstatistica").innerHTML=(limiteProfundidade + "");
-        document.getElementById("statusBusca").style="color:green; font-weight:bold";
-        document.getElementById("statusBusca").innerHTML="SUCESSO!!!";
-        document.getElementById("custoSolucao").innerHTML=(this.caminhoSolucao.length + "");
-        document.getElementById("qtdNosExpandidos").innerHTML="";
-        document.getElementById("qtdNosVisitados").innerHTML=(numVisitados + "");
-        document.getElementById("fatorRamificacaoMediaBusca").innerHTML=(valorMedioRamificacao + "");
-        document.getElementById("tempoExecucao").innerHTML=(parseFloat((tempoFinal - tempoInicial)).toFixed(3) + " milissegundos");
-      }
-    }
-
-}*/
-
 
 Maze.prototype.buscaEmLargura = function (verticeInicial, verticeObjetivo){
   var tempoInicial = performance.now();
@@ -1083,8 +890,7 @@ Maze.prototype.buscaEmLargura = function (verticeInicial, verticeObjetivo){
        }       
       }
       console.log(texto+"\n");
-      valorMedioRamificacao = (valorMedioRamificacao/numPais);
-      valorMedioRamificacao = Math.ceil(parseFloat(valorMedioRamificacao).toFixed(3));  //Arredonda
+      valorMedioRamificacao = parseFloat((valorMedioRamificacao - 1)/numPais).toFixed(3);
       console.log("Valor médio do fator de ramificação da árvore de busca: " + valorMedioRamificacao);
 
       var tempoFinal = performance.now();
@@ -1174,8 +980,7 @@ Maze.prototype.buscaEmLargura = function (verticeInicial, verticeObjetivo){
           }     
         }
         console.log(texto+"\n");
-        valorMedioRamificacao = (valorMedioRamificacao/numPais);
-        valorMedioRamificacao = Math.ceil(parseFloat(valorMedioRamificacao).toFixed(3));  //Arredonda
+        valorMedioRamificacao = parseFloat((valorMedioRamificacao - 1)/numPais).toFixed(3);
         console.log("Valor médio do fator de ramificação da árvore de busca: " + valorMedioRamificacao);
 
         var tempoFinal = performance.now();
@@ -1195,6 +1000,13 @@ Maze.prototype.buscaEmLargura = function (verticeInicial, verticeObjetivo){
 }
 
 
+Maze.prototype.mudarPesos = function (pesosAtuais){
+  for(var i = 0; i < this.linhas; i++){
+    for(var j = 0; j < this.linhas; j++){
+      this.matriz[i][j].peso = pesosAtuais;
+    }
+  }
+}
 
 
 Maze.prototype.buscaOrdenada = function (verticeInicial, verticeObjetivo){
@@ -1209,6 +1021,7 @@ Maze.prototype.buscaOrdenada = function (verticeInicial, verticeObjetivo){
       visitados[i][j] = false;
     }
   }
+  var nosExpandidos = 0;
   var profundidade = 0;                                             ///Armazena a profundidade da busca
   var fim = this.matriz[verticeObjetivo[0]][verticeObjetivo[1]];
   var s = this.matriz[verticeInicial[0]][verticeInicial[1]];
@@ -1245,8 +1058,7 @@ Maze.prototype.buscaOrdenada = function (verticeInicial, verticeObjetivo){
               if(visitados[auxVizinho.i][auxVizinho.j] === false){        //vizinho não visitado
                 var u = auxVizinho;                                       //Atualiza para o próximo vértice
                 u.pai = n;
-                abertos.push([u, custoArestas + n.peso[i]]);
-                var u = auxVizinho;                                       //Atualiza para o próximo vértice
+                //abertos.push([u, custoArestas + n.peso[i]]);
                 //verifica se a celula já está na lista de abertos e se o custo é maior ou menor
                 //Não insere na lista de abertos caso o custo seja maior ou igual ao que já tem na lista
                 //Se tiver e este for com custo menor, remover a celula antiga do abertos
@@ -1262,6 +1074,7 @@ Maze.prototype.buscaOrdenada = function (verticeInicial, verticeObjetivo){
                       abertos.splice(c, 1);                   //remove o elemento
                       u.pai = n;
                       abertos.push([u, custoArestas + n.peso[i]]);
+                      nosExpandidos++;
                       break;
                     }
                   }
@@ -1269,6 +1082,7 @@ Maze.prototype.buscaOrdenada = function (verticeInicial, verticeObjetivo){
                 if(encontrouNaLista === false){ //Não encontrou então pode inserir na lista
                   u.pai = n;
                   abertos.push([u, custoArestas + n.peso[i]]);
+                  nosExpandidos++;
                 }
               }
             }
@@ -1342,8 +1156,7 @@ Maze.prototype.buscaOrdenada = function (verticeInicial, verticeObjetivo){
       }     
     }
     console.log(texto+"\n");
-    valorMedioRamificacao = (valorMedioRamificacao/numPais);
-    valorMedioRamificacao = Math.ceil(parseFloat(valorMedioRamificacao).toFixed(3));  //Arredonda
+    valorMedioRamificacao = parseFloat((valorMedioRamificacao - 1)/numPais).toFixed(3);
     console.log("Valor médio do fator de ramificação da árvore de busca: " + valorMedioRamificacao);
 
     var tempoFinal = performance.now();
@@ -1354,7 +1167,7 @@ Maze.prototype.buscaOrdenada = function (verticeInicial, verticeObjetivo){
     document.getElementById("statusBusca").style="color:red; font-weight:bold";
     document.getElementById("statusBusca").innerHTML="FRACASSO!!!";
     document.getElementById("custoSolucao").innerHTML=(" X ");
-    document.getElementById("qtdNosExpandidos").innerHTML=(numVisitados + "");
+    document.getElementById("qtdNosExpandidos").innerHTML=(nosExpandidos + "");
     document.getElementById("qtdNosVisitados").innerHTML=(numVisitados + "");
     document.getElementById("fatorRamificacaoMediaBusca").innerHTML=(valorMedioRamificacao + "");
     document.getElementById("tempoExecucao").innerHTML=(parseFloat((tempoFinal - tempoInicial)).toFixed(3) + " milissegundos");
@@ -1416,7 +1229,6 @@ Maze.prototype.buscaOrdenada = function (verticeInicial, verticeObjetivo){
        if(elementosBusca[i][0].pai != null){
          for(var j = 0; j < tabelaFilhosPorCelula.length; j++){
            if(elementosBusca[i][0].pai === tabelaFilhosPorCelula[j][0]){                 //Encontrou o pai então incrementa o número de filhos dele
-             console.log("RTTETETET");
              tabelaFilhosPorCelula[j][1] = tabelaFilhosPorCelula[j][1] + 1;
            }
          }
@@ -1434,8 +1246,7 @@ Maze.prototype.buscaOrdenada = function (verticeInicial, verticeObjetivo){
         }     
       }
       console.log(texto+"\n");
-      valorMedioRamificacao = (valorMedioRamificacao/numPais);
-      valorMedioRamificacao = Math.ceil(parseFloat(valorMedioRamificacao).toFixed(3));  //Arredonda
+      valorMedioRamificacao = parseFloat((valorMedioRamificacao - 1)/numPais).toFixed(3);
       console.log("Valor médio do fator de ramificação da árvore de busca: " + valorMedioRamificacao);
 
       var tempoFinal = performance.now();
@@ -1446,7 +1257,7 @@ Maze.prototype.buscaOrdenada = function (verticeInicial, verticeObjetivo){
       document.getElementById("statusBusca").style="color:green; font-weight:bold";
       document.getElementById("statusBusca").innerHTML="SUCESSO!!!";
       document.getElementById("custoSolucao").innerHTML=(fechados[fechados.length - 1][1] + "");        // ultimo elemento fechado tem o custo de solução
-      document.getElementById("qtdNosExpandidos").innerHTML=(numVisitados + "");
+      document.getElementById("qtdNosExpandidos").innerHTML=(nosExpandidos + "");
       document.getElementById("qtdNosVisitados").innerHTML=(numVisitados + "");
       document.getElementById("fatorRamificacaoMediaBusca").innerHTML=(valorMedioRamificacao + "");
       document.getElementById("tempoExecucao").innerHTML=(parseFloat((tempoFinal - tempoInicial)).toFixed(3) + " milissegundos");
@@ -1697,7 +1508,7 @@ if(fracasso){
       this.caminhoSolucao = [];
       console.log("\t \t ----- Fracasso em encontrar a solução!!! --- \n");
       console.log("Status da busca: \n \n");
-      //console.log("Profundidade: "+ profundidade);
+      console.log("Profundidade: "+ profundidade);
       var texto = "\nAbertos (total ao final da execucao: " + abertos.length + "): ";
       for(var i = 0; i < abertos.length; i++){
         texto = texto + "Celula[" + abertos[i][0].i + "][" + abertos[i][0].j + "] Custo:  +" + abertos[i][1] +" -- ";
@@ -1731,26 +1542,30 @@ if(fracasso){
       elementosBusca = abertos.concat(fechados);
       var tabelaFilhosPorCelula = [];
       for(var j = 0; j < elementosBusca.length; j++){          //Cria tabela inicial de filhos por celula
-       tabelaFilhosPorCelula.push([elementosBusca[j], 0]);
+       tabelaFilhosPorCelula.push([elementosBusca[j][0], 0]);
       }
       for(var i = 0; i < elementosBusca.length; i++){
-       if(elementosBusca[i].pai != null){
+       if(elementosBusca[i][0].pai != null){
          for(var j = 0; j < tabelaFilhosPorCelula.length; j++){
-           if(elementosBusca[i].pai === tabelaFilhosPorCelula[j][0]){                 //Encontrou o pai então incrementa o número de filhos dele
+           if(elementosBusca[i][0].pai === tabelaFilhosPorCelula[j][0]){                 //Encontrou o pai então incrementa o número de filhos dele
              tabelaFilhosPorCelula[j][1] = tabelaFilhosPorCelula[j][1] + 1;
            }
          }
        }
       }
 
-      texto = "\nImpressao da lista de pais e numero de filhos(Total de vertices: "+tabelaFilhosPorCelula.length+"): \n";
+      texto = "\nImpressao da lista de pais e numero de filhos(Total de vertices: " + tabelaFilhosPorCelula.length + "): \n";
       var valorMedioRamificacao = 0;
-      for(var i = 0; i < tabelaFilhosPorCelula.length; i++){
-       texto = texto + "(["+tabelaFilhosPorCelula[i][0].i+", "+ tabelaFilhosPorCelula[i][0].j + "], " + tabelaFilhosPorCelula[i][1] + ")  --  \n";
-       valorMedioRamificacao = valorMedioRamificacao + tabelaFilhosPorCelula[i][1];
+      var numPais = 0;
+      for(var k = 0; k < tabelaFilhosPorCelula.length; k++){
+        texto = texto + "(["+tabelaFilhosPorCelula[k][0].i+", "+ tabelaFilhosPorCelula[k][0].j + "], " + tabelaFilhosPorCelula[k][1] + ")  --  \n";
+        valorMedioRamificacao = valorMedioRamificacao + tabelaFilhosPorCelula[k][1];
+        if(tabelaFilhosPorCelula[k][1] != 0){                                          //Não conta as folhas visto que não são pais
+          numPais++;
+        }     
       }
       console.log(texto+"\n");
-      valorMedioRamificacao = (valorMedioRamificacao/tabelaFilhosPorCelula.length);
+      valorMedioRamificacao = parseFloat((valorMedioRamificacao - 1)/numPais).toFixed(3);
       console.log("Valor médio do fator de ramificação da árvore de busca: " + valorMedioRamificacao);
 
       var tempoFinal = performance.now();
@@ -1770,7 +1585,7 @@ if(fracasso){
       if(sucesso){
         console.log("\t \t ----- Sucesso em encontrar a solução!!! --- \n");
         console.log("Status da busca: \n \n");
-        //console.log("Profundidade: "+ profundidade);
+        console.log("Profundidade: "+ profundidade);
         var texto = "\nAbertos (total ao final da execucao: " + abertos.length + "): ";
         for(var i = 0; i < abertos.length; i++){
           texto = texto + "Celula[" + abertos[i][0].i + "][" + abertos[i][0].j + "] Custo:  +" + abertos[i][1] +" -- ";
@@ -1817,26 +1632,30 @@ if(fracasso){
         elementosBusca = abertos.concat(fechados);
         var tabelaFilhosPorCelula = [];
         for(var j = 0; j < elementosBusca.length; j++){          //Cria tabela inicial de filhos por celula
-         tabelaFilhosPorCelula.push([elementosBusca[j], 0]);
+         tabelaFilhosPorCelula.push([elementosBusca[j][0], 0]);
         }
         for(var i = 0; i < elementosBusca.length; i++){
-         if(elementosBusca[i].pai != null){
+         if(elementosBusca[i][0].pai != null){
            for(var j = 0; j < tabelaFilhosPorCelula.length; j++){
-             if(elementosBusca[i].pai === tabelaFilhosPorCelula[j][0]){                 //Encontrou o pai então incrementa o número de filhos dele
+             if(elementosBusca[i][0].pai === tabelaFilhosPorCelula[j][0]){                 //Encontrou o pai então incrementa o número de filhos dele
                tabelaFilhosPorCelula[j][1] = tabelaFilhosPorCelula[j][1] + 1;
              }
            }
          }
         }
 
-        texto = "\nImpressao da lista de pais e numero de filhos(Total de vertices: "+tabelaFilhosPorCelula.length+"): \n";
+        texto = "\nImpressao da lista de pais e numero de filhos(Total de vertices: " + tabelaFilhosPorCelula.length + "): \n";
         var valorMedioRamificacao = 0;
-        for(var i = 0; i < tabelaFilhosPorCelula.length; i++){
-         texto = texto + "(["+tabelaFilhosPorCelula[i][0].i+", "+ tabelaFilhosPorCelula[i][0].j + "], " + tabelaFilhosPorCelula[i][1] + ")  --  \n";
-         valorMedioRamificacao = valorMedioRamificacao + tabelaFilhosPorCelula[i][1];
+        var numPais = 0;
+        for(var k = 0; k < tabelaFilhosPorCelula.length; k++){
+          texto = texto + "(["+tabelaFilhosPorCelula[k][0].i+", "+ tabelaFilhosPorCelula[k][0].j + "], " + tabelaFilhosPorCelula[k][1] + ")  --  \n";
+          valorMedioRamificacao = valorMedioRamificacao + tabelaFilhosPorCelula[k][1];
+          if(tabelaFilhosPorCelula[k][1] != 0){                                          //Não conta as folhas visto que não são pais
+            numPais++;
+          }     
         }
         console.log(texto+"\n");
-        valorMedioRamificacao = (valorMedioRamificacao/tabelaFilhosPorCelula.length);
+        valorMedioRamificacao = parseFloat((valorMedioRamificacao - 1)/numPais).toFixed(3);
         console.log("Valor médio do fator de ramificação da árvore de busca: " + valorMedioRamificacao);
 
         var tempoFinal = performance.now();
