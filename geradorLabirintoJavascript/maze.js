@@ -1265,11 +1265,7 @@ Maze.prototype.buscaOrdenada = function (verticeInicial, verticeObjetivo){
   }
 }
 
-
-
-
-
-
+//Implementação do André
 Maze.prototype.buscaGulosa = function(verticeInicial, verticeObjetivo)
 {
 
@@ -1346,6 +1342,290 @@ Maze.prototype.buscaGulosa = function(verticeInicial, verticeObjetivo)
 
 }
 
+
+//Implementação do Lucas
+Maze.prototype.buscaGulosa2 = function(verticeInicial, verticeObjetivo){
+
+  var tempoInicial = performance.now();
+  console.log("\n \t \t-------- Executando a busca gulosa:  ------------\n \n");
+
+  //CRIA MATRIZ AUXILIAR DE HEURÍSTICAS
+  var matrizHeuristicas = [];
+  for (var i = 0; i < this.linhas; i++) {
+      matrizHeuristicas[i] = [];
+    for (var j = 0; j < this.colunas; j++) {
+      matrizHeuristicas[i][j] = this.heuristica(i,j,verticeObjetivo[0], verticeObjetivo[1]);
+      console.log("linha "+i+" coluna "+j+" = "+matrizHeuristicas[i][j]);
+    }
+  }
+
+  var abertos = [];                                //Armazena os custo de cada celula
+  var fechados = [];
+  var visitados = [];                            //Matriz de visitados
+  for (var i = 0; i < this.linhas; i++) {
+    visitados[i] = [];
+    for(var j = 0; j < this.colunas; j++){
+      visitados[i][j] = false;
+    }
+  }
+  var profundidade = 0;                                             //Armazena a profundidade da busca
+  var fim = this.matriz[verticeObjetivo[0]][verticeObjetivo[1]];
+  var s = this.matriz[verticeInicial[0]][verticeInicial[1]];
+  abertos.push([s, 0]);               // (celula, f(x), somaArestas)
+  visitados[s.i][s.j] = true;                                       // Visitando o primeiro vertice
+  var fracasso = false, sucesso = false;
+  while((sucesso == false) && (fracasso == false)){
+      if(abertos.length == 0){                                    // Lista de abertos vazia
+          fracasso = true;
+      }
+      else{
+        var n;                                       
+        var menorH = matrizHeuristicas[abertos[0][0].i][abertos[0][0].j];
+        console.log(menorH);
+        var custoArestas = abertos[0][1];
+        var posicao = 0;
+        for(var i = 0; i < abertos.length; i++){                  //Pega o elemento de menor (heuristica)
+          if(matrizHeuristicas[abertos[i][0].i][abertos[i][0].j] <= menorH){
+            n = abertos[i][0];
+            menorH = matrizHeuristicas[abertos[i][0].i][abertos[i][0].j];
+            custoArestas = abertos[i][1];
+            posicao = i;
+          }
+        }
+        abertos.splice(posicao, 1);                               //Remove da lista de abertos o elemento de menor valor da heurística
+        visitados[n.i][n.j] = true;                               //Marca como visitado o próximo vértice
+        if(n == fim){
+            sucesso = true;
+            profundidade++;
+            fechados.push([n, custoArestas]);
+            break;
+        }
+        else{
+            var contador = 0;
+            for (var i = 0; i < s.wall.length; i++) {                       //Checa na direção contraria(esquerda,baixo,direita,cima) para poder retirar da pilha na ordem do vetor de paredes
+              if(n.wall[i] === false){                                      //Checa se não há parede
+                var auxVizinho = n.getVizinho(i, this.matriz);              //Captura a celula do vizinho na matriz
+                if(visitados[auxVizinho.i][auxVizinho.j] === false){        //vizinho não visitado
+                  var u = auxVizinho;                                       //Atualiza para o próximo vértice
+                  //verifica se a celula já está na lista de abertos e se o custo é maior ou menor
+                  //Não insere na lista de abertos caso o custo seja maior ou igual ao que já tem na lista
+                  //Se tiver e este for com custo menor, remover a celula antiga do abertos
+                  //console.log("TESTEEEEEEEEEE");
+                  var encontrouNaLista = false;
+                  for(var c = 0; c < abertos.length; c++){
+                    if(u === abertos[c][0]){  //u está na lista
+                      encontrouNaLista = true;
+                      if(matrizHeuristicas[abertos[c][0].i][abertos[c][0].j] <= (matrizHeuristicas[auxVizinho.i][auxVizinho.j])){   // Compara o custo com a celula presente
+                          //O antigo na lista tem o menor custo então não faz nada   
+                          break;
+                      }
+                      else{   //Custo válido para inserir na lista
+                        abertos.splice(c, 1);                   //remove o elemento
+                        u.pai = n;
+                        abertos.push([u, custoArestas + n.peso[i]]);
+                        break;
+                      }
+                    }
+                  }
+                  if(encontrouNaLista === false){ //Não encontrou então pode inserir na lista
+                    u.pai = n;
+                    abertos.push([u, custoArestas + n.peso[i]]);
+                  }
+                }
+              }
+              contador++;
+          }
+          if(contador >= 4){                ///Passou todas as operações possíveis -- Insere o n fechado com os custos de aresta e funcao FF
+            profundidade++;
+            fechados.push([n, custoArestas]);
+          }
+        }
+      }
+  }
+
+
+  //Estatísticas
+for(var i = 0; i < this.linhas; i++){
+  for(var j = 0; j < this.colunas; j++){
+
+    this.insereNaTabelaTexto("tabelaListaHeuristica", 3, [((j + i * this.colunas) + ""), ("Celula["+i+"]["+j+"]"), (matrizHeuristicas[i][j]+"")]);
+  }
+  //texto = texto + "Celula[" + abertos[i][0].i + "][" + abertos[i][0].j + "] Custo:  +" + abertos[i][1] +" -- ";
+}
+
+if(fracasso){
+  this.caminhoSolucao = [];
+  console.log("\t \t ----- Fracasso em encontrar a solução!!! --- \n");
+  console.log("Status da busca: \n \n");
+  console.log("Profundidade: "+ profundidade);
+  var texto = "\nAbertos (total ao final da execucao: " + abertos.length + "): ";
+  for(var i = 0; i < abertos.length; i++){
+    texto = texto + "Celula[" + abertos[i][0].i + "][" + abertos[i][0].j + "] Custo:  +" + abertos[i][1] +" -- ";
+  this.insereNaTabelaTexto("tabelaListaAbertos", 3, [(i + ""), ("Celula["+abertos[i][0].i+"]["+abertos[i][0].j+"]"), (abertos[i][1]+"")]);
+  }
+  texto = texto + "\n";
+  console.log(texto);
+
+  texto = "\nFechados (total ao final da execucao: " + fechados.length + "): ";
+  for(var i = 0; i < fechados.length; i++){
+      texto = texto + "Celula["+fechados[i][0].i+"]["+fechados[i][0].j+"] Custo:  +" + fechados[i][1] +" -- ";
+      this.insereNaTabelaTexto("tabelaListaFechados", 3, [(i + ""), ("Celula[" + fechados[i][0].i + "][" + fechados[i][0].j+"]"), (fechados[i][1] + "")]);
+  }
+  texto = texto + "\n";
+  console.log(texto);
+
+  texto = "";
+  var numVisitados = 0;
+  for (var i = 0; i < this.linhas; i++) {
+    for(var j = 0; j < this.colunas; j++){
+      if(visitados[i][j]){
+          texto = texto + "Celula["+i+"]["+j+"] -- ";
+          numVisitados++;
+      }
+    }
+  }
+  texto = "\n\nQuem foi visitado (total ao final da execucao: " + numVisitados + "): " + texto;
+  console.log(texto);
+
+  var elementosBusca = [];
+  elementosBusca = abertos.concat(fechados);
+  var tabelaFilhosPorCelula = [];
+  for(var j = 0; j < elementosBusca.length; j++){          //Cria tabela inicial de filhos por celula
+   tabelaFilhosPorCelula.push([elementosBusca[j][0], 0]);
+  }
+  for(var i = 0; i < elementosBusca.length; i++){
+   if(elementosBusca[i][0].pai != null){
+     for(var j = 0; j < tabelaFilhosPorCelula.length; j++){
+       if(elementosBusca[i][0].pai === tabelaFilhosPorCelula[j][0]){                 //Encontrou o pai então incrementa o número de filhos dele
+         tabelaFilhosPorCelula[j][1] = tabelaFilhosPorCelula[j][1] + 1;
+       }
+     }
+   }
+  }
+
+  texto = "\nImpressao da lista de pais e numero de filhos(Total de vertices: " + tabelaFilhosPorCelula.length + "): \n";
+  var valorMedioRamificacao = 0;
+  var numPais = 0;
+  for(var k = 0; k < tabelaFilhosPorCelula.length; k++){
+    texto = texto + "(["+tabelaFilhosPorCelula[k][0].i+", "+ tabelaFilhosPorCelula[k][0].j + "], " + tabelaFilhosPorCelula[k][1] + ")  --  \n";
+    valorMedioRamificacao = valorMedioRamificacao + tabelaFilhosPorCelula[k][1];
+    if(tabelaFilhosPorCelula[k][1] != 0){                                          //Não conta as folhas visto que não são pais
+      numPais++;
+    }     
+  }
+  console.log(texto+"\n");
+  valorMedioRamificacao = parseFloat((valorMedioRamificacao - 1)/numPais).toFixed(3);
+  console.log("Valor médio do fator de ramificação da árvore de busca: " + valorMedioRamificacao);
+
+  var tempoFinal = performance.now();
+  console.log("\nTempo de execução: " + parseFloat((tempoFinal - tempoInicial)).toFixed(3) + " milissegundos");    ///Mede o tempo somente na função
+
+  //Atualiza as estatísticas no HTML
+  document.getElementById("profEstatistica").innerHTML=(profundidade + "");
+  document.getElementById("statusBusca").style="color:red; font-weight:bold";
+  document.getElementById("statusBusca").innerHTML="FRACASSO!!!";
+  document.getElementById("custoSolucao").innerHTML=("X");
+  document.getElementById("qtdNosExpandidos").innerHTML="";
+  document.getElementById("qtdNosVisitados").innerHTML=(numVisitados + "");
+  document.getElementById("fatorRamificacaoMediaBusca").innerHTML=(valorMedioRamificacao + "");
+  document.getElementById("tempoExecucao").innerHTML=(parseFloat((tempoFinal - tempoInicial)).toFixed(3) + " milissegundos");
+}
+else{
+  if(sucesso){
+    console.log("\t \t ----- Sucesso em encontrar a solução!!! --- \n");
+    console.log("Status da busca: \n \n");
+    console.log("Profundidade: "+ profundidade);
+    var texto = "\nAbertos (total ao final da execucao: " + abertos.length + "): ";
+    for(var i = 0; i < abertos.length; i++){
+      texto = texto + "Celula[" + abertos[i][0].i + "][" + abertos[i][0].j + "] Custo:  +" + abertos[i][1] +" -- ";
+    this.insereNaTabelaTexto("tabelaListaAbertos", 3, [(i + ""), ("Celula["+abertos[i][0].i+"]["+abertos[i][0].j+"]"), (abertos[i][1]+"")]);
+    }
+    texto = texto + "\n";
+    console.log(texto);
+
+    texto = "\nFechados (total ao final da execucao: " + fechados.length + "): ";
+    for(var i = 0; i < fechados.length; i++){
+        texto = texto + "Celula["+fechados[i][0].i+"]["+fechados[i][0].j+"] Custo:  +" + fechados[i][1] +" -- ";
+        this.insereNaTabelaTexto("tabelaListaFechados", 3, [(i + ""), ("Celula[" + fechados[i][0].i + "][" + fechados[i][0].j+"]"), (fechados[i][1] + "")]);
+    }
+    texto = texto + "\n";
+    console.log(texto);
+
+    texto = "";
+    var numVisitados = 0;
+    for (var i = 0; i < this.linhas; i++) {
+      for(var j = 0; j < this.colunas; j++){
+        if(visitados[i][j]){
+            texto = texto + "Celula["+i+"]["+j+"] -- ";
+            numVisitados++;
+        }
+      }
+    }
+    texto = "\n\nQuem foi visitado (total ao final da execucao: " + numVisitados + "): " + texto;
+    console.log(texto);
+
+    this.caminhoSolucao = [];
+    var aux = n;
+    while(aux != null){
+      this.caminhoSolucao.push(aux);
+      aux = aux.pai;
+    }
+    this.caminhoSolucao.reverse();                                               //Inverte o vetor
+    texto = "Caminho da solução (Total: "+ this.caminhoSolucao.length + "): ";
+    for(var i = 0; i < this.caminhoSolucao.length; i++){
+      texto = texto + "Celula["+this.caminhoSolucao[i].i+"]["+this.caminhoSolucao[i].j+"] -- "
+    }
+    console.log(texto);
+
+    var elementosBusca = [];
+    elementosBusca = abertos.concat(fechados);
+    var tabelaFilhosPorCelula = [];
+    for(var j = 0; j < elementosBusca.length; j++){          //Cria tabela inicial de filhos por celula
+     tabelaFilhosPorCelula.push([elementosBusca[j][0], 0]);
+    }
+    for(var i = 0; i < elementosBusca.length; i++){
+     if(elementosBusca[i][0].pai != null){
+       for(var j = 0; j < tabelaFilhosPorCelula.length; j++){
+         if(elementosBusca[i][0].pai === tabelaFilhosPorCelula[j][0]){                 //Encontrou o pai então incrementa o número de filhos dele
+           tabelaFilhosPorCelula[j][1] = tabelaFilhosPorCelula[j][1] + 1;
+         }
+       }
+     }
+    }
+
+    texto = "\nImpressao da lista de pais e numero de filhos(Total de vertices: " + tabelaFilhosPorCelula.length + "): \n";
+    var valorMedioRamificacao = 0;
+    var numPais = 0;
+    for(var k = 0; k < tabelaFilhosPorCelula.length; k++){
+      texto = texto + "(["+tabelaFilhosPorCelula[k][0].i+", "+ tabelaFilhosPorCelula[k][0].j + "], " + tabelaFilhosPorCelula[k][1] + ")  --  \n";
+      valorMedioRamificacao = valorMedioRamificacao + tabelaFilhosPorCelula[k][1];
+      if(tabelaFilhosPorCelula[k][1] != 0){                                          //Não conta as folhas visto que não são pais
+        numPais++;
+      }     
+    }
+    console.log(texto+"\n");
+    valorMedioRamificacao = parseFloat((valorMedioRamificacao - 1)/numPais).toFixed(3);
+    console.log("Valor médio do fator de ramificação da árvore de busca: " + valorMedioRamificacao);
+
+    var tempoFinal = performance.now();
+    console.log("\nTempo de execução: " + parseFloat((tempoFinal - tempoInicial)).toFixed(3) + " milissegundos");    ///Mede o tempo somente na função
+
+    //Atualiza as estatísticas no HTML
+    document.getElementById("profEstatistica").innerHTML=(profundidade + "");
+    document.getElementById("statusBusca").style="color:green; font-weight:bold";
+    document.getElementById("statusBusca").innerHTML="SUCESSO!!!";
+    document.getElementById("custoSolucao").innerHTML=(fechados[fechados.length - 1][1] + "");        // ultimo elemento fechado tem o custo de solução
+    document.getElementById("qtdNosExpandidos").innerHTML="";
+    document.getElementById("qtdNosVisitados").innerHTML=(numVisitados + "");
+    document.getElementById("fatorRamificacaoMediaBusca").innerHTML=(valorMedioRamificacao + "");
+    document.getElementById("tempoExecucao").innerHTML=(parseFloat((tempoFinal - tempoInicial)).toFixed(3) + " milissegundos");
+  }
+}
+
+
+
+}
+
 Maze.prototype.escolheMelhorCaminho = function(celula, matrizHeuristicas, visitados){
 
   var vizinhos = [];
@@ -1405,15 +1685,6 @@ Maze.prototype.buscaAEstrela = function(verticeInicial, verticeObjetivo){
   }
 
   var abertos = [];                                //Armazena os custo de cada celula
-  /**
-  [ No  | Heuristica ]
-  abertos[i].push(celula)
-  abertos[i].push(valorHeuristica)
-
-  ou
-  f = somaAresta + heuristica
-  abertos.push([celula, f])
-  */
   var fechados = [];
   var visitados = [];                            //Matriz de visitados
   for (var i = 0; i < this.linhas; i++) {
