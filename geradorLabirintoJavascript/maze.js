@@ -110,6 +110,7 @@ Maze.prototype.desenharGeracaoLabirintoPorPassos = function(ctx, espacamento, es
 *******************************************************/
 
 Maze.prototype.desenharSolucao = function(ctx, espacamento){
+  //Desenhando Quadrados coloridos
   for(var i = 0; i < this.caminhoSolucao.length; i++){
     var x = this.caminhoSolucao[i].j * this.larguraCelula + espacamento;
     var y = this.caminhoSolucao[i].i * this.larguraCelula + espacamento;
@@ -125,6 +126,25 @@ Maze.prototype.desenharSolucao = function(ctx, espacamento){
       ctx.fillStyle = 'rgb(0,200,0)';   //Caminho
       ctx.fillRect(x + (this.larguraCelula/4), y + (this.larguraCelula/4), this.larguraCelula/2, this.larguraCelula/2);
     }
+  }
+
+  // Desenhando linhas vermelhas
+  ctx.strokeStyle = 'rgb(255,0,0)';
+  ctx.lineWidth = 3;   
+  if(this.caminhoSolucao.length > 0){
+    var inicioX = (this.caminhoSolucao[0].j * this.larguraCelula + espacamento) + (this.larguraCelula/4) + this.larguraCelula/4;
+    var inicioY = (this.caminhoSolucao[0].i * this.larguraCelula + espacamento) + (this.larguraCelula/4) + this.larguraCelula/4;
+  }
+  for(var i = 1; i < this.caminhoSolucao.length; i++){
+    var fimX = (this.caminhoSolucao[i].j * this.larguraCelula + espacamento) + (this.larguraCelula/4) + this.larguraCelula/4;
+    var fimY = (this.caminhoSolucao[i].i * this.larguraCelula + espacamento) + (this.larguraCelula/4) + this.larguraCelula/4;
+    ctx.beginPath();
+    ctx.moveTo(inicioX, inicioY);
+    ctx.lineTo(fimX, fimY);
+    ctx.stroke();
+    ctx.closePath();
+    inicioX = fimX;
+    inicioY = fimY;
   }
 }
 
