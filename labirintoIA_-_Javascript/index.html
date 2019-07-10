@@ -418,7 +418,11 @@
       }
 
       function limparDadosBusca(){
+          //Limpar o console
+          console.clear();
+          console.log("Limpando dados de outras buscas\n");
           //Remove os dados das tabelas
+          console.log("limpando dados de interface\n");
          for (var i = 0; i < 3; i++) {
              var nomeTabela = "";
              switch (i) {
@@ -434,9 +438,8 @@
                  default:
              }
              var tabela = document.getElementById(nomeTabela);
-             while(tabela.rows.length > 2){
-                 var ultimaLinha = (document.getElementById(nomeTabela).rows.length - 1);
-                 tabela.deleteRow(ultimaLinha);
+             while(tabela.rows.length >= 3){
+                 tabela.deleteRow(2);         //Remove terceira linha até sobrar somente os cabeçalhos
              }
          }
 
@@ -450,9 +453,8 @@
          document.getElementById("qtdNosVisitados").innerHTML="";
          document.getElementById("fatorRamificacaoMediaBusca").innerHTML="";
          document.getElementById("tempoExecucao").innerHTML="";
+         console.log("Dados limpos com sucesso\n");
       }
-
-      // 
 
       /************************************************
       *                                               *
@@ -529,8 +531,6 @@
      function limparTela() {
       ctx.fillStyle = "gray";
       ctx.fillRect(0,0, tela.width, tela.height);
-      //console.log("limpou a tela");
-      //ctx.clearRect(0,0, tela.width, tela.height);
      }
     </script>
 
