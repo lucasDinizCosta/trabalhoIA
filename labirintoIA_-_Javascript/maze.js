@@ -510,7 +510,7 @@ Maze.prototype.backtracking = function(verticeInicial, verticeObjetivo){
     document.getElementById("statusBusca").innerHTML="FRACASSO!!!";
     document.getElementById("custoSolucao").innerHTML=" X ";
     document.getElementById("qtdNosExpandidos").innerHTML=((fechados.length + abertos.length) + "");
-    document.getElementById("qtdNosVisitados").innerHTML=(fechados.length + "");
+    document.getElementById("qtdNosVisitados").innerHTML=((fechados.length + abertos.length) + "");
     document.getElementById("fatorRamificacaoMediaBusca").innerHTML=(valorMedioRamificacao + "");
     document.getElementById("tempoExecucao").innerHTML=(parseFloat((tempoFinal - tempoInicial)).toFixed(3) + " milissegundos");
   }
@@ -599,7 +599,7 @@ Maze.prototype.backtracking = function(verticeInicial, verticeObjetivo){
       document.getElementById("statusBusca").innerHTML="SUCESSO!!!";
       document.getElementById("custoSolucao").innerHTML=(this.caminhoSolucao.length + "");
       document.getElementById("qtdNosExpandidos").innerHTML=((fechados.length + abertos.length) + "");
-      document.getElementById("qtdNosVisitados").innerHTML=(fechados.length + "");
+      document.getElementById("qtdNosVisitados").innerHTML=((fechados.length + abertos.length) + "");
       document.getElementById("fatorRamificacaoMediaBusca").innerHTML=(valorMedioRamificacao + "");
       document.getElementById("tempoExecucao").innerHTML=(parseFloat((tempoFinal - tempoInicial)).toFixed(3) + " milissegundos");
     }
