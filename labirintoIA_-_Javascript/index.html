@@ -120,7 +120,7 @@
           </li>
           <li>Vertices:
               <span style="color:blue; font-weight:bold">Inicial - </span>
-              <span id="verticeInicialBuscaEstatistica" style="color:blue; font-weight:bold">[X, Y]</span>
+              <span id="verticeInicialBuscaEstatistica" style="color:blue; font-weight:bold">[X1, Y1]</span>
               |
               <span style="color:red; font-weight:bold">Objetivo - </span>
               <span id="verticeObjetivoBuscaEstatistica" style="color:red; font-weight:bold">[X2, Y2]</span>
@@ -191,7 +191,12 @@
     </div>
 
     <script>
-
+      //Retorna a barra de scroll para a posição de origem
+      function scrollZero(){
+          window.scrollTo(0, 0);
+      }
+      document.documentElement.scrollLeft = 0;
+      scrollZero();
       var tela = document.getElementById("canvas");
       var ctx = tela.getContext("2d");
       var anterior = dt = 0;
@@ -218,8 +223,8 @@
       *                                                *
       **************************************************/
 
-      var verticeInicial = [2];               //posicao 1 representa a identificação da linha e a 2 a identificação da coluna
-      var verticeObjetivo = [2];
+      var verticeInicial = [];               //posicao 1 representa a identificação da linha e a 2 a identificação da coluna
+      var verticeObjetivo = [];
 
       limparTela();
 
@@ -275,6 +280,15 @@
 
       function funcaoBotaoGerarCompleto(){
         limparDadosBusca();
+        limparTabelaHeuristica();
+        document.getElementById("verticeInicialBuscaEstatistica").innerHTML=("[X1, Y1]");
+        document.getElementById("verticeObjetivoBuscaEstatistica").innerHTML=("[X2, Y2]");
+        verticeInicial = [];
+        verticeObjetivo = [];
+        document.getElementById("numLinhaVertInicial").value = "";
+        document.getElementById("numColunaVertInicial").value = "";
+        document.getElementById("numLinhaVertObjetivo").value = "";
+        document.getElementById("numColunaVertObjetivo").value = "";
         valorLinhas  = parseInt(document.getElementById("numLinhas").value);
         valorColunas = parseInt(document.getElementById("numColunas").value);     ///Converte pra inteiro o valor digitado
         valorLargura = parseInt(document.getElementById("numLarguraCelula").value);
@@ -292,7 +306,17 @@
       }
 
       function funcaoBotaoGerarPassoAPasso(){
+        limparTela();
         limparDadosBusca();
+        limparTabelaHeuristica();
+        document.getElementById("verticeInicialBuscaEstatistica").innerHTML=("[X1, Y1]");
+        document.getElementById("verticeObjetivoBuscaEstatistica").innerHTML=("[X2, Y2]");
+        verticeInicial = [];
+        verticeObjetivo = [];
+        document.getElementById("numLinhaVertInicial").value = "";
+        document.getElementById("numColunaVertInicial").value = "";
+        document.getElementById("numLinhaVertObjetivo").value = "";
+        document.getElementById("numColunaVertObjetivo").value = "";
         valorLinhas = parseInt(document.getElementById("numLinhas").value);
         valorColunas = parseInt(document.getElementById("numColunas").value);             //Converte pra inteiro o valor digitado
         valorLargura = parseInt(document.getElementById("numLarguraCelula").value);
@@ -320,41 +344,59 @@
       }
 
       function funcaoGerarVariacao(){
-        labirinto.gerarVariacao();
+        limparDadosBusca();
+        limparTabelaHeuristica();
         limparTela();
+        verticeInicial=[];
+        verticeObjetivo=[];
+        labirinto.gerarVariacao();
         labirinto.desenharLabirinto(ctx, espacamento);
+        document.getElementById("verticeInicialBuscaEstatistica").innerHTML=("[X1, Y1");
+        document.getElementById("verticeObjetivoBuscaEstatistica").innerHTML=("[X2, Y2]");
         document.getElementById("cbCaminhoSolucao").checked=false;
         document.getElementById("cbLinhasGrade").checked=false;
       }
 
       function validaVertices(){
-        verticeInicial[0] = parseInt(document.getElementById("numLinhaVertInicial").value);
-        verticeInicial[1] = parseInt(document.getElementById("numColunaVertInicial").value);
-        verticeObjetivo[0] = parseInt(document.getElementById("numLinhaVertObjetivo").value);
-        verticeObjetivo[1] = parseInt(document.getElementById("numColunaVertObjetivo").value);
-        if(verticeInicial[0] >= labirinto.linhas){
+        linhaVerticeInicial = parseInt(document.getElementById("numLinhaVertInicial").value);
+        colunaVerticeInicial = parseInt(document.getElementById("numColunaVertInicial").value);
+        linhaVerticeObjetivo = parseInt(document.getElementById("numLinhaVertObjetivo").value);
+        colunaVerticeObjetivo = parseInt(document.getElementById("numColunaVertObjetivo").value);
+        if(linhaVerticeInicial >= labirinto.linhas){
           alert("Vértice inicial ultrapassando as linhas do labirintos: {" + 0 + " -> "+ (labirinto.linhas - 1) + "}");
+          verticeInicial=[];
+          verticeObjetivo=[];
         }
         else{
-          if(verticeObjetivo[0] >= labirinto.linhas){
+          if(linhaVerticeObjetivo >= labirinto.linhas){
             alert("Vértice objetivo ultrapassando as linhas do labirintos: {" + 0 + " -> "+ (labirinto.linhas - 1) + "}");
+            verticeInicial=[];
+            verticeObjetivo=[];
           }
           else{
-            if(verticeInicial[1] >= labirinto.colunas){
+            if(colunaVerticeInicial >= labirinto.colunas){
               alert("Vértice inicial ultrapassando as colunas do labirintos: {" + 0 + " -> "+ (labirinto.cols-1) + "}");
+              verticeInicial=[];
+              verticeObjetivo=[];
             }
-            else if(verticeObjetivo[1] >= labirinto.colunas){
+            else if(colunaVerticeObjetivo >= labirinto.colunas){
               alert("Vértice objetivo ultrapassando as colunas do labirintos: {" + 0 + " -> "+ (labirinto.cols-1) + "}");
+              verticeInicial=[];
+              verticeObjetivo=[];
             }
             else{
               console.log("Validado");
-              var txt;
-              var r = confirm("Deseja testar para que as buscas NUNCA encontrem o vertice objetivo?");
-              if (r == true) {
+              verticeInicial.push(linhaVerticeInicial);
+              verticeInicial.push(colunaVerticeInicial);
+              verticeObjetivo.push(linhaVerticeObjetivo);
+              verticeObjetivo.push(colunaVerticeObjetivo);
+              limparDadosBusca();
+              limparTabelaHeuristica();
+              var r = confirm("Deseja testar para que as buscas NUNCA encontrem o vertice objetivo?\n OK => Bloqueia o caminho para o vértice objetivo;\n Cancelar => Apenas valida os vertices selecionados;");
+              if (r == true) {  //Clicou em OK
                   labirinto.criarMapaComFracassoProObjetivo(verticeObjetivo);
-              } else {
-                  txt = "You pressed Cancel!";
               }
+              labirinto.calcularHeuristica(verticeObjetivo);
               document.getElementById("verticeInicialBuscaEstatistica").innerHTML=("["+ verticeInicial[0] + ", " + verticeInicial[1] + "]");
               document.getElementById("verticeObjetivoBuscaEstatistica").innerHTML=("["+ verticeObjetivo[0] + ", " + verticeObjetivo[1] + "]");
             }
@@ -363,51 +405,81 @@
       }
 
       function backtracking(){
-        limparDadosBusca();
-        document.getElementById("tipoBuscaEstatistica").innerHTML="Busca em Backtracking";
-        labirinto.backtracking(verticeInicial, verticeObjetivo);
-        desenharPosBusca();
-      }
-
-      function buscaProfundidadeLimitada(){
-        limparDadosBusca();
-        var limite = prompt("Digite um valor para o limite da busca em profundidade: ", 1000000);
-        if (limite == null || limite < 2) {
-          alert("Digite um número valido maior que 1");
-        } else {
-          document.getElementById("tipoBuscaEstatistica").innerHTML="Busca em profundidade limitada";
-          document.getElementById("profLimitadaEstatistica").innerHTML=limite;
-          labirinto.buscaProfundidadeLimitada(verticeInicial, verticeObjetivo, parseInt(limite));
+        if(verticeInicial.length === 0 || verticeObjetivo.length === 0 || (verticeInicial.length === 0 && verticeObjetivo.length === 0)){
+          alert("Preencha os vertices e clique no botão para validar!!!");
+        }
+        else{
+          limparDadosBusca();
+          document.getElementById("tipoBuscaEstatistica").innerHTML="Busca em Backtracking";
+          labirinto.backtracking(verticeInicial, verticeObjetivo);
           desenharPosBusca();
         }
       }
 
+      function buscaProfundidadeLimitada(){
+        if(verticeInicial.length === 0 || verticeObjetivo.length === 0 || (verticeInicial.length === 0 && verticeObjetivo.length === 0)){
+          alert("Preencha os vertices e clique no botão para validar!!!");
+        }
+        else{
+          limparDadosBusca();
+          var limite = prompt("Digite um valor para o limite da busca em profundidade: ", 1000000);
+          if (limite == null || limite < 2) {
+            alert("Digite um número valido maior que 1");
+          }else {
+            document.getElementById("tipoBuscaEstatistica").innerHTML="Busca em profundidade limitada";
+            document.getElementById("profLimitadaEstatistica").innerHTML=limite;
+            labirinto.buscaProfundidadeLimitada(verticeInicial, verticeObjetivo, parseInt(limite));
+            desenharPosBusca();
+          }
+        }
+      }
+
       function buscaEmLargura(){
-        limparDadosBusca();
-        document.getElementById("tipoBuscaEstatistica").innerHTML="Busca em Largura";
-        labirinto.buscaEmLargura(verticeInicial, verticeObjetivo);
-        desenharPosBusca();
+        if(verticeInicial.length === 0 || verticeObjetivo.length === 0 || (verticeInicial.length === 0 && verticeObjetivo.length === 0)){
+          alert("Preencha os vertices e clique no botão para validar!!!");
+        }
+        else{
+          limparDadosBusca();
+          document.getElementById("tipoBuscaEstatistica").innerHTML="Busca em Largura";
+          labirinto.buscaEmLargura(verticeInicial, verticeObjetivo);
+          desenharPosBusca();
+        }
       }
 
       function buscaGulosa(){
-        limparDadosBusca();
-        document.getElementById("tipoBuscaEstatistica").innerHTML="Busca Gulosa";
-        labirinto.buscaGulosa2(verticeInicial, verticeObjetivo);
-        desenharPosBusca();
+        if(verticeInicial.length === 0 || verticeObjetivo.length === 0 || (verticeInicial.length === 0 && verticeObjetivo.length === 0)){
+          alert("Preencha os vertices e clique no botão para validar!!!");
+        }
+        else{
+          limparDadosBusca();
+          document.getElementById("tipoBuscaEstatistica").innerHTML="Busca Gulosa";
+          labirinto.buscaGulosa2(verticeInicial, verticeObjetivo);
+          desenharPosBusca();
+        }
       }
 
       function buscaOrdenada(){
-        limparDadosBusca();
-        document.getElementById("tipoBuscaEstatistica").innerHTML="Busca Ordenada";
-        labirinto.buscaOrdenada(verticeInicial, verticeObjetivo);
-        desenharPosBusca();
+        if(verticeInicial.length === 0 || verticeObjetivo.length === 0 || (verticeInicial.length === 0 && verticeObjetivo.length === 0)){
+          alert("Preencha os vertices e clique no botão para validar!!!");
+        }
+        else{
+          limparDadosBusca();
+          document.getElementById("tipoBuscaEstatistica").innerHTML="Busca Ordenada";
+          labirinto.buscaOrdenada(verticeInicial, verticeObjetivo);
+          desenharPosBusca();
+        }
       }
 
       function buscaAEstrela(){
-        limparDadosBusca();
-        document.getElementById("tipoBuscaEstatistica").innerHTML="Busca em A*";
-        labirinto.buscaAEstrela(verticeInicial, verticeObjetivo);
-        desenharPosBusca();
+        if(verticeInicial.length === 0 || verticeObjetivo.length === 0 || (verticeInicial.length === 0 && verticeObjetivo.length === 0)){
+          alert("Preencha os vertices e clique no botão para validar!!!");
+        }
+        else{
+          limparDadosBusca();
+          document.getElementById("tipoBuscaEstatistica").innerHTML="Busca em A*";
+          labirinto.buscaAEstrela(verticeInicial, verticeObjetivo);
+          desenharPosBusca();
+        }
       }
 
       function buscaIDAEstrela(){
@@ -417,13 +489,26 @@
         desenharPosBusca();
       }
 
+      function limparTabelaHeuristica(){
+        //Limpar o console
+        console.clear();
+        console.log("Limpando tabela de heurística\n");
+        //Remove os dados das tabelas
+         var nomeTabela = "tabelaListaHeuristica";
+         var tabela = document.getElementById(nomeTabela);
+         while(tabela.rows.length >= 3){
+             tabela.deleteRow(2);         //Remove terceira linha até sobrar somente os cabeçalhos
+         }
+         console.log("Tabela Heuristica limpa com sucesso\n");
+      }
+
       function limparDadosBusca(){
           //Limpar o console
           console.clear();
           console.log("Limpando dados de outras buscas\n");
           //Remove os dados das tabelas
           console.log("limpando dados de interface\n");
-         for (var i = 0; i < 3; i++) {
+         for (var i = 0; i < 2; i++) {
              var nomeTabela = "";
              switch (i) {
                  case 0:
@@ -431,9 +516,6 @@
                      break;
                  case 1:
                     nomeTabela = "tabelaListaFechados";
-                    break;
-                 case 2:
-                    nomeTabela = "tabelaListaHeuristica";
                     break;
                  default:
              }
@@ -536,5 +618,3 @@
 
   </body>
 </html>
-
-
